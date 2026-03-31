@@ -41,10 +41,10 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           📊 Bet History
         </h3>
         <div className="flex items-center gap-4">
-          <span className="font-display text-[10px] text-success uppercase tracking-wider">
+          <span className="font-display text-sm md:text-base text-success uppercase tracking-wider font-bold">
             {totalWon}W
           </span>
-          <span className="font-display text-[10px] text-danger uppercase tracking-wider">
+          <span className="font-display text-sm md:text-base text-danger uppercase tracking-wider font-bold">
             {totalLost}L
           </span>
           <span className={cn(
