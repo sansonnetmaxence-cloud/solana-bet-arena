@@ -181,24 +181,30 @@ const Index = () => {
 
           {betResult && (
             <div className={cn(
-              'absolute inset-0 flex items-center justify-center z-40 bg-background/70 backdrop-blur-sm',
-              'animate-in fade-in duration-500'
+              'absolute inset-0 flex items-center justify-center z-40 backdrop-blur-md',
+              'animate-in fade-in duration-300'
             )}>
               <div className={cn(
-                'text-center p-8 rounded-xl border-2',
+                'text-center p-12 rounded-2xl border-2 animate-result-pop',
                 betResult === 'won'
-                  ? 'border-success glow-green'
-                  : 'border-danger glow-red'
+                  ? 'border-success glow-green bg-success/5'
+                  : 'border-danger glow-red bg-danger/5'
               )}>
                 <span className={cn(
-                  'font-display text-5xl md:text-7xl font-black',
+                  'font-display text-7xl md:text-9xl font-black block animate-result-text',
                   betResult === 'won' ? 'text-success text-glow-green' : 'text-danger text-glow-red'
                 )}>
-                  {betResult === 'won' ? 'WIN' : 'LOSS'}
+                  {betResult === 'won' ? '🏆 WIN' : '💀 LOSS'}
                 </span>
-                <p className="font-display text-sm text-muted-foreground mt-2 uppercase tracking-widest">
+                <p className={cn(
+                  'font-display text-xl md:text-2xl mt-4 uppercase tracking-widest font-bold animate-result-amount',
+                  betResult === 'won' ? 'text-success' : 'text-danger'
+                )}>
                   {betResult === 'won' ? `+${activeBet?.amount} SOL` : `-${activeBet?.amount} SOL`}
                 </p>
+                {betResult === 'won' && (
+                  <div className="mt-2 text-2xl animate-bounce">🎉🎉🎉</div>
+                )}
               </div>
             </div>
           )}
