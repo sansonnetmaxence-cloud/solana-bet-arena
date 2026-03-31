@@ -3,6 +3,7 @@ import Header from '@/components/Header';
 import BettingGrid from '@/components/BettingGrid';
 import WalletPanel from '@/components/WalletPanel';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
+import LiveFeed from '@/components/LiveFeed';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
