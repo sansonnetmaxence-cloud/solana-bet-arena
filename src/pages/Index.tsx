@@ -166,10 +166,11 @@ const Index = () => {
             connecting={wallet.connecting}
             onConnect={wallet.connect}
             onDisconnect={wallet.disconnect}
+            quickBetMode={quickBetMode}
+            onToggleQuickBet={setQuickBetMode}
           />
         </div>
 
-        {/* Wallet connect button when not connected */}
         {!wallet.connected && (
           <div className="fixed bottom-6 right-6 z-30">
             <WalletPanel
@@ -181,6 +182,8 @@ const Index = () => {
               connecting={wallet.connecting}
               onConnect={wallet.connect}
               onDisconnect={wallet.disconnect}
+              quickBetMode={quickBetMode}
+              onToggleQuickBet={setQuickBetMode}
             />
           </div>
         )}

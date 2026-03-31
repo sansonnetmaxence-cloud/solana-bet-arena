@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { useWallet, WalletType } from '@/hooks/useWallet';
+import { WalletType } from '@/hooks/useWallet';
+import { Switch } from '@/components/ui/switch';
 
 interface WalletPanelProps {
   onPlaceBet: (amount: number, customPrice: number | null, timeframe: number) => void;
@@ -11,6 +12,8 @@ interface WalletPanelProps {
   connecting: boolean;
   onConnect: (type: WalletType) => void;
   onDisconnect: () => void;
+  quickBetMode: boolean;
+  onToggleQuickBet: (val: boolean) => void;
 }
 
 const WalletPanel = ({
@@ -22,6 +25,8 @@ const WalletPanel = ({
   connecting,
   onConnect,
   onDisconnect,
+  quickBetMode,
+  onToggleQuickBet,
 }: WalletPanelProps) => {
   const [amount, setAmount] = useState('0.1');
   const [customPrice, setCustomPrice] = useState('');
@@ -54,7 +59,7 @@ const WalletPanel = ({
   }
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-5 p-6">
       {/* Wallet info */}
       <div className="flex items-center justify-between">
         <div>
@@ -67,6 +72,17 @@ const WalletPanel = ({
         >
           Disconnect
         </button>
+      </div>
+
+      <div className="h-px bg-border" />
+
+      {/* Quick Bet Mode Toggle */}
+      <div className="flex items-center justify-between">
+        <div>
+          <span className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block">Quick Bet</span>
+          <span className="text-[9px] text-muted-foreground/70">Random price + time cards</span>
+        </div>
+        <Switch checked={quickBetMode} onCheckedChange={onToggleQuickBet} />
       </div>
 
       <div className="h-px bg-border" />
@@ -155,7 +171,7 @@ const WalletPanel = ({
             : 'bg-primary/20 border-primary text-primary hover:bg-primary/30 glow-primary hover:scale-[1.02]'
         )}
       >
-        {activeBet ? `⏱ Bet Active (${timeframe}min)` : '🎯 Place Bet'}
+        {activeBet ? `⏱ Bet Active` : '🎯 Place Bet'}
       </button>
     </div>
   );
