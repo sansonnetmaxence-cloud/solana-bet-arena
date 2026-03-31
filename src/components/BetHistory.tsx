@@ -48,7 +48,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
             {totalLost}L
           </span>
           <span className={cn(
-            'font-display text-xs font-bold',
+            'font-display text-lg md:text-xl font-black',
             totalProfit >= 0 ? 'text-success text-glow-green' : 'text-danger text-glow-red'
           )}>
             {totalProfit >= 0 ? '+' : ''}{totalProfit.toFixed(2)} SOL
