@@ -56,7 +56,7 @@ const PriceCard = ({
   if (isCenter) {
     return (
       <div className="relative flex flex-col items-center justify-center w-72 h-[22rem] md:w-96 md:h-[28rem] rounded-2xl border-2 border-primary/60 bg-card glow-primary animate-float mx-4 shrink-0">
-        <span className="font-display text-xs md:text-sm text-muted-foreground tracking-widest uppercase mb-1">SOL/USD</span>
+        <span className="font-display text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-2">SOL/USD</span>
         <div className={cn(
           'transition-all duration-300',
           bounce && 'scale-110',
