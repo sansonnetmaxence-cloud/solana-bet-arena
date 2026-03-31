@@ -15,7 +15,8 @@ interface ActiveBet {
 }
 
 const Index = () => {
-  const { price, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const [quickBetMode, setQuickBetMode] = useState(false);
   const wallet = useWallet();
   const [activeBet, setActiveBet] = useState<ActiveBet | null>(null);
   const [betResult, setBetResult] = useState<'won' | 'lost' | null>(null);
@@ -141,10 +142,12 @@ const Index = () => {
           ) : (
             <BettingGrid
               currentPrice={price}
+              previousPrice={previousPrice}
               priceHistory={priceHistory}
               onSelectBet={handleSelectBet}
               activeBet={activeBet}
               betResult={betResult}
+              quickBetMode={quickBetMode}
             />
           )}
         </div>
@@ -163,10 +166,11 @@ const Index = () => {
             connecting={wallet.connecting}
             onConnect={wallet.connect}
             onDisconnect={wallet.disconnect}
+            quickBetMode={quickBetMode}
+            onToggleQuickBet={setQuickBetMode}
           />
         </div>
 
-        {/* Wallet connect button when not connected */}
         {!wallet.connected && (
           <div className="fixed bottom-6 right-6 z-30">
             <WalletPanel
@@ -178,6 +182,8 @@ const Index = () => {
               connecting={wallet.connecting}
               onConnect={wallet.connect}
               onDisconnect={wallet.disconnect}
+              quickBetMode={quickBetMode}
+              onToggleQuickBet={setQuickBetMode}
             />
           </div>
         )}
