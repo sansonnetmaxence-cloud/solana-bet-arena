@@ -5,35 +5,74 @@ export const useSolanaPrice = () => {
   const [previousPrice, setPreviousPrice] = useState<number | null>(null);
   const [priceHistory, setPriceHistory] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
+  const wsRef = useRef<WebSocket | null>(null);
+  const reconnectRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetchPrice = useCallback(async () => {
-    try {
-      const res = await fetch(
-        'https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd'
-      );
-      const data = await res.json();
-      const newPrice = data.solana.usd;
-      setPrice((prev) => {
-        setPreviousPrice(prev);
-        return newPrice;
-      });
-      setPriceHistory((prev) => {
-        const next = [...prev, newPrice];
-        return next.length > 30 ? next.slice(-30) : next;
-      });
-      setLoading(false);
-    } catch (err) {
-      console.error('Failed to fetch SOL price:', err);
-    }
+  const addToHistory = useCallback((newPrice: number) => {
+    setPriceHistory((prev) => {
+      const next = [...prev, newPrice];
+      return next.length > 60 ? next.slice(-60) : next;
+    });
   }, []);
 
-  useEffect(() => {
-    fetchPrice();
-    const interval = setInterval(fetchPrice, 5000);
-    return () => clearInterval(interval);
-  }, [fetchPrice]);
+  // Sample history at regular intervals for smoother chart
+  const lastHistoryTime = useRef(0);
 
-  const priceDirection = price && previousPrice 
+  const connect = useCallback(() => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) return;
+
+    // Binance WebSocket for SOL/USDT real-time trades
+    const ws = new WebSocket('wss://stream.binance.com:9443/ws/solusdt@trade');
+    wsRef.current = ws;
+
+    ws.onopen = () => {
+      console.log('Binance WebSocket connected');
+      setLoading(false);
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        const newPrice = parseFloat(data.p); // trade price
+        if (isNaN(newPrice)) return;
+
+        setPrice((prev) => {
+          setPreviousPrice(prev);
+          return newPrice;
+        });
+
+        // Add to history every 500ms max for smooth chart
+        const now = Date.now();
+        if (now - lastHistoryTime.current > 500) {
+          lastHistoryTime.current = now;
+          addToHistory(newPrice);
+        }
+
+        setLoading(false);
+      } catch (err) {
+        console.error('WS parse error:', err);
+      }
+    };
+
+    ws.onerror = (err) => {
+      console.error('WS error:', err);
+    };
+
+    ws.onclose = () => {
+      console.log('WS closed, reconnecting in 2s...');
+      reconnectRef.current = setTimeout(connect, 2000);
+    };
+  }, [addToHistory]);
+
+  useEffect(() => {
+    connect();
+    return () => {
+      wsRef.current?.close();
+      if (reconnectRef.current) clearTimeout(reconnectRef.current);
+    };
+  }, [connect]);
+
+  const priceDirection = price && previousPrice
     ? price > previousPrice ? 'up' : price < previousPrice ? 'down' : 'neutral'
     : 'neutral';
 
