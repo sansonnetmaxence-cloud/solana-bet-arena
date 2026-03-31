@@ -4,6 +4,7 @@ import BettingGrid from '@/components/BettingGrid';
 import WalletPanel from '@/components/WalletPanel';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { cn } from '@/lib/utils';
 
 interface ActiveBet {
@@ -18,6 +19,7 @@ const Index = () => {
   const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
   const [quickBetMode, setQuickBetMode] = useState(false);
   const wallet = useWallet();
+  const sfx = useSoundEffects();
   const [activeBet, setActiveBet] = useState<ActiveBet | null>(null);
   const [betResult, setBetResult] = useState<'won' | 'lost' | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<'up' | 'down' | null>(null);
@@ -26,9 +28,10 @@ const Index = () => {
 
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down') => {
     if (!wallet.connected) return;
+    sfx.playClick();
     setSelectedPrice(targetPrice);
     setSelectedDirection(direction);
-  }, [wallet.connected]);
+  }, [wallet.connected, sfx]);
 
   const handlePlaceBet = useCallback((amount: number, customPrice: number | null, timeframe: number) => {
     if (!price) return;
@@ -47,6 +50,7 @@ const Index = () => {
       amount,
     };
     setActiveBet(bet);
+    sfx.playClick();
     setCountdown(timeframe * 60);
     setBetResult(null);
   }, [price, selectedPrice, selectedDirection]);
@@ -64,6 +68,7 @@ const Index = () => {
               ? price >= activeBet.price
               : price <= activeBet.price;
             setBetResult(won ? 'won' : 'lost');
+            if (won) sfx.playWin(); else sfx.playLose();
             // Reset after 4s
             setTimeout(() => {
               setActiveBet(null);
