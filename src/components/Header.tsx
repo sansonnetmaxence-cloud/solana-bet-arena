@@ -27,7 +27,7 @@ const Header = ({ priceDirection }: HeaderProps) => {
         </h1>
       </div>
 
-      <div className="flex items-center gap-2 bg-success/5 border border-success/20 rounded-lg px-4 py-2">
+      <div className="flex items-center gap-2 backdrop-blur-md bg-success/5 border border-success/20 rounded-lg px-4 py-2">
         <span className="font-display text-[9px] text-success/70 uppercase tracking-widest">🏆 Community Wins</span>
         <span className="font-display text-lg md:text-xl font-black text-success text-glow-green tabular-nums">
           {totalSol.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
