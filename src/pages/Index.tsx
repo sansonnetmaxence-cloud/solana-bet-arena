@@ -50,6 +50,7 @@ const Index = () => {
       amount,
     };
     setActiveBet(bet);
+    sfx.playClick();
     setCountdown(timeframe * 60);
     setBetResult(null);
   }, [price, selectedPrice, selectedDirection]);
