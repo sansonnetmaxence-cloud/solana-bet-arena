@@ -4,6 +4,7 @@ import BettingGrid from '@/components/BettingGrid';
 import WalletPanel from '@/components/WalletPanel';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
+import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { cn } from '@/lib/utils';
 
 interface ActiveBet {
