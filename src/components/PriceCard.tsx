@@ -16,6 +16,8 @@ interface PriceCardProps {
   result?: BetResult;
   disabled?: boolean;
   timeLabel?: string;
+  activeBet?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
+  countdown?: number;
 }
 
 const PriceCard = ({
