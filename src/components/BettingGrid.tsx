@@ -15,7 +15,7 @@ interface BettingGridProps {
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
 
-const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBet, betResult, quickBetMode }: BettingGridProps) => {
+const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBet, betResult, quickBetMode, countdown }: BettingGridProps) => {
   const basePrice = currentPrice ?? 150;
 
   // Start at 0.10 from current price, increment by 0.10
