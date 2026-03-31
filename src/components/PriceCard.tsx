@@ -25,13 +25,13 @@ const PriceCard = ({
 }: PriceCardProps) => {
   if (isCenter) {
     return (
-      <div className="relative flex flex-col items-center justify-center w-36 h-36 md:w-44 md:h-44 rounded-lg border-2 border-primary/60 bg-card glow-primary animate-float">
-        <span className="font-display text-xs text-muted-foreground tracking-widest uppercase mb-1">SOL/USD</span>
-        <span className="font-display text-2xl md:text-3xl font-bold text-primary text-glow-primary">
+      <div className="relative flex flex-col items-center justify-center w-48 h-48 md:w-60 md:h-60 rounded-xl border-2 border-primary/60 bg-card glow-primary animate-float mx-4">
+        <span className="font-display text-xs md:text-sm text-muted-foreground tracking-widest uppercase mb-2">SOL/USD</span>
+        <span className="font-display text-3xl md:text-5xl font-bold text-primary text-glow-primary">
           ${currentPrice?.toFixed(2) ?? '---'}
         </span>
-        <span className="font-display text-[10px] text-muted-foreground mt-1">LIVE</span>
-        <div className="absolute inset-0 rounded-lg scanline pointer-events-none" />
+        <span className="font-display text-[10px] md:text-xs text-muted-foreground mt-2 animate-pulse-glow">● LIVE</span>
+        <div className="absolute inset-0 rounded-xl scanline pointer-events-none" />
       </div>
     );
   }
