@@ -69,15 +69,17 @@ const MiniChart = ({ data, width = 240, height = 90 }: MiniChartProps) => {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Glow line (thick, blurred)
-    ctx.beginPath();
-    drawSmoothLine(points);
-    ctx.strokeStyle = colorA;
-    ctx.lineWidth = 4;
-    ctx.shadowColor = colorA;
-    ctx.shadowBlur = 16;
-    ctx.globalAlpha = 0.4;
-    ctx.stroke();
+    // Double glow line for extra fluidity
+    for (const [blur, alpha, width] of [[24, 0.2, 8], [14, 0.4, 4]] as const) {
+      ctx.beginPath();
+      drawSmoothLine(points);
+      ctx.strokeStyle = colorA;
+      ctx.lineWidth = width;
+      ctx.shadowColor = colorA;
+      ctx.shadowBlur = blur;
+      ctx.globalAlpha = alpha;
+      ctx.stroke();
+    }
     ctx.globalAlpha = 1;
 
     // Sharp line on top
