@@ -172,7 +172,7 @@ const PriceCard = ({
       {timeLabel && (
         <span className={cn(
           'text-[9px] mt-1 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm',
-          isUp ? 'text-success/90 bg-success/10' : 'text-danger/90 bg-danger/10'
+          isUp ? 'text-primary/90 bg-primary/10' : 'text-danger/90 bg-danger/10'
         )}>
           {timeLabel}
         </span>
