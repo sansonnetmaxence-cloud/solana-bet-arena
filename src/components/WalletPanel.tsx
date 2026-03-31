@@ -29,6 +29,8 @@ const WalletPanel = ({
   onDisconnect,
   quickBetMode,
   onToggleQuickBet,
+  quickBetAmount,
+  onQuickBetAmountChange,
 }: WalletPanelProps) => {
   const [amount, setAmount] = useState('0.1');
   const [customPrice, setCustomPrice] = useState('');
