@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import BettingGrid from '@/components/BettingGrid';
 import WalletPanel from '@/components/WalletPanel';
+import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
@@ -25,6 +26,7 @@ const Index = () => {
   const [selectedDirection, setSelectedDirection] = useState<'up' | 'down' | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
+  const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
 
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down') => {
     if (!wallet.connected) return;
@@ -53,7 +55,7 @@ const Index = () => {
     sfx.playClick();
     setCountdown(timeframe * 60);
     setBetResult(null);
-  }, [price, selectedPrice, selectedDirection]);
+  }, [price, selectedPrice, selectedDirection, sfx]);
 
   // Countdown timer
   useEffect(() => {
@@ -62,14 +64,28 @@ const Index = () => {
       setCountdown((c) => {
         if (c <= 1) {
           clearInterval(timer);
-          // Resolve bet
           if (price) {
             const won = activeBet.direction === 'up'
               ? price >= activeBet.price
               : price <= activeBet.price;
-            setBetResult(won ? 'won' : 'lost');
+            const result = won ? 'won' : 'lost';
+            setBetResult(result);
             if (won) sfx.playWin(); else sfx.playLose();
-            // Reset after 4s
+
+            // Record to history
+            const record: BetRecord = {
+              id: crypto.randomUUID(),
+              direction: activeBet.direction,
+              targetPrice: activeBet.price,
+              startPrice: activeBet.startPrice,
+              endPrice: price,
+              amount: activeBet.amount,
+              timeframe: activeBet.timeframe,
+              result,
+              timestamp: new Date(),
+            };
+            setBetHistory(prev => [...prev, record]);
+
             setTimeout(() => {
               setActiveBet(null);
               setBetResult(null);
@@ -83,7 +99,7 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBet, price]);
+  }, [activeBet, price, sfx]);
 
   const formatCountdown = (s: number) => {
     const min = Math.floor(s / 60);
@@ -92,7 +108,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background grid-bg relative overflow-hidden">
+    <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
       <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
@@ -103,7 +119,6 @@ const Index = () => {
           'flex-1 flex flex-col items-center justify-center p-4 md:p-8 transition-all duration-500',
           betResult && 'relative'
         )}>
-          {/* Countdown */}
           {activeBet && countdown > 0 && (
             <div className="mb-6 text-center">
               <span className="font-display text-4xl md:text-5xl font-bold text-primary text-glow-primary">
@@ -115,7 +130,6 @@ const Index = () => {
             </div>
           )}
 
-          {/* Result overlay */}
           {betResult && (
             <div className={cn(
               'absolute inset-0 flex items-center justify-center z-40 bg-background/70 backdrop-blur-sm',
@@ -157,7 +171,7 @@ const Index = () => {
           )}
         </div>
 
-        {/* Right panel - slides in when wallet connected */}
+        {/* Right panel */}
         <div className={cn(
           'w-80 border-l border-border/50 bg-card/30 backdrop-blur-sm transition-all duration-500 ease-out overflow-hidden',
           wallet.connected ? 'translate-x-0 opacity-100 max-w-80' : 'translate-x-full opacity-0 max-w-0 border-0'
@@ -192,6 +206,11 @@ const Index = () => {
             />
           </div>
         )}
+      </div>
+
+      {/* Bet History */}
+      <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
+        <BetHistory history={betHistory} />
       </div>
     </div>
   );
