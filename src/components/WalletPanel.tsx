@@ -14,6 +14,8 @@ interface WalletPanelProps {
   onDisconnect: () => void;
   quickBetMode: boolean;
   onToggleQuickBet: (val: boolean) => void;
+  quickBetAmount: number;
+  onQuickBetAmountChange: (val: number) => void;
 }
 
 const WalletPanel = ({
@@ -27,6 +29,8 @@ const WalletPanel = ({
   onDisconnect,
   quickBetMode,
   onToggleQuickBet,
+  quickBetAmount,
+  onQuickBetAmountChange,
 }: WalletPanelProps) => {
   const [amount, setAmount] = useState('0.1');
   const [customPrice, setCustomPrice] = useState('');
@@ -84,6 +88,31 @@ const WalletPanel = ({
         </div>
         <Switch checked={quickBetMode} onCheckedChange={onToggleQuickBet} />
       </div>
+
+      {/* Quick Bet Amount */}
+      {quickBetMode && (
+        <div>
+          <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
+            Quick Bet Amount (SOL)
+          </label>
+          <div className="flex gap-2">
+            {[0.05, 0.1, 0.5, 1].map((a) => (
+              <button
+                key={a}
+                onClick={() => onQuickBetAmountChange(a)}
+                className={cn(
+                  'flex-1 py-1.5 rounded text-[10px] font-display uppercase border transition-all',
+                  quickBetAmount === a
+                    ? 'border-primary/60 text-primary bg-primary/10 glow-primary'
+                    : 'border-border text-muted-foreground hover:border-primary/30'
+                )}
+              >
+                {a}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="h-px bg-border" />
 
