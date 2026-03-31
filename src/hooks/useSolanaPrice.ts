@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 export const useSolanaPrice = () => {
   const [price, setPrice] = useState<number | null>(null);
   const [previousPrice, setPreviousPrice] = useState<number | null>(null);
+  const [priceHistory, setPriceHistory] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchPrice = useCallback(async () => {
@@ -15,6 +16,10 @@ export const useSolanaPrice = () => {
       setPrice((prev) => {
         setPreviousPrice(prev);
         return newPrice;
+      });
+      setPriceHistory((prev) => {
+        const next = [...prev, newPrice];
+        return next.length > 30 ? next.slice(-30) : next;
       });
       setLoading(false);
     } catch (err) {
@@ -32,5 +37,5 @@ export const useSolanaPrice = () => {
     ? price > previousPrice ? 'up' : price < previousPrice ? 'down' : 'neutral'
     : 'neutral';
 
-  return { price, previousPrice, loading, priceDirection };
+  return { price, previousPrice, loading, priceDirection, priceHistory };
 };
