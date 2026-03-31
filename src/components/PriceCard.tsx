@@ -145,9 +145,9 @@ const PriceCard = ({
         'relative flex flex-col items-center justify-center rounded-lg border transition-all duration-300 cursor-pointer font-display',
         timeLabel ? 'w-[90px] h-[90px] md:w-[100px] md:h-[100px]' : 'w-[70px] h-[70px] md:w-[80px] md:h-[80px]',
         isUp
-          ? 'border-success/30 hover:border-success/70 hover:glow-green'
+          ? 'border-primary/30 hover:border-primary/70 hover:glow-primary'
           : 'border-danger/30 hover:border-danger/70 hover:glow-red',
-        selected && isUp && 'border-success glow-green',
+        selected && isUp && 'border-primary glow-primary',
         selected && !isUp && 'border-danger glow-red',
         result === 'won' && 'border-success glow-green',
         result === 'lost' && 'border-danger glow-red',
@@ -157,13 +157,13 @@ const PriceCard = ({
     >
       <span className={cn(
         'text-[8px] uppercase tracking-wider mb-0.5',
-        isUp ? 'text-success/70' : 'text-danger/70'
+        isUp ? 'text-primary/70' : 'text-danger/70'
       )}>
         {isUp ? '▲ UP' : '▼ DOWN'}
       </span>
       <span className={cn(
         timeLabel ? 'text-xs md:text-sm font-bold' : 'text-[10px] md:text-xs font-bold',
-        isUp ? 'text-success' : 'text-danger',
+        isUp ? 'text-primary' : 'text-danger',
         result === 'won' && 'text-glow-green',
         result === 'lost' && 'text-glow-red'
       )}>
@@ -172,7 +172,7 @@ const PriceCard = ({
       {timeLabel && (
         <span className={cn(
           'text-[9px] mt-1 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm',
-          isUp ? 'text-success/90 bg-success/10' : 'text-danger/90 bg-danger/10'
+          isUp ? 'text-primary/90 bg-primary/10' : 'text-danger/90 bg-danger/10'
         )}>
           {timeLabel}
         </span>

@@ -34,21 +34,21 @@ const BetHistory = ({ history }: BetHistoryProps) => {
   );
 
   return (
-    <div className="w-full px-4 md:px-8 py-6">
+    <div className="w-full px-4 md:px-8 py-8">
       {/* Stats bar */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-sm text-muted-foreground uppercase tracking-widest">
-          Bet History
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-display text-lg md:text-xl text-foreground uppercase tracking-widest font-bold">
+          📊 Bet History
         </h3>
         <div className="flex items-center gap-4">
-          <span className="font-display text-[10px] text-success uppercase tracking-wider">
+          <span className="font-display text-sm md:text-base text-success uppercase tracking-wider font-bold">
             {totalWon}W
           </span>
-          <span className="font-display text-[10px] text-danger uppercase tracking-wider">
+          <span className="font-display text-sm md:text-base text-danger uppercase tracking-wider font-bold">
             {totalLost}L
           </span>
           <span className={cn(
-            'font-display text-xs font-bold',
+            'font-display text-lg md:text-xl font-black',
             totalProfit >= 0 ? 'text-success text-glow-green' : 'text-danger text-glow-red'
           )}>
             {totalProfit >= 0 ? '+' : ''}{totalProfit.toFixed(2)} SOL
@@ -62,7 +62,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           <thead>
             <tr className="border-b border-border/50">
               {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'Result'].map(h => (
-                <th key={h} className="font-display text-[9px] text-muted-foreground/60 uppercase tracking-widest pb-2 px-2">
+                <th key={h} className="font-display text-xs text-muted-foreground/70 uppercase tracking-widest pb-3 px-3">
                   {h}
                 </th>
               ))}
@@ -71,32 +71,32 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           <tbody>
             {history.slice().reverse().map((bet) => (
               <tr key={bet.id} className="border-b border-border/20 hover:bg-card/50 transition-colors">
-                <td className="py-2 px-2 font-mono text-[10px] text-muted-foreground">
+                <td className="py-3 px-3 font-mono text-sm text-muted-foreground">
                   {bet.timestamp.toLocaleTimeString()}
                 </td>
-                <td className="py-2 px-2">
+                <td className="py-3 px-3">
                   <span className={cn(
-                    'font-display text-[10px] uppercase',
-                    bet.direction === 'up' ? 'text-success' : 'text-danger'
+                    'font-display text-sm uppercase font-bold',
+                    bet.direction === 'up' ? 'text-primary' : 'text-danger'
                   )}>
                     {bet.direction === 'up' ? '▲ UP' : '▼ DOWN'}
                   </span>
                 </td>
-                <td className="py-2 px-2 font-mono text-[10px] text-foreground">
+                <td className="py-3 px-3 font-mono text-sm text-foreground font-bold">
                   ${bet.targetPrice.toFixed(2)}
                 </td>
-                <td className="py-2 px-2 font-mono text-[10px] text-muted-foreground">
+                <td className="py-3 px-3 font-mono text-sm text-muted-foreground">
                   ${bet.startPrice.toFixed(2)}
                 </td>
-                <td className="py-2 px-2 font-mono text-[10px] text-muted-foreground">
+                <td className="py-3 px-3 font-mono text-sm text-muted-foreground">
                   ${bet.endPrice.toFixed(2)}
                 </td>
-                <td className="py-2 px-2 font-mono text-[10px] text-foreground">
+                <td className="py-3 px-3 font-mono text-sm text-foreground font-bold">
                   {bet.amount} SOL
                 </td>
-                <td className="py-2 px-2">
+                <td className="py-3 px-3">
                   <span className={cn(
-                    'font-display text-[10px] font-bold uppercase px-2 py-0.5 rounded',
+                    'font-display text-sm font-black uppercase px-3 py-1 rounded',
                     bet.result === 'won'
                       ? 'text-success bg-success/10 border border-success/30'
                       : 'text-danger bg-danger/10 border border-danger/30'
