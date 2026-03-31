@@ -42,8 +42,8 @@
 
     --radius: 0.5rem;
 
-    --font-display: 'Orbitron', sans-serif;
-    --font-mono: 'Space Mono', monospace;
+    --font-display: 'Geist Mono', monospace;
+    --font-mono: 'Geist Mono', monospace;
 
     --glow-green: 0 0 20px hsl(145 100% 50% / 0.6), 0 0 40px hsl(145 100% 50% / 0.3), 0 0 80px hsl(145 100% 50% / 0.1);
     --glow-red: 0 0 20px hsl(0 100% 63% / 0.6), 0 0 40px hsl(0 100% 63% / 0.3), 0 0 80px hsl(0 100% 63% / 0.1);
