@@ -6,7 +6,7 @@ interface BettingGridProps {
   currentPrice: number | null;
   previousPrice: number | null;
   priceHistory: number[];
-  onSelectBet: (price: number, direction: 'up' | 'down') => void;
+  onSelectBet: (price: number, direction: 'up' | 'down', quickTimeframe?: number) => void;
   activeBet: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number } | null;
   betResult: 'won' | 'lost' | null;
   quickBetMode?: boolean;
