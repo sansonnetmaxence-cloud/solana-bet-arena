@@ -40,7 +40,7 @@ const Index = () => {
         direction,
         timeframe: quickTimeframe,
         startPrice: price,
-        amount: 0.1,
+        amount: quickBetAmount,
       };
       setActiveBet(bet);
       setCountdown(quickTimeframe * 60);
