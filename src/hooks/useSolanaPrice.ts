@@ -7,48 +7,40 @@ export const useSolanaPrice = () => {
   const [loading, setLoading] = useState(true);
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectRef = useRef<NodeJS.Timeout | null>(null);
-
-  const addToHistory = useCallback((newPrice: number) => {
-    setPriceHistory((prev) => {
-      const next = [...prev, newPrice];
-      return next.length > 60 ? next.slice(-60) : next;
-    });
-  }, []);
-
-  // Sample history at regular intervals for smoother chart
   const lastHistoryTime = useRef(0);
+  const latestPrice = useRef<number | null>(null);
 
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
-    // Binance WebSocket for SOL/USDT real-time trades
     const ws = new WebSocket('wss://stream.binance.com:9443/ws/solusdt@trade');
     wsRef.current = ws;
 
     ws.onopen = () => {
       console.log('Binance WebSocket connected');
-      setLoading(false);
     };
 
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        const newPrice = parseFloat(data.p); // trade price
+        const newPrice = parseFloat(data.p);
         if (isNaN(newPrice)) return;
 
-        setPrice((prev) => {
-          setPreviousPrice(prev);
-          return newPrice;
-        });
+        const prev = latestPrice.current;
+        latestPrice.current = newPrice;
 
-        // Add to history every 500ms max for smooth chart
+        setPreviousPrice(prev);
+        setPrice(newPrice);
+        setLoading(false);
+
         const now = Date.now();
         if (now - lastHistoryTime.current > 500) {
           lastHistoryTime.current = now;
-          addToHistory(newPrice);
+          setPriceHistory((h) => {
+            const next = [...h, newPrice];
+            return next.length > 60 ? next.slice(-60) : next;
+          });
         }
-
-        setLoading(false);
       } catch (err) {
         console.error('WS parse error:', err);
       }
@@ -62,7 +54,7 @@ export const useSolanaPrice = () => {
       console.log('WS closed, reconnecting in 2s...');
       reconnectRef.current = setTimeout(connect, 2000);
     };
-  }, [addToHistory]);
+  }, []);
 
   useEffect(() => {
     connect();
