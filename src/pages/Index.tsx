@@ -28,9 +28,10 @@ const Index = () => {
 
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down') => {
     if (!wallet.connected) return;
+    sfx.playClick();
     setSelectedPrice(targetPrice);
     setSelectedDirection(direction);
-  }, [wallet.connected]);
+  }, [wallet.connected, sfx]);
 
   const handlePlaceBet = useCallback((amount: number, customPrice: number | null, timeframe: number) => {
     if (!price) return;
