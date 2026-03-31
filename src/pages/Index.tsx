@@ -28,12 +28,28 @@ const Index = () => {
   const [countdown, setCountdown] = useState<number>(0);
   const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
 
-  const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down') => {
+  const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down', quickTimeframe?: number) => {
     if (!wallet.connected) return;
     sfx.playClick();
+
+    // Quick bet mode: instantly place the bet
+    if (quickBetMode && quickTimeframe != null && price) {
+      const bet: ActiveBet = {
+        price: targetPrice,
+        direction,
+        timeframe: quickTimeframe,
+        startPrice: price,
+        amount: 0.1,
+      };
+      setActiveBet(bet);
+      setCountdown(quickTimeframe * 60);
+      setBetResult(null);
+      return;
+    }
+
     setSelectedPrice(targetPrice);
     setSelectedDirection(direction);
-  }, [wallet.connected, sfx]);
+  }, [wallet.connected, sfx, quickBetMode, price]);
 
   const handlePlaceBet = useCallback((amount: number, customPrice: number | null, timeframe: number) => {
     if (!price) return;

@@ -39,18 +39,26 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     return map;
   }, [basePrice]);
 
-  const renderCard = (p: number, dir: 'up' | 'down') => (
-    <PriceCard
-      key={`${dir}-${p}`}
-      price={p}
-      direction={dir}
-      onClick={() => onSelectBet(p, dir)}
-      selected={activeBet?.price === p && activeBet?.direction === dir}
-      result={activeBet?.price === p && activeBet?.direction === dir ? betResult : null}
-      disabled={!!activeBet}
-      timeLabel={quickBetMode ? randomTimes[p.toFixed(4)] : undefined}
-    />
-  );
+  const parseTime = (label: string): number => {
+    if (label === '30s') return 0.5;
+    return parseInt(label);
+  };
+
+  const renderCard = (p: number, dir: 'up' | 'down') => {
+    const timeLabel = quickBetMode ? randomTimes[p.toFixed(4)] : undefined;
+    return (
+      <PriceCard
+        key={`${dir}-${p}`}
+        price={p}
+        direction={dir}
+        onClick={() => onSelectBet(p, dir, timeLabel ? parseTime(timeLabel) : undefined)}
+        selected={activeBet?.price === p && activeBet?.direction === dir}
+        result={activeBet?.price === p && activeBet?.direction === dir ? betResult : null}
+        disabled={!!activeBet}
+        timeLabel={timeLabel}
+      />
+    );
+  };
 
   return (
     <div className={cn(
