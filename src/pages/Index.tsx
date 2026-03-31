@@ -19,6 +19,7 @@ const Index = () => {
   const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
   const [quickBetMode, setQuickBetMode] = useState(false);
   const wallet = useWallet();
+  const sfx = useSoundEffects();
   const [activeBet, setActiveBet] = useState<ActiveBet | null>(null);
   const [betResult, setBetResult] = useState<'won' | 'lost' | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<'up' | 'down' | null>(null);
