@@ -7,14 +7,15 @@ interface BettingGridProps {
   previousPrice: number | null;
   priceHistory: number[];
   onSelectBet: (price: number, direction: 'up' | 'down', quickTimeframe?: number) => void;
-  activeBet: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number } | null;
+  activeBet: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
   betResult: 'won' | 'lost' | null;
   quickBetMode?: boolean;
+  countdown?: number;
 }
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
 
-const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBet, betResult, quickBetMode }: BettingGridProps) => {
+const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBet, betResult, quickBetMode, countdown }: BettingGridProps) => {
   const basePrice = currentPrice ?? 150;
 
   // Start at 0.10 from current price, increment by 0.10
@@ -98,6 +99,8 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
           currentPrice={currentPrice ?? undefined}
           previousPrice={previousPrice ?? undefined}
           priceHistory={priceHistory}
+          activeBet={activeBet}
+          countdown={countdown}
         />
       </div>
 

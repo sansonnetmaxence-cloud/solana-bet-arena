@@ -169,16 +169,6 @@ const Index = () => {
           'flex-1 flex flex-col items-center justify-center p-4 md:p-8 transition-all duration-500',
           betResult && 'relative'
         )}>
-          {activeBet && countdown > 0 && (
-            <div className="mb-6 text-center">
-              <span className="font-display text-4xl md:text-5xl font-bold text-primary text-glow-primary">
-                {formatCountdown(countdown)}
-              </span>
-              <p className="font-display text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
-                {activeBet.direction === 'up' ? '▲' : '▼'} Target: ${activeBet.price.toFixed(2)} • {activeBet.amount} SOL
-              </p>
-            </div>
-          )}
 
           {betResult && (
             <div className={cn(
@@ -223,6 +213,7 @@ const Index = () => {
               activeBet={activeBet}
               betResult={betResult}
               quickBetMode={quickBetMode}
+              countdown={countdown}
             />
           )}
         </div>
