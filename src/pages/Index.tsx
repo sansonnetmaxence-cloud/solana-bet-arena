@@ -268,6 +268,9 @@ const Index = () => {
         )}
       </div>
 
+      {/* Live Feed */}
+      <LiveFeed />
+
       {/* Bet History */}
       <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
         <BetHistory history={betHistory} />
