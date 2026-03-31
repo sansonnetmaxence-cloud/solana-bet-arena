@@ -14,6 +14,8 @@ interface WalletPanelProps {
   onDisconnect: () => void;
   quickBetMode: boolean;
   onToggleQuickBet: (val: boolean) => void;
+  quickBetAmount: number;
+  onQuickBetAmountChange: (val: number) => void;
 }
 
 const WalletPanel = ({
