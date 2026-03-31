@@ -141,6 +141,7 @@ const Index = () => {
           ) : (
             <BettingGrid
               currentPrice={price}
+              priceHistory={priceHistory}
               onSelectBet={handleSelectBet}
               activeBet={activeBet}
               betResult={betResult}
