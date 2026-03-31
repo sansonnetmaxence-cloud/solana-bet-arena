@@ -213,6 +213,7 @@ const Index = () => {
               activeBet={activeBet}
               betResult={betResult}
               quickBetMode={quickBetMode}
+              countdown={countdown}
             />
           )}
         </div>
