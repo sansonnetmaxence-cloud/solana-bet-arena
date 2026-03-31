@@ -126,9 +126,22 @@ const Index = () => {
 
   return (
     <div className={cn(
-      'min-h-screen bg-background relative overflow-x-hidden transition-all duration-700',
-      activeBet?.direction === 'up' ? 'grid-bg-up' : activeBet?.direction === 'down' ? 'grid-bg-down' : 'grid-bg'
+      'min-h-screen relative overflow-x-hidden transition-all duration-700',
+      activeBet?.direction === 'up' ? 'grid-bg-up bg-[hsl(145_100%_50%/0.03)]' : activeBet?.direction === 'down' ? 'grid-bg-down bg-[hsl(0_100%_63%/0.03)]' : 'grid-bg bg-background'
     )}>
+      {/* Radial glow overlay */}
+      {activeBet && (
+        <div className={cn(
+          'absolute inset-0 pointer-events-none z-0 transition-opacity duration-700',
+          activeBet.direction === 'up'
+            ? 'opacity-100'
+            : 'opacity-100'
+        )} style={{
+          background: activeBet.direction === 'up'
+            ? 'radial-gradient(ellipse at center, hsl(145 100% 50% / 0.08) 0%, transparent 70%)'
+            : 'radial-gradient(ellipse at center, hsl(0 100% 63% / 0.08) 0%, transparent 70%)',
+        }} />
+      )}
       <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
