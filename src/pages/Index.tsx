@@ -68,6 +68,7 @@ const Index = () => {
               ? price >= activeBet.price
               : price <= activeBet.price;
             setBetResult(won ? 'won' : 'lost');
+            if (won) sfx.playWin(); else sfx.playLose();
             // Reset after 4s
             setTimeout(() => {
               setActiveBet(null);
