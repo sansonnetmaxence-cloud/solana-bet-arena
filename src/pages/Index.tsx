@@ -15,7 +15,8 @@ interface ActiveBet {
 }
 
 const Index = () => {
-  const { price, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const [quickBetMode, setQuickBetMode] = useState(false);
   const wallet = useWallet();
   const [activeBet, setActiveBet] = useState<ActiveBet | null>(null);
   const [betResult, setBetResult] = useState<'won' | 'lost' | null>(null);
