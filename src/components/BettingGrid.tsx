@@ -7,9 +7,10 @@ interface BettingGridProps {
   previousPrice: number | null;
   priceHistory: number[];
   onSelectBet: (price: number, direction: 'up' | 'down', quickTimeframe?: number) => void;
-  activeBet: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number } | null;
+  activeBet: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
   betResult: 'won' | 'lost' | null;
   quickBetMode?: boolean;
+  countdown?: number;
 }
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
