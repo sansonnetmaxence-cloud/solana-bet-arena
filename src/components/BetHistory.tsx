@@ -62,7 +62,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           <thead>
             <tr className="border-b border-border/50">
               {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'Result'].map(h => (
-                <th key={h} className="font-display text-[9px] text-muted-foreground/60 uppercase tracking-widest pb-2 px-2">
+                <th key={h} className="font-display text-xs text-muted-foreground/70 uppercase tracking-widest pb-3 px-3">
                   {h}
                 </th>
               ))}
