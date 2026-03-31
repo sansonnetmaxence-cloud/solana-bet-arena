@@ -142,10 +142,12 @@ const Index = () => {
           ) : (
             <BettingGrid
               currentPrice={price}
+              previousPrice={previousPrice}
               priceHistory={priceHistory}
               onSelectBet={handleSelectBet}
               activeBet={activeBet}
               betResult={betResult}
+              quickBetMode={quickBetMode}
             />
           )}
         </div>
