@@ -114,30 +114,41 @@ const WalletPanel = ({
         </div>
       )}
 
-      <div className="h-px bg-border" />
+      {!quickBetMode && (
+        <>
+          <div className="h-px bg-border" />
+          {/* Timeframe */}
+          <div>
+            <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
+              Timeframe
+            </label>
+            <div className="flex gap-2">
+              {[1, 2, 5].map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTimeframe(t)}
+                  className={cn(
+                    'flex-1 py-2 rounded-md font-display text-xs uppercase tracking-wider border transition-all',
+                    timeframe === t
+                      ? 'bg-primary/20 border-primary text-primary glow-primary'
+                      : 'border-border text-muted-foreground hover:border-primary/40'
+                  )}
+                >
+                  {t}min
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Timeframe */}
-      <div>
-        <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
-          Timeframe
-        </label>
-        <div className="flex gap-2">
-          {[1, 2, 5].map((t) => (
-            <button
-              key={t}
-              onClick={() => setTimeframe(t)}
-              className={cn(
-                'flex-1 py-2 rounded-md font-display text-xs uppercase tracking-wider border transition-all',
-                timeframe === t
-                  ? 'bg-primary/20 border-primary text-primary glow-primary'
-                  : 'border-border text-muted-foreground hover:border-primary/40'
-              )}
-            >
-              {t}min
-            </button>
-          ))}
+      {quickBetMode && (
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <span className="font-display text-[9px] text-primary/70 uppercase tracking-widest">
+            ⚡ Quick Bet active — timeframe is shown on each card
+          </span>
         </div>
-      </div>
+      )}
 
       {/* Custom price */}
       <div>
