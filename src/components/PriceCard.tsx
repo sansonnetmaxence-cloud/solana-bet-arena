@@ -78,8 +78,8 @@ const PriceCard = ({
         {priceFlash === 'down' && (
           <span className="text-danger text-xs font-display animate-fade-arrow-down absolute top-16 md:top-20">▼▼▼</span>
         )}
-        <span className="font-display text-[10px] md:text-xs text-muted-foreground mt-1 mb-3 animate-pulse-glow">● LIVE</span>
-        <MiniChart data={priceHistory} width={240} height={90} />
+        <span className="font-display text-[10px] md:text-xs text-danger mt-1 mb-3 animate-pulse-glow">● LIVE</span>
+        <MiniChart data={priceHistory} width={280} height={110} />
         <div className="absolute inset-0 rounded-2xl scanline pointer-events-none" />
       </div>
     );
