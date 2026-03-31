@@ -89,7 +89,7 @@ const Index = () => {
     <div className="min-h-screen bg-background grid-bg relative overflow-hidden">
       <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
-      <Header priceDirection={priceDirection} />
+      <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
 
       <div className="flex flex-1 min-h-[calc(100vh-57px)]">
         {/* Main area */}
