@@ -99,6 +99,8 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
           currentPrice={currentPrice ?? undefined}
           previousPrice={previousPrice ?? undefined}
           priceHistory={priceHistory}
+          activeBet={activeBet}
+          countdown={countdown}
         />
       </div>
 
