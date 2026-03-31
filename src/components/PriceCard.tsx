@@ -64,7 +64,7 @@ const PriceCard = ({
           priceFlash === 'down' && 'animate-price-down',
         )}>
           <span className={cn(
-            'font-display text-4xl md:text-6xl font-black transition-colors duration-300',
+            'font-display text-5xl md:text-7xl font-black transition-colors duration-300',
             priceFlash === 'up' && 'text-success text-glow-green',
             priceFlash === 'down' && 'text-danger text-glow-red',
             !priceFlash && 'text-primary text-glow-primary',
