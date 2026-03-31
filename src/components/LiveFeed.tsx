@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
 
 const PSEUDOS = [
   'CryptoKing', 'SolHunter', 'MoonBoy', 'DiamondHands', 'Whale99',
@@ -10,10 +11,28 @@ const PSEUDOS = [
   'MegaBull', 'SolFlare69', 'CryptoNinja', 'WhaleTail', 'AlphaWolf',
 ];
 
+const playBigWinSound = () => {
+  try {
+    const ctx = new AudioContext();
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.15, ctx.currentTime + i * 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.12 + 0.4);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start(ctx.currentTime + i * 0.12);
+      osc.stop(ctx.currentTime + i * 0.12 + 0.4);
+    });
+  } catch {}
+};
+
 const generateFakeTrade = () => {
   const pseudo = PSEUDOS[Math.floor(Math.random() * PSEUDOS.length)];
   const suffix = Math.floor(Math.random() * 999);
-  const won = Math.random() > 0.3; // 70% win rate to entice
+  const won = Math.random() > 0.3;
   const amount = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10][Math.floor(Math.random() * 8)];
   const priceBase = 120 + Math.random() * 40;
   const direction = Math.random() > 0.5 ? 'up' : 'down';
@@ -45,15 +64,26 @@ const LiveFeed = () => {
     Array.from({ length: 5 }, generateFakeTrade)
   );
 
+  const showBigWinToast = useCallback((trade: Trade) => {
+    playBigWinSound();
+    toast({
+      title: `🏆 ${trade.pseudo} just won BIG!`,
+      description: `+${trade.amount} SOL on $${trade.price} ${trade.direction === 'up' ? '▲' : '▼'} (${trade.timeframe})`,
+      className: 'border-success/60 bg-success/10 text-success font-display',
+      duration: 5000,
+    });
+  }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setTrades(prev => {
-        const next = [generateFakeTrade(), ...prev];
-        return next.slice(0, 30);
-      });
+      const newTrade = generateFakeTrade();
+      if (newTrade.won && newTrade.amount >= 5) {
+        showBigWinToast(newTrade);
+      }
+      setTrades(prev => [newTrade, ...prev].slice(0, 30));
     }, 1500 + Math.random() * 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [showBigWinToast]);
 
   return (
     <div className="w-full border-t border-border/30 bg-card/20 backdrop-blur-sm overflow-hidden">
