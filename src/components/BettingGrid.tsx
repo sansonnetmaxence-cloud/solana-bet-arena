@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import PriceCard from './PriceCard';
 import { cn } from '@/lib/utils';
 
@@ -14,31 +14,45 @@ const BettingGrid = ({ currentPrice, onSelectBet, activeBet, betResult }: Bettin
 
   const downPrices = useMemo(() => {
     return [
+      basePrice - 10,
+      basePrice - 7,
       basePrice - 5,
+      basePrice - 4,
       basePrice - 3,
+      basePrice - 2.5,
       basePrice - 2,
+      basePrice - 1.5,
       basePrice - 1,
+      basePrice - 0.75,
       basePrice - 0.5,
+      basePrice - 0.25,
     ];
   }, [basePrice]);
 
   const upPrices = useMemo(() => {
     return [
+      basePrice + 0.25,
       basePrice + 0.5,
+      basePrice + 0.75,
       basePrice + 1,
+      basePrice + 1.5,
       basePrice + 2,
+      basePrice + 2.5,
       basePrice + 3,
+      basePrice + 4,
       basePrice + 5,
+      basePrice + 7,
+      basePrice + 10,
     ];
   }, [basePrice]);
 
   return (
     <div className={cn(
-      'relative flex items-center justify-center gap-3 md:gap-4 flex-wrap transition-all duration-500',
+      'relative flex items-center justify-center gap-3 md:gap-5 transition-all duration-500',
       betResult && 'after:absolute after:inset-0 after:bg-background/60 after:rounded-xl after:pointer-events-none after:z-10'
     )}>
-      {/* Down bets - left side */}
-      <div className="flex flex-col gap-3 items-end">
+      {/* Down bets - left side - 3 columns */}
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
         {downPrices.map((p) => (
           <PriceCard
             key={`down-${p}`}
@@ -55,8 +69,8 @@ const BettingGrid = ({ currentPrice, onSelectBet, activeBet, betResult }: Bettin
       {/* Center price */}
       <PriceCard price={0} direction="up" isCenter currentPrice={currentPrice ?? undefined} />
 
-      {/* Up bets - right side */}
-      <div className="flex flex-col gap-3 items-start">
+      {/* Up bets - right side - 3 columns */}
+      <div className="grid grid-cols-3 gap-2 md:gap-3">
         {upPrices.map((p) => (
           <PriceCard
             key={`up-${p}`}
