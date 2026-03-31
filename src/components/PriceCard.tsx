@@ -92,7 +92,8 @@ const PriceCard = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'relative flex flex-col items-center justify-center w-[70px] h-[70px] md:w-[80px] md:h-[80px] rounded-lg border transition-all duration-300 cursor-pointer font-display',
+        'relative flex flex-col items-center justify-center rounded-lg border transition-all duration-300 cursor-pointer font-display',
+        timeLabel ? 'w-[90px] h-[90px] md:w-[100px] md:h-[100px]' : 'w-[70px] h-[70px] md:w-[80px] md:h-[80px]',
         isUp
           ? 'border-success/30 hover:border-success/70 hover:glow-green'
           : 'border-danger/30 hover:border-danger/70 hover:glow-red',
@@ -111,7 +112,7 @@ const PriceCard = ({
         {isUp ? '▲ UP' : '▼ DOWN'}
       </span>
       <span className={cn(
-        'text-[10px] md:text-xs font-bold',
+        timeLabel ? 'text-xs md:text-sm font-bold' : 'text-[10px] md:text-xs font-bold',
         isUp ? 'text-success' : 'text-danger',
         result === 'won' && 'text-glow-green',
         result === 'lost' && 'text-glow-red'
@@ -120,8 +121,8 @@ const PriceCard = ({
       </span>
       {timeLabel && (
         <span className={cn(
-          'text-[7px] mt-0.5 uppercase tracking-wider',
-          isUp ? 'text-success/50' : 'text-danger/50'
+          'text-[9px] mt-1 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm',
+          isUp ? 'text-success/90 bg-success/10' : 'text-danger/90 bg-danger/10'
         )}>
           {timeLabel}
         </span>
