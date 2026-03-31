@@ -205,5 +205,12 @@
 
 .animate-bet-placed { animation: bet-placed-pulse 1s ease-out 3; }
 
+@keyframes slide-in-feed {
+  0% { transform: translateX(-40px); opacity: 0; max-height: 0; }
+  100% { transform: translateX(0); opacity: 1; max-height: 40px; }
+}
+
+.animate-slide-in-feed { animation: slide-in-feed 0.4s ease-out; }
+
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
