@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Orbitron", "sans-serif"],
-        mono: ["Space Mono", "monospace"],
+        display: ["Geist Mono", "monospace"],
+        mono: ["Geist Mono", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",

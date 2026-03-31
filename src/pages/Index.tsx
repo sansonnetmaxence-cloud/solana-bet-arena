@@ -125,7 +125,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
+    <div className={cn(
+      'min-h-screen bg-background relative overflow-x-hidden transition-all duration-700',
+      activeBet?.direction === 'up' ? 'grid-bg-up' : activeBet?.direction === 'down' ? 'grid-bg-down' : 'grid-bg'
+    )}>
       <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />

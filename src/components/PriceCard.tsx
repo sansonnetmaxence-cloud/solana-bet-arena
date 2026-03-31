@@ -55,8 +55,8 @@ const PriceCard = ({
 
   if (isCenter) {
     return (
-      <div className="relative flex flex-col items-center justify-center w-64 h-80 md:w-80 md:h-96 rounded-2xl border-2 border-primary/60 bg-card glow-primary animate-float mx-4 shrink-0">
-        <span className="font-display text-xs md:text-sm text-muted-foreground tracking-widest uppercase mb-1">SOL/USD</span>
+      <div className="relative flex flex-col items-center justify-center w-72 h-[22rem] md:w-96 md:h-[28rem] rounded-2xl border-2 border-primary/60 bg-card glow-primary animate-float mx-4 shrink-0">
+        <span className="font-display text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-2">SOL/USD</span>
         <div className={cn(
           'transition-all duration-300',
           bounce && 'scale-110',
@@ -64,7 +64,7 @@ const PriceCard = ({
           priceFlash === 'down' && 'animate-price-down',
         )}>
           <span className={cn(
-            'font-display text-4xl md:text-6xl font-black transition-colors duration-300',
+            'font-display text-5xl md:text-7xl font-black transition-colors duration-300',
             priceFlash === 'up' && 'text-success text-glow-green',
             priceFlash === 'down' && 'text-danger text-glow-red',
             !priceFlash && 'text-primary text-glow-primary',
@@ -78,8 +78,8 @@ const PriceCard = ({
         {priceFlash === 'down' && (
           <span className="text-danger text-xs font-display animate-fade-arrow-down absolute top-16 md:top-20">▼▼▼</span>
         )}
-        <span className="font-display text-[10px] md:text-xs text-muted-foreground mt-1 mb-3 animate-pulse-glow">● LIVE</span>
-        <MiniChart data={priceHistory} width={240} height={90} />
+        <span className="font-display text-[10px] md:text-xs text-danger mt-1 mb-3 animate-pulse-glow">● LIVE</span>
+        <MiniChart data={priceHistory} width={280} height={110} />
         <div className="absolute inset-0 rounded-2xl scanline pointer-events-none" />
       </div>
     );
