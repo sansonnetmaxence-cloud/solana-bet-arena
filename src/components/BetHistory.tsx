@@ -34,11 +34,11 @@ const BetHistory = ({ history }: BetHistoryProps) => {
   );
 
   return (
-    <div className="w-full px-4 md:px-8 py-6">
+    <div className="w-full px-4 md:px-8 py-8">
       {/* Stats bar */}
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-display text-sm text-muted-foreground uppercase tracking-widest">
-          Bet History
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="font-display text-lg md:text-xl text-foreground uppercase tracking-widest font-bold">
+          📊 Bet History
         </h3>
         <div className="flex items-center gap-4">
           <span className="font-display text-[10px] text-success uppercase tracking-wider">
