@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
@@ -42,8 +42,8 @@
 
     --radius: 0.5rem;
 
-    --font-display: 'Geist Mono', monospace;
-    --font-mono: 'Geist Mono', monospace;
+    --font-display: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
 
     --glow-green: 0 0 20px hsl(145 100% 50% / 0.6), 0 0 40px hsl(145 100% 50% / 0.3), 0 0 80px hsl(145 100% 50% / 0.1);
     --glow-red: 0 0 20px hsl(0 100% 63% / 0.6), 0 0 40px hsl(0 100% 63% / 0.3), 0 0 80px hsl(0 100% 63% / 0.1);
