@@ -7,7 +7,7 @@ import LiveFeed from '@/components/LiveFeed';
 import MarketRules from '@/components/MarketRules';
 import OrderBook from '@/components/OrderBook';
 import WinRain from '@/components/WinRain';
-import { useSolanaPrice } from '@/hooks/useSolanaPrice';
+import { useCryptoPrice, type MarketSymbol } from '@/hooks/useCryptoPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 
