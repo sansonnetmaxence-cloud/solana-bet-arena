@@ -41,28 +41,48 @@ const PriceCard = ({
 }: PriceCardProps) => {
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
   const [priceTrend, setPriceTrend] = useState<'up' | 'down'>('up');
-  const [bounce, setBounce] = useState(false);
+  const [displayPrice, setDisplayPrice] = useState(currentPrice ?? 0);
+  const animRef = useRef<number>(0);
   const prevPriceRef = useRef(currentPrice);
+  const targetRef = useRef(currentPrice ?? 0);
+  const displayRef = useRef(currentPrice ?? 0);
+  const glowIntensity = useRef(0);
 
+  // Smooth animated price counter
   useEffect(() => {
-    if (!isCenter || currentPrice == null || prevPriceRef.current == null) {
-      prevPriceRef.current = currentPrice;
-      return;
-    }
-    if (currentPrice > prevPriceRef.current) {
-      setPriceFlash('up');
-      setPriceTrend('up');
-      setBounce(true);
-    } else if (currentPrice < prevPriceRef.current) {
-      setPriceFlash('down');
-      setPriceTrend('down');
-      setBounce(true);
+    if (!isCenter || currentPrice == null) return;
+
+    if (prevPriceRef.current != null) {
+      if (currentPrice > prevPriceRef.current) {
+        setPriceFlash('up');
+        setPriceTrend('up');
+        glowIntensity.current = 1;
+      } else if (currentPrice < prevPriceRef.current) {
+        setPriceFlash('down');
+        setPriceTrend('down');
+        glowIntensity.current = 1;
+      }
     }
     prevPriceRef.current = currentPrice;
-    const t1 = setTimeout(() => setPriceFlash(null), 600);
-    const t2 = setTimeout(() => setBounce(false), 300);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    targetRef.current = currentPrice;
+
+    const t1 = setTimeout(() => setPriceFlash(null), 800);
+    return () => clearTimeout(t1);
   }, [currentPrice, isCenter]);
+
+  // RAF loop for silky smooth interpolation
+  useEffect(() => {
+    if (!isCenter) return;
+    const tick = () => {
+      const lerp = 0.08;
+      displayRef.current += (targetRef.current - displayRef.current) * lerp;
+      glowIntensity.current *= 0.96; // fade glow
+      setDisplayPrice(displayRef.current);
+      animRef.current = requestAnimationFrame(tick);
+    };
+    animRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animRef.current);
+  }, [isCenter]);
 
   const formatCountdown = (s: number) => {
     const min = Math.floor(s / 60);
