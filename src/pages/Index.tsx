@@ -133,7 +133,7 @@ const Index = () => {
         style={{
           opacity: activeBet?.direction === 'up' ? 1 : 0,
           backgroundImage: 
-            'linear-gradient(hsl(145 100% 50% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(145 100% 50% / 0.3) 1px, transparent 1px)',
+          'linear-gradient(hsl(160 100% 51% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.3) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
           animation: activeBet?.direction === 'up' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
         }}
