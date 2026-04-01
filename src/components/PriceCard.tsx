@@ -175,22 +175,20 @@ const PriceCard = ({
 
         {/* Price */}
         <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1">
-          <div className={cn(
-            'transition-transform duration-200',
-            bounce && 'scale-[1.03]',
-          )}>
+          <div className="relative">
             <span className={cn(
-              'font-display font-black transition-colors duration-200 leading-none tabular-nums',
+              'font-display font-black leading-none tabular-nums transition-colors duration-500',
               hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-[5.5rem]',
-              `text-${trendColor}`,
+              priceTrend === 'up' ? 'text-success' : 'text-danger',
             )}
               style={{
                 textShadow: priceTrend === 'up'
-                  ? '0 0 20px hsl(160 100% 51% / 0.25)'
-                  : '0 0 20px hsl(0 100% 63% / 0.25)',
+                  ? `0 0 ${20 + glowIntensity.current * 30}px hsl(160 100% 51% / ${0.2 + glowIntensity.current * 0.4})`
+                  : `0 0 ${20 + glowIntensity.current * 30}px hsl(0 100% 63% / ${0.2 + glowIntensity.current * 0.4})`,
+                transition: 'text-shadow 0.3s ease-out',
               }}
             >
-              ${currentPrice?.toFixed(2) ?? '---'}
+              ${displayPrice.toFixed(2)}
             </span>
           </div>
 
