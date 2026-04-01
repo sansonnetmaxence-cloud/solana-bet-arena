@@ -38,7 +38,7 @@ const PnLChart = ({ history, currency, solPrice }: PnLChartProps) => {
     ];
   }, [history, currency, solPrice]);
 
-  if (history.length < 2) return null;
+  if (history.length < 1) return null;
 
   const lastValue = chartData[chartData.length - 1]?.pnl ?? 0;
   const isPositive = lastValue >= 0;
