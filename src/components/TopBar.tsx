@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { WalletType } from '@/hooks/useWallet';
+import phantomLogo from '@/assets/phantom-logo.png';
+import solflareLogo from '@/assets/solflare-logo.png';
 
 interface Notification {
   id: string;
