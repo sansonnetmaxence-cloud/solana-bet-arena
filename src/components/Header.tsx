@@ -16,28 +16,31 @@ const Header = ({ priceDirection }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="flex items-center justify-between px-6 py-4 border-b border-border/50">
+    <header className="flex items-center justify-between px-6 py-3 border-b border-border/30 bg-card/40 backdrop-blur-md relative z-20">
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center glow-primary">
-          <span className="font-display text-primary text-xs font-bold">S</span>
+        <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+          <span className="font-display text-primary text-sm font-black">◎</span>
         </div>
-        <h1 className="font-display text-lg md:text-xl font-bold tracking-wider uppercase">
-          <span className="text-primary text-glow-primary">SOL</span>
-          <span className="text-muted-foreground">BET</span>
-        </h1>
+        <div className="flex flex-col">
+          <h1 className="font-display text-base font-bold tracking-wider uppercase leading-tight">
+            <span className="text-primary">SOL</span>
+            <span className="text-foreground/60">BET</span>
+          </h1>
+          <span className="font-display text-[8px] text-muted-foreground tracking-widest uppercase">Prediction Market</span>
+        </div>
       </div>
 
-      <div className="flex items-center gap-2 backdrop-blur-md bg-success/5 border border-success/20 rounded-lg px-4 py-2">
-        <span className="font-display text-[9px] text-success/70 uppercase tracking-widest">🏆 Community Wins</span>
-        <span className="font-display text-lg md:text-xl font-black text-success text-glow-green tabular-nums">
+      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-success/[0.04] border border-success/10">
+        <span className="font-display text-[8px] text-success/60 uppercase tracking-widest">Community Wins</span>
+        <span className="font-display text-base font-black text-success tabular-nums">
           {totalSol.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </span>
-        <span className="font-display text-xs text-success/60 font-bold">SOL</span>
+        <span className="font-display text-[9px] text-success/50 font-bold">SOL</span>
       </div>
 
       <div className="flex items-center gap-2">
-        <div className={`w-2 h-2 rounded-full ${priceDirection === 'up' ? 'bg-success animate-pulse-glow' : priceDirection === 'down' ? 'bg-danger animate-pulse-glow' : 'bg-muted-foreground'}`} />
-        <span className="font-display text-[10px] text-muted-foreground uppercase tracking-widest">Live Feed</span>
+        <div className={`w-1.5 h-1.5 rounded-full ${priceDirection === 'up' ? 'bg-success' : priceDirection === 'down' ? 'bg-danger' : 'bg-muted-foreground'}`} />
+        <span className="font-display text-[9px] text-muted-foreground uppercase tracking-widest">Live</span>
       </div>
     </header>
   );
