@@ -8,7 +8,7 @@ import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
-import { useTheme } from '@/hooks/useTheme';
+
 import { cn } from '@/lib/utils';
 
 interface ActiveBet {
