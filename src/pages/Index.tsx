@@ -205,6 +205,8 @@ const Index = () => {
         quickBetAmount={quickBetAmount}
         onQuickBetAmountChange={setQuickBetAmount}
         notifications={notifications}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main area */}
