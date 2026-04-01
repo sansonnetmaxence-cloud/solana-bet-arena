@@ -64,12 +64,6 @@ const TopBar = ({
 
         {/* Right — Wallet (visible on mobile in this row) */}
         <div className="flex items-center gap-1.5 sm:hidden">
-          <button
-            onClick={onToggleTheme}
-            className="p-1 rounded-md border border-border/30 hover:border-primary/40 text-muted-foreground hover:text-foreground transition-all"
-          >
-            {theme === 'dark' ? '☀️' : '🌙'}
-          </button>
           {connected ? (
             <>
               <button
