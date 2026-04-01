@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { WalletType } from '@/hooks/useWallet';
-import { DollarSign, CircleDot } from 'lucide-react';
+import { DollarSign, CircleDot, ArrowLeftRight } from 'lucide-react';
 
 interface Notification {
   id: string;
