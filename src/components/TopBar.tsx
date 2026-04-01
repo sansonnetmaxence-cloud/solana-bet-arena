@@ -185,18 +185,25 @@ const TopBar = ({
 
       {/* Mobile wallet menu */}
       {showWalletMenu && !connecting && (
-        <div className="sm:hidden absolute right-3 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-lg p-1.5 shadow-xl z-50 min-w-[140px] animate-in fade-in zoom-in-95 duration-150">
+        <div className="sm:hidden absolute right-3 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-xl p-2 shadow-2xl z-50 min-w-[180px] animate-in fade-in zoom-in-95 duration-150">
+          <span className="text-[9px] font-display uppercase tracking-widest text-muted-foreground/40 px-3 pt-1 pb-1">Select Wallet</span>
           <button
             onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-[11px] font-display text-foreground hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
           >
-            👻 Phantom
+            <div className="w-6 h-6 rounded-md bg-[#AB9FF2] flex items-center justify-center shadow-sm shadow-[#AB9FF2]/20">
+              <span className="text-background font-black text-xs">P</span>
+            </div>
+            <span>Phantom</span>
           </button>
           <button
             onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
-            className="flex items-center gap-2 px-3 py-2 rounded-md text-[11px] font-display text-foreground hover:bg-primary/10 transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
           >
-            ☀️ Solflare
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#FC7227] to-[#FCC827] flex items-center justify-center shadow-sm shadow-[#FC7227]/20">
+              <span className="text-background font-black text-xs">S</span>
+            </div>
+            <span>Solflare</span>
           </button>
         </div>
       )}
