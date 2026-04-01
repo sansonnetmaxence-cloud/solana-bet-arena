@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '@/components/Header';
 import BettingGrid from '@/components/BettingGrid';
 import TopBar from '@/components/TopBar';
@@ -40,6 +40,8 @@ const Index = () => {
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const priceRef = useRef(price);
+  useEffect(() => { priceRef.current = price; }, [price]);
 
   const addNotification = useCallback((message: string, type: 'win' | 'loss' | 'info') => {
     const notif: Notification = { id: crypto.randomUUID(), message, type, timestamp: Date.now() };
@@ -103,6 +105,7 @@ const Index = () => {
       setActiveBets(prev => {
         const updated: ActiveBet[] = [];
         const resolved: ActiveBet[] = [];
+        const currentPrice = priceRef.current;
 
         prev.forEach(bet => {
           if (bet.countdown <= 1) {
@@ -112,11 +115,11 @@ const Index = () => {
           }
         });
 
-        if (resolved.length > 0 && price) {
+        if (resolved.length > 0 && currentPrice) {
           resolved.forEach(bet => {
             const won = bet.direction === 'up'
-              ? price >= bet.price
-              : price <= bet.price;
+              ? currentPrice >= bet.price
+              : currentPrice <= bet.price;
             const result = won ? 'won' : 'lost';
             if (won) sfx.playWin(); else sfx.playLose();
 
@@ -135,7 +138,7 @@ const Index = () => {
               direction: bet.direction,
               targetPrice: bet.price,
               startPrice: bet.startPrice,
-              endPrice: price,
+              endPrice: currentPrice,
               amount: bet.amount,
               timeframe: bet.timeframe,
               result,
@@ -154,7 +157,7 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBets.length, price, sfx, addNotification]);
+  }, [activeBets.length, sfx, addNotification]);
 
   const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
   const primaryCountdown = primaryBet?.countdown ?? 0;
