@@ -208,6 +208,8 @@ const Index = () => {
         notifications={notifications}
       />
 
+      <MarketRules />
+
       {/* Main area */}
       <div className={cn(
         'flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 min-h-[calc(100vh-100px)] sm:min-h-[calc(100vh-120px)] transition-all duration-500',
