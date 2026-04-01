@@ -47,6 +47,8 @@ const Index = () => {
         countdown: quickTimeframe * 60,
       };
       setActiveBets(prev => [...prev, bet]);
+      setSelectedPrice(null);
+      setSelectedDirection(null);
       return;
     }
 
