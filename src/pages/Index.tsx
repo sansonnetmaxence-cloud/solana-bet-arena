@@ -162,7 +162,7 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBets.length, sfx, addNotification]);
+  }, [activeBets.length]);
 
   const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
   const primaryCountdown = primaryBet?.countdown ?? 0;
