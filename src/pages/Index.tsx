@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Header from '@/components/Header';
 import BettingGrid from '@/components/BettingGrid';
-import WalletPanel from '@/components/WalletPanel';
+import TopBar from '@/components/TopBar';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
@@ -19,6 +19,13 @@ interface ActiveBet {
   countdown: number;
 }
 
+interface Notification {
+  id: string;
+  message: string;
+  type: 'win' | 'loss' | 'info';
+  timestamp: number;
+}
+
 const Index = () => {
   const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
   const [quickBetMode] = useState(true);
@@ -31,6 +38,12 @@ const Index = () => {
   const [selectedDirection, setSelectedDirection] = useState<'up' | 'down' | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = useCallback((message: string, type: 'win' | 'loss' | 'info') => {
+    const notif: Notification = { id: crypto.randomUUID(), message, type, timestamp: Date.now() };
+    setNotifications(prev => [notif, ...prev].slice(0, 20));
+  }, []);
 
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down', quickTimeframe?: number) => {
     if (!wallet.connected) return;
@@ -49,12 +62,13 @@ const Index = () => {
       setActiveBets(prev => [...prev, bet]);
       setSelectedPrice(null);
       setSelectedDirection(null);
+      addNotification(`Bet placed: ${direction === 'up' ? '▲' : '▼'} $${targetPrice.toFixed(2)} · ${quickBetAmount} SOL`, 'info');
       return;
     }
 
     setSelectedPrice(targetPrice);
     setSelectedDirection(direction);
-  }, [wallet.connected, sfx, quickBetMode, price, quickBetAmount]);
+  }, [wallet.connected, sfx, quickBetMode, price, quickBetAmount, addNotification]);
 
   const handlePlaceBet = useCallback((amount: number, customPrice: number | null, timeframe: number) => {
     if (!price) return;
@@ -78,7 +92,8 @@ const Index = () => {
     sfx.playClick();
     setSelectedPrice(null);
     setSelectedDirection(null);
-  }, [price, selectedPrice, selectedDirection, sfx]);
+    addNotification(`Bet placed: ${direction === 'up' ? '▲' : '▼'} $${targetPrice.toFixed(2)} · ${amount} SOL`, 'info');
+  }, [price, selectedPrice, selectedDirection, sfx, addNotification]);
 
   // Countdown timer for all active bets
   useEffect(() => {
@@ -96,7 +111,6 @@ const Index = () => {
           }
         });
 
-        // Resolve finished bets
         if (resolved.length > 0 && price) {
           resolved.forEach(bet => {
             const won = bet.direction === 'up'
@@ -107,6 +121,13 @@ const Index = () => {
 
             setLatestResult(result);
             setLatestResultBet(bet);
+
+            addNotification(
+              won
+                ? `WIN +${bet.amount} SOL on $${bet.price.toFixed(2)}`
+                : `LOSS -${bet.amount} SOL on $${bet.price.toFixed(2)}`,
+              won ? 'win' : 'loss'
+            );
 
             const record: BetRecord = {
               id: crypto.randomUUID(),
@@ -132,13 +153,10 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBets.length, price, sfx]);
+  }, [activeBets.length, price, sfx, addNotification]);
 
-  // First active bet for backward compat display
   const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
   const primaryCountdown = primaryBet?.countdown ?? 0;
-
-  // Grid overlay direction: use the latest bet's direction
   const gridDirection = primaryBet?.direction ?? null;
 
   return (
@@ -147,128 +165,93 @@ const Index = () => {
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'up' ? 0.6 : 0,
-          backgroundImage: 
-          'linear-gradient(hsl(160 100% 51% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.15) 1px, transparent 1px)',
+          opacity: gridDirection === 'up' ? 0.4 : 0,
+          backgroundImage:
+            'linear-gradient(hsl(160 100% 51% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.1) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'up' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'down' ? 0.6 : 0,
+          opacity: gridDirection === 'down' ? 0.4 : 0,
           backgroundImage:
-            'linear-gradient(hsl(0 100% 63% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.15) 1px, transparent 1px)',
+            'linear-gradient(hsl(0 100% 63% / 0.1) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.1) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'down' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
-      
+
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
 
-      <div className="flex flex-1 min-h-[calc(100vh-57px)]">
-        {/* Main area */}
-        <div className={cn(
-          'flex-1 flex flex-col items-center justify-center p-4 md:p-8 transition-all duration-500',
-          latestResult && 'relative'
-        )}>
+      <TopBar
+        connected={wallet.connected}
+        walletAddress={wallet.walletAddress}
+        walletType={wallet.walletType}
+        connecting={wallet.connecting}
+        onConnect={wallet.connect}
+        onDisconnect={wallet.disconnect}
+        quickBetAmount={quickBetAmount}
+        onQuickBetAmountChange={setQuickBetAmount}
+        notifications={notifications}
+      />
 
-          {latestResult && latestResultBet && (
-            <div className="absolute inset-0 flex items-center justify-center z-40 backdrop-blur-sm bg-background/60 animate-in fade-in duration-300">
-              <div className={cn(
-                'text-center p-10 md:p-14 rounded-2xl border animate-result-pop',
-                latestResult === 'won'
-                  ? 'border-success/30 bg-card/90'
-                  : 'border-danger/30 bg-card/90'
+      {/* Main area */}
+      <div className={cn(
+        'flex flex-col items-center justify-center p-4 md:p-8 min-h-[calc(100vh-120px)] transition-all duration-500',
+        latestResult && 'relative'
+      )}>
+        {latestResult && latestResultBet && (
+          <div className="absolute inset-0 flex items-center justify-center z-40 backdrop-blur-sm bg-background/60 animate-in fade-in duration-300">
+            <div className={cn(
+              'text-center p-10 md:p-14 rounded-2xl border animate-result-pop',
+              latestResult === 'won'
+                ? 'border-success/30 bg-card/90'
+                : 'border-danger/30 bg-card/90'
+            )}>
+              <span className={cn(
+                'font-display text-6xl md:text-8xl font-black block',
+                latestResult === 'won' ? 'text-success' : 'text-danger'
+              )}
+                style={{
+                  textShadow: latestResult === 'won'
+                    ? '0 0 40px hsl(160 100% 51% / 0.3)'
+                    : '0 0 40px hsl(0 100% 63% / 0.3)',
+                }}
+              >
+                {latestResult === 'won' ? 'WIN' : 'LOSS'}
+              </span>
+              <p className={cn(
+                'font-display text-2xl md:text-3xl mt-3 font-black tabular-nums',
+                latestResult === 'won' ? 'text-success/80' : 'text-danger/80'
               )}>
-                <span className={cn(
-                  'font-display text-6xl md:text-8xl font-black block animate-result-text',
-                  latestResult === 'won' ? 'text-success' : 'text-danger'
-                )}
-                  style={{
-                    textShadow: latestResult === 'won'
-                      ? '0 0 40px hsl(160 100% 51% / 0.3)'
-                      : '0 0 40px hsl(0 100% 63% / 0.3)',
-                  }}
-                >
-                  {latestResult === 'won' ? 'WIN' : 'LOSS'}
-                </span>
-                <p className={cn(
-                  'font-display text-2xl md:text-3xl mt-3 font-black animate-result-amount tabular-nums',
-                  latestResult === 'won' ? 'text-success/80' : 'text-danger/80'
-                )}>
-                  {latestResult === 'won' ? `+${latestResultBet.amount}` : `-${latestResultBet.amount}`} SOL
-                </p>
-              </div>
+                {latestResult === 'won' ? `+${latestResultBet.amount}` : `-${latestResultBet.amount}`} SOL
+              </p>
             </div>
-          )}
-
-          {loading ? (
-            <div className="font-display text-primary text-glow-primary animate-pulse-glow text-xl uppercase tracking-widest">
-              Loading Price Feed...
-            </div>
-          ) : (
-            <BettingGrid
-              currentPrice={price}
-              previousPrice={previousPrice}
-              priceHistory={priceHistory}
-              onSelectBet={handleSelectBet}
-              activeBets={activeBets}
-              betResult={latestResult}
-              quickBetMode={quickBetMode}
-              countdown={primaryCountdown}
-              selectedPrice={selectedPrice}
-              selectedDirection={selectedDirection}
-            />
-          )}
-        </div>
-
-        {/* Right panel */}
-        <div className={cn(
-          'w-80 border-l border-border/50 bg-card/30 backdrop-blur-sm transition-all duration-500 ease-out overflow-hidden',
-          wallet.connected ? 'translate-x-0 opacity-100 max-w-80' : 'translate-x-full opacity-0 max-w-0 border-0'
-        )}>
-          <WalletPanel
-            onPlaceBet={handlePlaceBet}
-            activeBet={primaryBet}
-            connected={wallet.connected}
-            walletAddress={wallet.walletAddress}
-            walletType={wallet.walletType}
-            connecting={wallet.connecting}
-            onConnect={wallet.connect}
-            onDisconnect={wallet.disconnect}
-            quickBetMode={quickBetMode}
-            onToggleQuickBet={() => {}}
-            quickBetAmount={quickBetAmount}
-            onQuickBetAmountChange={setQuickBetAmount}
-          />
-        </div>
-
-        {!wallet.connected && (
-          <div className="fixed bottom-6 right-6 z-30">
-            <WalletPanel
-              onPlaceBet={handlePlaceBet}
-              activeBet={primaryBet}
-              connected={wallet.connected}
-              walletAddress={wallet.walletAddress}
-              walletType={wallet.walletType}
-              connecting={wallet.connecting}
-              onConnect={wallet.connect}
-              onDisconnect={wallet.disconnect}
-              quickBetMode={quickBetMode}
-              onToggleQuickBet={() => {}}
-              quickBetAmount={quickBetAmount}
-              onQuickBetAmountChange={setQuickBetAmount}
-            />
           </div>
+        )}
+
+        {loading ? (
+          <div className="font-display text-primary text-glow-primary animate-pulse-glow text-xl uppercase tracking-widest">
+            Loading Price Feed...
+          </div>
+        ) : (
+          <BettingGrid
+            currentPrice={price}
+            previousPrice={previousPrice}
+            priceHistory={priceHistory}
+            onSelectBet={handleSelectBet}
+            activeBets={activeBets}
+            betResult={latestResult}
+            quickBetMode={quickBetMode}
+            countdown={primaryCountdown}
+            selectedPrice={selectedPrice}
+            selectedDirection={selectedDirection}
+          />
         )}
       </div>
 
-      {/* Live Feed */}
       <LiveFeed />
 
-      {/* Bet History */}
       <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
         <BetHistory history={betHistory} />
       </div>
