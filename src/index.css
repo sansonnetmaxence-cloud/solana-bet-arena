@@ -53,39 +53,39 @@
   }
 
   .light {
-    --background: 0 0% 97%;
-    --foreground: 240 20% 10%;
+    --background: 220 20% 96%;
+    --foreground: 230 25% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 240 20% 10%;
+    --card-foreground: 230 25% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 240 20% 10%;
+    --popover-foreground: 230 25% 12%;
 
-    --primary: 160 100% 38%;
+    --primary: 160 85% 32%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 263 60% 55%;
+    --secondary: 263 55% 48%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 240 5% 90%;
-    --muted-foreground: 240 5% 40%;
+    --muted: 220 14% 90%;
+    --muted-foreground: 220 10% 38%;
 
-    --accent: 263 60% 55%;
+    --accent: 263 55% 48%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 85% 55%;
+    --destructive: 0 80% 48%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 100% 38%;
+    --success: 160 85% 28%;
     --success-foreground: 0 0% 100%;
 
-    --danger: 0 85% 55%;
+    --danger: 0 80% 48%;
     --danger-foreground: 0 0% 100%;
 
-    --border: 240 5% 82%;
-    --input: 240 5% 82%;
-    --ring: 160 100% 38%;
+    --border: 220 15% 78%;
+    --input: 220 15% 78%;
+    --ring: 160 85% 32%;
 
     --radius: 0.5rem;
 

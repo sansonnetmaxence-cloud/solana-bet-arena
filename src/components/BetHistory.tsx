@@ -76,8 +76,8 @@ const BetHistory = ({ history }: BetHistoryProps) => {
       </div>
 
       {/* P&L Chart */}
-      {history.length >= 2 && (
-        <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl border border-border/20 bg-card/30">
+      {history.length >= 1 && (
+        <div className="mb-4 sm:mb-6 p-4 sm:p-5 rounded-2xl border border-border/30 bg-card/60 backdrop-blur-sm shadow-sm">
           <PnLChart history={history} currency={currency} solPrice={solPrice} />
         </div>
       )}
