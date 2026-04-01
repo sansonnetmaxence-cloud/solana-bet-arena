@@ -36,7 +36,10 @@ const PriceCard = ({
   disabled = false,
   timeLabel,
   activeBet,
+  activeBets = [],
   countdown,
+  selectedPrice,
+  selectedDirection,
 }: PriceCardProps) => {
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
   const [bounce, setBounce] = useState(false);
