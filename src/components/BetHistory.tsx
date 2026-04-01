@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { DollarSign, CircleDot, ArrowLeftRight } from 'lucide-react';
 
 interface BetRecord {
   id: string;
@@ -52,9 +53,17 @@ const BetHistory = ({ history }: BetHistoryProps) => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setCurrency(c => c === 'SOL' ? 'USD' : 'SOL')}
-            className="px-2 py-0.5 rounded border border-border/40 text-[9px] font-display font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+            className="flex items-center gap-1 px-2 py-0.5 rounded border border-border/40 text-[9px] font-display font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
           >
-            {currency === 'SOL' ? '◎ SOL' : '$ USD'}
+            {currency === 'SOL'
+              ? <CircleDot size={12} className="text-muted-foreground" />
+              : <DollarSign size={12} className="text-muted-foreground" />
+            }
+            <ArrowLeftRight size={10} className="text-muted-foreground/50" />
+            {currency === 'SOL'
+              ? <DollarSign size={12} className="text-muted-foreground/50" />
+              : <CircleDot size={12} className="text-muted-foreground/50" />
+            }
           </button>
           <span className="font-display text-sm md:text-base text-success uppercase tracking-wider font-bold">
             {totalWon}W
