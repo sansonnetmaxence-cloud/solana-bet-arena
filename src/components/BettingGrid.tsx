@@ -138,6 +138,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
             timeframe: b.timeframe,
             startPrice: b.startPrice,
             amount: b.amount,
+            countdown: b.countdown,
           }))}
           countdown={countdown}
           selectedPrice={selectedPrice}
