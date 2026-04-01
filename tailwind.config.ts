@@ -118,6 +118,8 @@ export default {
         "price-fly-down": "price-fly-down 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         "arrow-float-up": "arrow-float-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "arrow-float-down": "arrow-float-down 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "flash-green": "flash-green 0.4s ease-out",
+        "flash-red": "flash-red 0.4s ease-out",
       },
     },
   },
