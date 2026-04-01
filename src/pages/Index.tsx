@@ -48,6 +48,11 @@ const Index = () => {
     setNotifications(prev => [notif, ...prev].slice(0, 20));
   }, []);
 
+  const sfxRef = useRef(sfx);
+  useEffect(() => { sfxRef.current = sfx; }, [sfx]);
+  const addNotificationRef = useRef(addNotification);
+  useEffect(() => { addNotificationRef.current = addNotification; }, [addNotification]);
+
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down', quickTimeframe?: number) => {
     if (!wallet.connected) return;
     sfx.playClick();
@@ -121,12 +126,12 @@ const Index = () => {
               ? currentPrice >= bet.price
               : currentPrice <= bet.price;
             const result = won ? 'won' : 'lost';
-            if (won) sfx.playWin(); else sfx.playLose();
+            if (won) sfxRef.current.playWin(); else sfxRef.current.playLose();
 
             setLatestResult(result);
             setLatestResultBet(bet);
 
-            addNotification(
+            addNotificationRef.current(
               won
                 ? `WIN +${bet.amount} SOL on $${bet.price.toFixed(2)}`
                 : `LOSS -${bet.amount} SOL on $${bet.price.toFixed(2)}`,
@@ -157,7 +162,7 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBets.length, sfx, addNotification]);
+  }, [activeBets.length]);
 
   const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
   const primaryCountdown = primaryBet?.countdown ?? 0;

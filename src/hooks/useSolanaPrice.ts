@@ -75,7 +75,7 @@ export const useSolanaPrice = () => {
 
     ws.onclose = () => {
       failCountRef.current += 1;
-      if (failCountRef.current >= 3) {
+      if (failCountRef.current >= 1) {
         startFallback();
         return;
       }
