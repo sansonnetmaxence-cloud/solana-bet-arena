@@ -168,13 +168,13 @@ const PriceCard = ({
         )}
 
         {/* Price */}
-        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1">
-          <div className="relative overflow-hidden">
+        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1 px-2 w-full">
+          <div className="relative overflow-hidden w-full flex items-center justify-center">
             <span
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
-                'font-display font-black leading-none tabular-nums block',
-                hasBet ? 'text-4xl sm:text-6xl md:text-7xl lg:text-8xl' : 'text-5xl sm:text-7xl md:text-8xl lg:text-[7rem]',
+                'font-display font-black leading-none tabular-nums block whitespace-nowrap',
+                hasBet ? 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl' : 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',
