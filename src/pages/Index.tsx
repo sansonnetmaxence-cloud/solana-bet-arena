@@ -33,6 +33,7 @@ const Index = () => {
   const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
+  const { theme, toggle: toggleTheme } = useTheme();
   const sfx = useSoundEffects();
   const [activeBets, setActiveBets] = useState<ActiveBet[]>([]);
   const [latestResult, setLatestResult] = useState<'won' | 'lost' | null>(null);
