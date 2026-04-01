@@ -31,8 +31,6 @@ const TopBar = ({
   quickBetAmount,
   onQuickBetAmountChange,
   notifications,
-  theme = 'dark',
-  onToggleTheme,
 }: TopBarProps) => {
   const [showWalletMenu, setShowWalletMenu] = useState(false);
   const [walletCurrency, setWalletCurrency] = useState<'SOL' | 'USD'>('SOL');
