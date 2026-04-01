@@ -100,6 +100,14 @@ export default {
           "20%": { opacity: "1" },
           "100%": { transform: "translateY(14px)", opacity: "0" },
         },
+        "flash-green": {
+          "0%": { backgroundColor: "hsl(var(--success) / 0.25)" },
+          "100%": { backgroundColor: "transparent" },
+        },
+        "flash-red": {
+          "0%": { backgroundColor: "hsl(var(--danger) / 0.25)" },
+          "100%": { backgroundColor: "transparent" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -110,6 +118,8 @@ export default {
         "price-fly-down": "price-fly-down 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         "arrow-float-up": "arrow-float-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "arrow-float-down": "arrow-float-down 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        "flash-green": "flash-green 0.4s ease-out",
+        "flash-red": "flash-red 0.4s ease-out",
       },
     },
   },
