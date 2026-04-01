@@ -16,31 +16,39 @@ const Header = ({ priceDirection }: HeaderProps) => {
   }, []);
 
   return (
-    <header className="flex items-center justify-between px-6 py-3 border-b border-border/30 bg-card/40 backdrop-blur-md relative z-20">
-      <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-          <span className="font-display text-primary text-sm font-black">◎</span>
+    <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3 border-b border-border/30 bg-card/40 backdrop-blur-md relative z-20">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+          <span className="font-display text-primary text-xs sm:text-sm font-black">◎</span>
         </div>
         <div className="flex flex-col">
-          <h1 className="font-display text-base font-bold tracking-wider uppercase leading-tight">
+          <h1 className="font-display text-sm sm:text-base font-bold tracking-wider uppercase leading-tight">
             <span className="text-primary">SOL</span>
             <span className="text-foreground/60">BET</span>
           </h1>
-          <span className="font-display text-[8px] text-muted-foreground tracking-widest uppercase">Prediction Market</span>
+          <span className="font-display text-[7px] sm:text-[8px] text-muted-foreground tracking-widest uppercase hidden sm:block">Prediction Market</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-success/[0.04] border border-success/10">
-        <span className="font-display text-[8px] text-success/60 uppercase tracking-widest">Community Wins</span>
-        <span className="font-display text-base font-black text-success tabular-nums">
+      <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-success/[0.04] border border-success/10">
+        <span className="font-display text-[7px] sm:text-[8px] text-success/60 uppercase tracking-widest">Community Wins</span>
+        <span className="font-display text-sm sm:text-base font-black text-success tabular-nums">
           {totalSol.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </span>
-        <span className="font-display text-[9px] text-success/50 font-bold">SOL</span>
+        <span className="font-display text-[8px] sm:text-[9px] text-success/50 font-bold">SOL</span>
       </div>
 
-      <div className="flex items-center gap-2">
+      {/* Mobile: compact community wins */}
+      <div className="flex sm:hidden items-center gap-1.5 px-2 py-1 rounded-md bg-success/[0.04] border border-success/10">
+        <span className="font-display text-xs font-black text-success tabular-nums">
+          {(totalSol / 1000).toFixed(1)}K
+        </span>
+        <span className="font-display text-[7px] text-success/50 font-bold">SOL</span>
+      </div>
+
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <div className={`w-1.5 h-1.5 rounded-full ${priceDirection === 'up' ? 'bg-success' : priceDirection === 'down' ? 'bg-danger' : 'bg-muted-foreground'}`} />
-        <span className="font-display text-[9px] text-muted-foreground uppercase tracking-widest">Live</span>
+        <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground uppercase tracking-widest">Live</span>
       </div>
     </header>
   );

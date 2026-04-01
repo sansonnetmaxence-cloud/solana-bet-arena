@@ -48,10 +48,8 @@ const PriceCard = ({
   const displayRef = useRef(currentPrice ?? 0);
   const glowIntensity = useRef(0);
 
-  // Smooth animated price counter
   useEffect(() => {
     if (!isCenter || currentPrice == null) return;
-
     if (prevPriceRef.current != null) {
       if (currentPrice > prevPriceRef.current) {
         setPriceFlash('up');
@@ -65,18 +63,16 @@ const PriceCard = ({
     }
     prevPriceRef.current = currentPrice;
     targetRef.current = currentPrice;
-
     const t1 = setTimeout(() => setPriceFlash(null), 800);
     return () => clearTimeout(t1);
   }, [currentPrice, isCenter]);
 
-  // RAF loop for silky smooth interpolation
   useEffect(() => {
     if (!isCenter) return;
     const tick = () => {
       const lerp = 0.08;
       displayRef.current += (targetRef.current - displayRef.current) * lerp;
-      glowIntensity.current *= 0.96; // fade glow
+      glowIntensity.current *= 0.96;
       setDisplayPrice(displayRef.current);
       animRef.current = requestAnimationFrame(tick);
     };
@@ -94,16 +90,18 @@ const PriceCard = ({
   const betDir = activeBet?.direction;
 
   if (isCenter) {
-    const priceDelta = currentPrice && activeBet 
-      ? currentPrice - activeBet.startPrice 
+    const priceDelta = currentPrice && activeBet
+      ? currentPrice - activeBet.startPrice
       : null;
     const priceDeltaPositive = priceDelta != null ? priceDelta >= 0 : null;
-    
 
     return (
       <div className={cn(
-        'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden border',
-        hasBet ? 'w-[22rem] h-[28rem] md:w-[28rem] md:h-[34rem]' : 'w-80 h-[24rem] md:w-[24rem] md:h-[30rem]',
+        'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
+        // Responsive sizing
+        hasBet
+          ? 'w-full max-w-[20rem] h-[22rem] sm:w-[22rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem]'
+          : 'w-full max-w-[18rem] h-[20rem] sm:w-80 sm:h-[24rem] md:w-[24rem] md:h-[30rem]',
         hasBet && betDir === 'up' && 'border-success/20',
         hasBet && betDir === 'down' && 'border-danger/20',
         !hasBet && 'border-border/30',
@@ -117,55 +115,51 @@ const PriceCard = ({
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-4 pb-2 z-[1]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <span className="text-[10px] font-black text-primary">◎</span>
+        <div className="flex items-center justify-between px-3 sm:px-5 pt-3 sm:pt-4 pb-1 sm:pb-2 z-[1]">
+          <div className="flex items-center gap-2">
+            <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <span className="text-[8px] sm:text-[10px] font-black text-primary">◎</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-sm text-foreground font-bold tracking-wide">SOL / USD</span>
-              <span className="font-display text-[9px] text-muted-foreground tracking-wider">Solana</span>
+              <span className="font-display text-xs sm:text-sm text-foreground font-bold tracking-wide">SOL / USD</span>
+              <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground tracking-wider">Solana</span>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-danger/8 border border-danger/15">
-            <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse" />
-            <span className="font-display text-[8px] text-danger font-bold uppercase tracking-widest">Live</span>
+          <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-danger/8 border border-danger/15">
+            <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-danger animate-pulse" />
+            <span className="font-display text-[7px] sm:text-[8px] text-danger font-bold uppercase tracking-widest">Live</span>
           </div>
         </div>
 
         {/* Active bets */}
         {activeBets.length > 0 && (
-          <div className="flex flex-col gap-1.5 mx-4 mt-1 z-[1] max-h-[120px] overflow-y-auto scrollbar-hide">
+          <div className="flex flex-col gap-1 sm:gap-1.5 mx-3 sm:mx-4 mt-1 z-[1] max-h-[80px] sm:max-h-[120px] overflow-y-auto scrollbar-hide">
             {activeBets.map((bet, i) => {
               const isUp = bet.direction === 'up';
               return (
                 <div
                   key={i}
                   className={cn(
-                    'rounded-lg px-3 py-2 flex items-center justify-between',
+                    'rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 flex items-center justify-between',
                     isUp ? 'bg-success/6 border border-success/15' : 'bg-danger/6 border border-danger/15',
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <span className={cn(
+                    'font-display text-lg sm:text-2xl font-black tabular-nums',
+                    isUp ? 'text-success' : 'text-danger',
+                  )}>
+                    {bet.countdown != null ? formatCountdown(bet.countdown) : '--:--'}
+                  </span>
+                  <div className="flex flex-col items-end">
                     <span className={cn(
-                      'font-display text-2xl font-black tabular-nums',
+                      'font-display text-xs sm:text-sm font-black tabular-nums',
                       isUp ? 'text-success' : 'text-danger',
                     )}>
-                      {bet.countdown != null ? formatCountdown(bet.countdown) : '--:--'}
+                      ${bet.price.toFixed(2)}
                     </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex flex-col items-end">
-                      <span className={cn(
-                        'font-display text-sm font-black tabular-nums',
-                        isUp ? 'text-success' : 'text-danger',
-                      )}>
-                        ${bet.price.toFixed(2)}
-                      </span>
-                      <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">
-                        {isUp ? '▲ UP' : '▼ DN'} · {bet.amount} SOL
-                      </span>
-                    </div>
+                    <span className="font-display text-[7px] sm:text-[8px] text-muted-foreground uppercase tracking-widest">
+                      {isUp ? '▲ UP' : '▼ DN'} · {bet.amount} SOL
+                    </span>
                   </div>
                 </div>
               );
@@ -180,7 +174,7 @@ const PriceCard = ({
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
                 'font-display font-black leading-none tabular-nums block',
-                hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-[5.5rem]',
+                hasBet ? 'text-3xl sm:text-5xl md:text-6xl' : 'text-4xl sm:text-6xl md:text-[5.5rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',
@@ -195,20 +189,18 @@ const PriceCard = ({
             </span>
           </div>
 
-          {/* Trend arrow */}
           {!hasBet && !selectedPrice && priceFlash && (
             <span className={cn(
-              'text-lg font-display mt-1 block',
+              'text-base sm:text-lg font-display mt-1 block',
               priceFlash === 'up' ? 'text-success animate-arrow-float-up' : 'text-danger animate-arrow-float-down',
             )}>
               {priceFlash === 'up' ? '▲' : '▼'}
             </span>
           )}
 
-          {/* Delta pill */}
           {hasBet && priceDelta != null && (
             <div className={cn(
-              'mt-2 px-3 py-0.5 rounded-full text-[11px] font-display font-bold flex items-center gap-1 tabular-nums',
+              'mt-1.5 sm:mt-2 px-2 sm:px-3 py-0.5 rounded-full text-[10px] sm:text-[11px] font-display font-bold flex items-center gap-1 tabular-nums',
               priceDeltaPositive
                 ? 'bg-success/8 text-success border border-success/15'
                 : 'bg-danger/8 text-danger border border-danger/15',
@@ -218,31 +210,30 @@ const PriceCard = ({
             </div>
           )}
 
-          {/* Selected price (non-quick-bet) */}
           {!hasBet && selectedPrice != null && selectedDirection && (
             <div className={cn(
-              'mt-3 px-4 py-2 rounded-xl border flex flex-col items-center animate-in fade-in zoom-in-95 duration-200',
+              'mt-2 sm:mt-3 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl border flex flex-col items-center animate-in fade-in zoom-in-95 duration-200',
               selectedDirection === 'up'
                 ? 'bg-success/6 border-success/20 text-success'
                 : 'bg-danger/6 border-danger/20 text-danger',
             )}>
-              <span className="text-[8px] uppercase tracking-widest font-bold opacity-60">Selected</span>
-              <span className="font-display text-xl font-black tabular-nums">${selectedPrice.toFixed(2)}</span>
-              <span className="text-[9px] font-bold uppercase">{selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}</span>
+              <span className="text-[7px] sm:text-[8px] uppercase tracking-widest font-bold opacity-60">Selected</span>
+              <span className="font-display text-lg sm:text-xl font-black tabular-nums">${selectedPrice.toFixed(2)}</span>
+              <span className="text-[8px] sm:text-[9px] font-bold uppercase">{selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}</span>
             </div>
           )}
         </div>
 
         {/* Chart */}
         <div className="relative w-full z-[1]">
-          <div className="absolute bottom-full left-0 right-0 h-16 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
-          <MiniChart data={priceHistory} width={hasBet ? 448 : 384} height={hasBet ? 140 : 120} />
+          <div className="absolute bottom-full left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
+          <MiniChart data={priceHistory} height={hasBet ? 100 : 90} />
         </div>
       </div>
     );
   }
 
-  // Small bet cards
+  // Small bet cards — responsive
   const isUp = direction === 'up';
 
   return (
@@ -253,7 +244,10 @@ const PriceCard = ({
         'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
         'transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
         'hover:scale-[1.08] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
-        timeLabel ? 'w-[88px] h-[88px] md:w-[96px] md:h-[96px]' : 'w-[68px] h-[68px] md:w-[76px] md:h-[76px]',
+        // Responsive card sizes
+        timeLabel
+          ? 'w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] md:w-[96px] md:h-[96px]'
+          : 'w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px]',
         isUp
           ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.08]'
           : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.08]',
@@ -267,7 +261,6 @@ const PriceCard = ({
         disabled && 'opacity-30 cursor-not-allowed hover:scale-100 hover:translate-y-0',
       )}
     >
-      {/* Hover glow overlay */}
       <div className={cn(
         'absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg',
         isUp
@@ -276,7 +269,7 @@ const PriceCard = ({
       )} />
 
       <span className={cn(
-        'text-[7px] uppercase tracking-wider mb-0.5 transition-all duration-300 relative z-[1]',
+        'text-[6px] sm:text-[7px] uppercase tracking-wider mb-0.5 transition-all duration-300 relative z-[1]',
         'group-hover:tracking-[0.2em]',
         isUp ? 'text-success/50 group-hover:text-success/90' : 'text-danger/50 group-hover:text-danger/90'
       )}>
@@ -285,14 +278,14 @@ const PriceCard = ({
       <span className={cn(
         'font-bold tabular-nums transition-all duration-300 relative z-[1]',
         'group-hover:font-extrabold',
-        timeLabel ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs',
+        timeLabel ? 'text-[10px] sm:text-xs md:text-sm' : 'text-[9px] sm:text-[10px] md:text-xs',
         isUp ? 'text-success/80 group-hover:text-success' : 'text-danger/80 group-hover:text-danger',
       )}>
         ${price.toFixed(2)}
       </span>
       {timeLabel && (
         <span className={cn(
-          'text-[8px] mt-0.5 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded transition-all duration-300 relative z-[1]',
+          'text-[7px] sm:text-[8px] mt-0.5 uppercase tracking-wider font-bold px-1 sm:px-1.5 py-0.5 rounded transition-all duration-300 relative z-[1]',
           'group-hover:px-2',
           isUp ? 'text-success/60 bg-success/[0.05] group-hover:bg-success/[0.1]' : 'text-danger/60 bg-danger/[0.05] group-hover:bg-danger/[0.1]'
         )}>
