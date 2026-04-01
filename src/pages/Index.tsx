@@ -4,6 +4,7 @@ import BettingGrid from '@/components/BettingGrid';
 import TopBar from '@/components/TopBar';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
+import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
@@ -161,6 +162,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-x-hidden">
+      <WinRain active={latestResult === 'won'} />
       {/* Grid color overlay */}
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
