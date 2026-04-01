@@ -12,7 +12,7 @@ const MarketRules = () => {
         className="flex items-center gap-1.5 text-[10px] font-display uppercase tracking-widest text-muted-foreground/60 hover:text-muted-foreground transition-colors mx-auto"
       >
         <ShieldCheck className="w-3 h-3" />
-        <span>Règles</span>
+        <span>Market Rules</span>
         <span className={cn('transition-transform duration-300 text-[8px]', open && 'rotate-180')}>▼</span>
       </button>
 
@@ -21,14 +21,14 @@ const MarketRules = () => {
         open ? 'grid-rows-[1fr] opacity-100 mt-2' : 'grid-rows-[0fr] opacity-0 mt-0'
       )}>
         <div className="overflow-hidden">
-          <div className="flex flex-wrap justify-center gap-3 text-[10px] text-muted-foreground pb-2">
-            <span>🎯 Pariez sur le prix SOL — <span className="text-success">hausse</span> ou <span className="text-danger">baisse</span></span>
-            <span className="text-border">·</span>
-            <span>⏱ Timer 30s / 1min / 5min</span>
-            <span className="text-border">·</span>
-            <span>✅ Résultat auto au prix réel</span>
-            <span className="text-border">·</span>
-            <span className="text-warning/80">⚠ Ne misez que ce que vous pouvez perdre</span>
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[10px] text-muted-foreground/70 pb-2 font-mono">
+            <span>Predict SOL price direction — <span className="text-success">Long</span> / <span className="text-danger">Short</span></span>
+            <span className="text-border/40">|</span>
+            <span>Timeframes: 30s · 1m · 5m</span>
+            <span className="text-border/40">|</span>
+            <span>Auto-resolved at expiry via live feed</span>
+            <span className="text-border/40">|</span>
+            <span className="text-warning/60">Risk disclaimer — trade responsibly</span>
           </div>
         </div>
       </div>
