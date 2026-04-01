@@ -135,7 +135,7 @@ const MiniChart = ({ data, width = 240, height = 90 }: MiniChartProps) => {
     <canvas
       ref={canvasRef}
       style={{ width, height }}
-      className="opacity-95"
+      className="opacity-95 block"
     />
   );
 };
