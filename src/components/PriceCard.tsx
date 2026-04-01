@@ -304,8 +304,3 @@ const PriceCard = ({
 };
 
 export default PriceCard;
-    </button>
-  );
-};
-
-export default PriceCard;
