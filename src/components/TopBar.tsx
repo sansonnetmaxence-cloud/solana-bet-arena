@@ -202,8 +202,8 @@ const TopBar = ({
             onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
           >
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#FC7227] to-[#FCC827] flex items-center justify-center shadow-sm shadow-[#FC7227]/20">
-              <span className="text-background font-black text-xs">S</span>
+            <div className="w-7 h-7 rounded-md bg-[#FC7227]/10 border border-[#FC7227]/20 flex items-center justify-center overflow-hidden">
+              <img src={solflareLogo} alt="Solflare" width={20} height={20} className="w-5 h-5 object-contain" />
             </div>
             <span>Solflare</span>
           </button>
