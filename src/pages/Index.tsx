@@ -143,39 +143,27 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
-      {/* Green grid overlay */}
+      {/* Grid color overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'up' ? 1 : 0,
+          opacity: gridDirection === 'up' ? 0.6 : 0,
           backgroundImage: 
-          'linear-gradient(hsl(160 100% 51% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.3) 1px, transparent 1px)',
+          'linear-gradient(hsl(160 100% 51% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.15) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'up' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'up' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Red grid overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'down' ? 1 : 0,
+          opacity: gridDirection === 'down' ? 0.6 : 0,
           backgroundImage:
-            'linear-gradient(hsl(0 100% 63% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.3) 1px, transparent 1px)',
+            'linear-gradient(hsl(0 100% 63% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.15) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'down' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'down' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Radial glow */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
-        style={{
-          opacity: primaryBet ? 1 : 0,
-          background: gridDirection === 'up'
-            ? 'radial-gradient(ellipse at center, hsl(160 100% 51% / 0.1) 0%, transparent 60%)'
-            : 'radial-gradient(ellipse at center, hsl(0 100% 63% / 0.1) 0%, transparent 60%)',
-        }}
-      />
-      <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
 
