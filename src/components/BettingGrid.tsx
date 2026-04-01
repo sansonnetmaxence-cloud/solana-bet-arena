@@ -150,13 +150,13 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
       </div>
 
       {/* Desktop layout */}
-      <div className="hidden sm:grid grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
+      <div className="hidden sm:grid grid-cols-4 md:grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
         {downPrices.map((p, i) => renderCard(p, 'down', i))}
       </div>
 
       <div className={cn(
-        'hidden sm:block transition-all duration-700 shrink-0 relative z-0',
-        hasBets && 'scale-105',
+        'hidden sm:block transition-all duration-700 shrink-0 relative z-0 mx-2 md:mx-4',
+        hasBets && 'scale-[1.03]',
       )}>
         <PriceCard
           price={0}
