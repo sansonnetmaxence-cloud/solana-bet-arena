@@ -5,6 +5,7 @@ import TopBar from '@/components/TopBar';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
 import MarketRules from '@/components/MarketRules';
+import OrderBook from '@/components/OrderBook';
 import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
