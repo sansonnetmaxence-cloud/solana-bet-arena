@@ -175,31 +175,31 @@ const Index = () => {
         )}>
 
           {latestResult && latestResultBet && (
-            <div className={cn(
-              'absolute inset-0 flex items-center justify-center z-40 backdrop-blur-md',
-              'animate-in fade-in duration-300'
-            )}>
+            <div className="absolute inset-0 flex items-center justify-center z-40 backdrop-blur-sm bg-background/60 animate-in fade-in duration-300">
               <div className={cn(
-                'text-center p-12 rounded-2xl border-2 animate-result-pop',
+                'text-center p-10 md:p-14 rounded-2xl border animate-result-pop',
                 latestResult === 'won'
-                  ? 'border-success glow-green bg-success/5'
-                  : 'border-danger glow-red bg-danger/5'
+                  ? 'border-success/30 bg-card/90'
+                  : 'border-danger/30 bg-card/90'
               )}>
                 <span className={cn(
-                  'font-display text-7xl md:text-9xl font-black block animate-result-text',
-                  latestResult === 'won' ? 'text-success text-glow-green' : 'text-danger text-glow-red'
-                )}>
-                  {latestResult === 'won' ? '🏆 WIN' : '💀 LOSS'}
+                  'font-display text-6xl md:text-8xl font-black block animate-result-text',
+                  latestResult === 'won' ? 'text-success' : 'text-danger'
+                )}
+                  style={{
+                    textShadow: latestResult === 'won'
+                      ? '0 0 40px hsl(160 100% 51% / 0.3)'
+                      : '0 0 40px hsl(0 100% 63% / 0.3)',
+                  }}
+                >
+                  {latestResult === 'won' ? 'WIN' : 'LOSS'}
                 </span>
                 <p className={cn(
-                  'font-display text-xl md:text-2xl mt-4 uppercase tracking-widest font-bold animate-result-amount',
-                  latestResult === 'won' ? 'text-success' : 'text-danger'
+                  'font-display text-2xl md:text-3xl mt-3 font-black animate-result-amount tabular-nums',
+                  latestResult === 'won' ? 'text-success/80' : 'text-danger/80'
                 )}>
-                  {latestResult === 'won' ? `+${latestResultBet.amount} SOL` : `-${latestResultBet.amount} SOL`}
+                  {latestResult === 'won' ? `+${latestResultBet.amount}` : `-${latestResultBet.amount}`} SOL
                 </p>
-                {latestResult === 'won' && (
-                  <div className="mt-2 text-2xl animate-bounce">🎉🎉🎉</div>
-                )}
               </div>
             </div>
           )}
