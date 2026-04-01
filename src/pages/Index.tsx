@@ -155,7 +155,7 @@ const Index = () => {
         style={{
           opacity: activeBet ? 1 : 0,
           background: activeBet?.direction === 'up'
-            ? 'radial-gradient(ellipse at center, hsl(145 100% 50% / 0.1) 0%, transparent 60%)'
+            ? 'radial-gradient(ellipse at center, hsl(160 100% 51% / 0.1) 0%, transparent 60%)'
             : 'radial-gradient(ellipse at center, hsl(0 100% 63% / 0.1) 0%, transparent 60%)',
         }}
       />
