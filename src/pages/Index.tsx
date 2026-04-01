@@ -4,6 +4,7 @@ import BettingGrid from '@/components/BettingGrid';
 import TopBar from '@/components/TopBar';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
+import MarketRules from '@/components/MarketRules';
 import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
@@ -277,6 +278,8 @@ const Index = () => {
       <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
         <BetHistory history={betHistory} />
       </div>
+
+      <MarketRules />
     </div>
   );
 };
