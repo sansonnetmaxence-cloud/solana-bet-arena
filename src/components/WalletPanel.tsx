@@ -109,69 +109,8 @@ const WalletPanel = ({
         </span>
       </div>
 
-      {/* Custom price */}
-      <div>
-        <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
-          Custom Target Price
-        </label>
-        <input
-          type="number"
-          step="0.01"
-          placeholder="e.g. 155.50"
-          value={customPrice}
-          onChange={(e) => setCustomPrice(e.target.value)}
-          className="w-full bg-muted/50 border border-border rounded-md px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary focus:glow-primary transition-all"
-        />
-      </div>
-
-      {/* Amount */}
-      <div>
-        <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
-          Bet Amount (SOL)
-        </label>
-        <input
-          type="number"
-          step="0.01"
-          min="0.01"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          className="w-full bg-muted/50 border border-border rounded-md px-3 py-2 font-mono text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary focus:glow-primary transition-all"
-        />
-        <div className="flex gap-2 mt-2">
-          {['0.1', '0.5', '1', '5'].map((a) => (
-            <button
-              key={a}
-              onClick={() => setAmount(a)}
-              className={cn(
-                'flex-1 py-1 rounded text-[10px] font-display uppercase border transition-all',
-                amount === a
-                  ? 'border-primary/60 text-primary bg-primary/10'
-                  : 'border-border text-muted-foreground hover:border-primary/30'
-              )}
-            >
-              {a}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Place bet button */}
-      <button
-        onClick={() => onPlaceBet(
-          parseFloat(amount),
-          customPrice ? parseFloat(customPrice) : null,
-          timeframe
-        )}
-        disabled={!!activeBet || !amount}
-        className={cn(
-          'w-full py-3 rounded-lg font-display text-sm uppercase tracking-widest border transition-all',
-          activeBet
-            ? 'bg-muted border-border text-muted-foreground cursor-not-allowed'
-            : 'bg-primary/20 border-primary text-primary hover:bg-primary/30 glow-primary hover:scale-[1.02]'
-        )}
-      >
-        {activeBet ? `⏱ Bet Active` : '🎯 Place Bet'}
-      </button>
+    </div>
+  );
     </div>
   );
 };
