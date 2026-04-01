@@ -38,7 +38,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
       {/* Stats bar */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="font-display text-lg md:text-xl text-foreground uppercase tracking-widest font-bold">
-          📊 Bet History
+          Bet History
         </h3>
         <div className="flex items-center gap-4">
           <span className="font-display text-sm md:text-base text-success uppercase tracking-wider font-bold">
