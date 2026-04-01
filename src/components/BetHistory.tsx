@@ -61,7 +61,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-border/50">
-              {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'Result'].map(h => (
+              {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'P&L', 'Result'].map(h => (
                 <th key={h} className="font-display text-xs text-muted-foreground/70 uppercase tracking-widest pb-3 px-3">
                   {h}
                 </th>
