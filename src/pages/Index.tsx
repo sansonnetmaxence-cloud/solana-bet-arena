@@ -281,7 +281,6 @@ const Index = () => {
         <BetHistory history={betHistory} />
       </div>
 
-      <MarketRules />
     </div>
   );
 };
