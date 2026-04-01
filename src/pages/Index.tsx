@@ -126,12 +126,12 @@ const Index = () => {
               ? currentPrice >= bet.price
               : currentPrice <= bet.price;
             const result = won ? 'won' : 'lost';
-            if (won) sfx.playWin(); else sfx.playLose();
+            if (won) sfxRef.current.playWin(); else sfxRef.current.playLose();
 
             setLatestResult(result);
             setLatestResultBet(bet);
 
-            addNotification(
+            addNotificationRef.current(
               won
                 ? `WIN +${bet.amount} SOL on $${bet.price.toFixed(2)}`
                 : `LOSS -${bet.amount} SOL on $${bet.price.toFixed(2)}`,
