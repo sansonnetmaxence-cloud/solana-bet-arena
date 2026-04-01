@@ -33,6 +33,10 @@ const TopBar = ({
   notifications,
 }: TopBarProps) => {
   const [showWalletMenu, setShowWalletMenu] = useState(false);
+  const [walletCurrency, setWalletCurrency] = useState<'SOL' | 'USD'>('SOL');
+  const solPrice = 130;
+  const balanceSOL = 4.20;
+  const balanceDisplay = walletCurrency === 'SOL' ? `${balanceSOL.toFixed(2)}` : `$${(balanceSOL * solPrice).toFixed(2)}`;
 
   return (
     <div className="flex items-center justify-between px-5 py-2.5 bg-card/40 backdrop-blur-md border-b border-border/20 relative z-20">
@@ -79,12 +83,17 @@ const TopBar = ({
       <div className="flex-1 flex items-center justify-end gap-3">
         {connected ? (
           <>
-            <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-success/[0.06] border border-success/15">
+            <button
+              onClick={() => setWalletCurrency(c => c === 'SOL' ? 'USD' : 'SOL')}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-success/[0.06] border border-success/15 hover:bg-success/[0.1] transition-all cursor-pointer"
+            >
               <span className="font-display text-base font-black text-success tabular-nums">
-                4.20
+                {balanceDisplay}
               </span>
-              <span className="font-display text-[8px] text-success/60 font-bold uppercase">SOL</span>
-            </div>
+              <span className="font-display text-[8px] text-success/60 font-bold uppercase">
+                {walletCurrency}
+              </span>
+            </button>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-success" />
               <span className="font-display text-[11px] text-primary tracking-wide">{walletAddress}</span>

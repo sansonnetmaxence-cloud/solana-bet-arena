@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface BetRecord {
@@ -17,6 +18,14 @@ interface BetHistoryProps {
 }
 
 const BetHistory = ({ history }: BetHistoryProps) => {
+  const [currency, setCurrency] = useState<'SOL' | 'USD'>('SOL');
+  const solPrice = 130; // approximate SOL/USD for display
+
+  const formatAmount = (amount: number, prefix = '') => {
+    if (currency === 'USD') return `${prefix}$${(amount * solPrice).toFixed(2)}`;
+    return `${prefix}${amount.toFixed(2)} SOL`;
+  };
+
   if (history.length === 0) {
     return (
       <div className="w-full px-6 py-8 text-center">
@@ -41,6 +50,12 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           Bet History
         </h3>
         <div className="flex items-center gap-4">
+          <button
+            onClick={() => setCurrency(c => c === 'SOL' ? 'USD' : 'SOL')}
+            className="px-2 py-0.5 rounded border border-border/40 text-[9px] font-display font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+          >
+            {currency === 'SOL' ? '◎ SOL' : '$ USD'}
+          </button>
           <span className="font-display text-sm md:text-base text-success uppercase tracking-wider font-bold">
             {totalWon}W
           </span>
@@ -49,9 +64,9 @@ const BetHistory = ({ history }: BetHistoryProps) => {
           </span>
           <span className={cn(
             'font-display text-lg md:text-xl font-black',
-            totalProfit >= 0 ? 'text-success text-glow-green' : 'text-danger text-glow-red'
+            totalProfit >= 0 ? 'text-success' : 'text-danger'
           )}>
-            {totalProfit >= 0 ? '+' : ''}{totalProfit.toFixed(2)} SOL
+            {totalProfit >= 0 ? '+' : ''}{formatAmount(Math.abs(totalProfit), totalProfit >= 0 ? '+' : '-').replace(/^[+-]/, totalProfit >= 0 ? '+' : '-')}
           </span>
         </div>
       </div>
@@ -99,7 +114,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
                     'font-mono text-sm font-bold tabular-nums',
                     bet.result === 'won' ? 'text-success' : 'text-danger'
                   )}>
-                    {bet.result === 'won' ? '+' : '-'}{bet.amount.toFixed(2)} SOL
+                    {bet.result === 'won' ? '+' : '-'}{formatAmount(bet.amount)}
                   </span>
                 </td>
                 <td className="py-3 px-3">
