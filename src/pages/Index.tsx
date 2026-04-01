@@ -31,7 +31,8 @@ interface Notification {
 }
 
 const Index = () => {
-  const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const [selectedMarket, setSelectedMarket] = useState<MarketSymbol>('SOL');
+  const { price, previousPrice, priceDirection, loading, priceHistory } = useCryptoPrice(selectedMarket);
   const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
