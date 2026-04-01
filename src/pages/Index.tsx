@@ -101,12 +101,11 @@ const Index = () => {
   // Countdown timer for all active bets
   useEffect(() => {
     if (activeBets.length === 0) return;
-    console.log('Starting countdown interval, bets:', activeBets.length);
     const timer = setInterval(() => {
-      console.log('Countdown tick');
       setActiveBets(prev => {
         const updated: ActiveBet[] = [];
         const resolved: ActiveBet[] = [];
+        const currentPrice = priceRef.current;
 
         prev.forEach(bet => {
           if (bet.countdown <= 1) {
@@ -116,11 +115,11 @@ const Index = () => {
           }
         });
 
-        if (resolved.length > 0 && price) {
+        if (resolved.length > 0 && currentPrice) {
           resolved.forEach(bet => {
             const won = bet.direction === 'up'
-              ? price >= bet.price
-              : price <= bet.price;
+              ? currentPrice >= bet.price
+              : currentPrice <= bet.price;
             const result = won ? 'won' : 'lost';
             if (won) sfx.playWin(); else sfx.playLose();
 
@@ -139,7 +138,7 @@ const Index = () => {
               direction: bet.direction,
               targetPrice: bet.price,
               startPrice: bet.startPrice,
-              endPrice: price,
+              endPrice: currentPrice,
               amount: bet.amount,
               timeframe: bet.timeframe,
               result,
@@ -158,7 +157,7 @@ const Index = () => {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBets.length, price, sfx, addNotification]);
+  }, [activeBets.length, sfx, addNotification]);
 
   const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
   const primaryCountdown = primaryBet?.countdown ?? 0;
