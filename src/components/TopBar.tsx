@@ -19,8 +19,6 @@ interface TopBarProps {
   quickBetAmount: number;
   onQuickBetAmountChange: (val: number) => void;
   notifications: Notification[];
-  theme?: 'dark' | 'light';
-  onToggleTheme?: () => void;
 }
 
 const TopBar = ({
