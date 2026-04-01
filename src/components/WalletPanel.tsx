@@ -111,8 +111,6 @@ const WalletPanel = ({
 
     </div>
   );
-    </div>
-  );
 };
 
 export default WalletPanel;
