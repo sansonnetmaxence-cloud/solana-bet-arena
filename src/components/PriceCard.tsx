@@ -174,7 +174,7 @@ const PriceCard = ({
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
                 'font-display font-black leading-none tabular-nums block',
-                hasBet ? 'text-3xl sm:text-5xl md:text-6xl' : 'text-4xl sm:text-6xl md:text-[5.5rem]',
+                hasBet ? 'text-4xl sm:text-6xl md:text-7xl lg:text-8xl' : 'text-5xl sm:text-7xl md:text-8xl lg:text-[7rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',

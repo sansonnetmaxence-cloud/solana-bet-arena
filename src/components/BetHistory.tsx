@@ -75,6 +75,13 @@ const BetHistory = ({ history }: BetHistoryProps) => {
         </div>
       </div>
 
+      {/* P&L Chart */}
+      {history.length >= 2 && (
+        <div className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-xl border border-border/20 bg-card/30">
+          <PnLChart history={history} currency={currency} solPrice={solPrice} />
+        </div>
+      )}
+
       {/* Mobile cards view */}
       <div className="flex flex-col gap-2 sm:hidden">
         {history.slice().reverse().map((bet) => (
