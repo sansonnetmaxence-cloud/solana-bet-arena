@@ -210,7 +210,7 @@ const Index = () => {
       />
 
       <MarketRules />
-      <OrderBook currentPrice={price} />
+      
 
       {/* Main area */}
       <div className={cn(
