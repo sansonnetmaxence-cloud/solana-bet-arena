@@ -17,7 +17,10 @@ interface PriceCardProps {
   disabled?: boolean;
   timeLabel?: string;
   activeBet?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
+  activeBets?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number }[];
   countdown?: number;
+  selectedPrice?: number | null;
+  selectedDirection?: 'up' | 'down' | null;
 }
 
 const PriceCard = ({
