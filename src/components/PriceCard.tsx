@@ -219,14 +219,12 @@ const PriceCard = ({
             </div>
           )}
 
-          {/* Trend indicator */}
+          {/* Trend dot */}
           {!hasBet && !selectedPrice && priceFlash && (
-            <span className={cn(
-              'text-xs font-display mt-1',
-              priceFlash === 'up' ? 'text-success animate-fade-arrow-up' : 'text-danger animate-fade-arrow-down',
-            )}>
-              {priceFlash === 'up' ? '▲' : '▼'}
-            </span>
+            <div className={cn(
+              'w-2 h-2 rounded-full mt-2 transition-all duration-500',
+              priceFlash === 'up' ? 'bg-success shadow-[0_0_8px_hsl(160_100%_51%/0.6)]' : 'bg-danger shadow-[0_0_8px_hsl(0_100%_63%/0.6)]',
+            )} />
           )}
         </div>
 
