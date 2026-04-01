@@ -43,6 +43,11 @@ const Index = () => {
   const priceRef = useRef(price);
   useEffect(() => { priceRef.current = price; }, [price]);
 
+  const sfxRef = useRef(sfx);
+  useEffect(() => { sfxRef.current = sfx; }, [sfx]);
+  const addNotificationRef = useRef(addNotification);
+  useEffect(() => { addNotificationRef.current = addNotification; }, [addNotification]);
+
   const addNotification = useCallback((message: string, type: 'win' | 'loss' | 'info') => {
     const notif: Notification = { id: crypto.randomUUID(), message, type, timestamp: Date.now() };
     setNotifications(prev => [notif, ...prev].slice(0, 20));
