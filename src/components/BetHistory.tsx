@@ -114,7 +114,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
                     'font-mono text-sm font-bold tabular-nums',
                     bet.result === 'won' ? 'text-success' : 'text-danger'
                   )}>
-                    {bet.result === 'won' ? '+' : '-'}{bet.amount.toFixed(2)} SOL
+                    {bet.result === 'won' ? '+' : '-'}{formatAmount(bet.amount)}
                   </span>
                 </td>
                 <td className="py-3 px-3">
