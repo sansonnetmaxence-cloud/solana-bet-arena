@@ -41,6 +41,22 @@ const BetHistory = ({ history }: BetHistoryProps) => {
   const totalWon = history.filter(b => b.result === 'won').length;
   const totalLost = history.filter(b => b.result === 'lost').length;
   const totalProfit = history.reduce((acc, b) => acc + (b.result === 'won' ? b.amount : -b.amount), 0);
+  const winrate = history.length > 0 ? ((totalWon / history.length) * 100).toFixed(1) : '0.0';
+
+  // Best trade
+  const bestTrade = history.reduce((best, b) => {
+    if (b.result === 'won' && b.amount > (best?.amount ?? 0)) return b;
+    return best;
+  }, null as (typeof history)[0] | null);
+
+  // Current streak
+  const reversed = [...history].reverse();
+  let streakType: 'won' | 'lost' | null = reversed[0]?.result ?? null;
+  let streakCount = 0;
+  for (const b of reversed) {
+    if (b.result === streakType) streakCount++;
+    else break;
+  }
 
   return (
     <div className="w-full px-3 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8">

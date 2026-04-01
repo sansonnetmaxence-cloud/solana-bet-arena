@@ -111,7 +111,7 @@ const PriceCard = ({
             ? betDir === 'up'
               ? '0 0 60px hsl(160 100% 51% / 0.12), 0 0 120px hsl(160 100% 51% / 0.04)'
               : '0 0 60px hsl(0 100% 63% / 0.12), 0 0 120px hsl(0 100% 63% / 0.04)'
-            : '0 4px 40px hsl(0 0% 0% / 0.4)',
+            : undefined,
         }}
       >
         {/* Header */}
