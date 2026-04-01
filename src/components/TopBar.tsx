@@ -33,6 +33,10 @@ const TopBar = ({
   notifications,
 }: TopBarProps) => {
   const [showWalletMenu, setShowWalletMenu] = useState(false);
+  const [walletCurrency, setWalletCurrency] = useState<'SOL' | 'USD'>('SOL');
+  const solPrice = 130;
+  const balanceSOL = 4.20;
+  const balanceDisplay = walletCurrency === 'SOL' ? `${balanceSOL.toFixed(2)}` : `$${(balanceSOL * solPrice).toFixed(2)}`;
 
   return (
     <div className="flex items-center justify-between px-5 py-2.5 bg-card/40 backdrop-blur-md border-b border-border/20 relative z-20">
