@@ -100,8 +100,8 @@ const PriceCard = ({
         'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
         // Responsive sizing
         hasBet
-          ? 'w-full max-w-[20rem] h-[22rem] sm:w-[22rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem]'
-          : 'w-full max-w-[18rem] h-[20rem] sm:w-80 sm:h-[24rem] md:w-[24rem] md:h-[30rem]',
+          ? 'w-full max-w-[22rem] h-[24rem] sm:w-[26rem] sm:h-[32rem] md:w-[32rem] md:h-[38rem] lg:w-[36rem] lg:h-[42rem]'
+          : 'w-full max-w-[20rem] h-[22rem] sm:w-[24rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem] lg:w-[32rem] lg:h-[38rem]',
         hasBet && betDir === 'up' && 'border-success/20',
         hasBet && betDir === 'down' && 'border-danger/20',
         !hasBet && 'border-border/30',
