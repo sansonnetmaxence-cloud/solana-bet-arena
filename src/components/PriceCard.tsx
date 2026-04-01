@@ -17,7 +17,10 @@ interface PriceCardProps {
   disabled?: boolean;
   timeLabel?: string;
   activeBet?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
+  activeBets?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number }[];
   countdown?: number;
+  selectedPrice?: number | null;
+  selectedDirection?: 'up' | 'down' | null;
 }
 
 const PriceCard = ({
@@ -33,9 +36,13 @@ const PriceCard = ({
   disabled = false,
   timeLabel,
   activeBet,
+  activeBets = [],
   countdown,
+  selectedPrice,
+  selectedDirection,
 }: PriceCardProps) => {
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
+  const [priceTrend, setPriceTrend] = useState<'up' | 'down'>('up');
   const [bounce, setBounce] = useState(false);
   const prevPriceRef = useRef(currentPrice);
 
@@ -46,9 +53,11 @@ const PriceCard = ({
     }
     if (currentPrice > prevPriceRef.current) {
       setPriceFlash('up');
+      setPriceTrend('up');
       setBounce(true);
     } else if (currentPrice < prevPriceRef.current) {
       setPriceFlash('down');
+      setPriceTrend('down');
       setBounce(true);
     }
     prevPriceRef.current = currentPrice;
@@ -149,25 +158,19 @@ const PriceCard = ({
             <span className={cn(
               'font-display font-black transition-colors duration-300 leading-none',
               hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-8xl',
-              priceFlash === 'up' && 'text-success',
-              priceFlash === 'down' && 'text-danger',
-              !priceFlash && !hasBet && 'text-primary',
-              !priceFlash && hasBet && betDir === 'up' && 'text-success',
-              !priceFlash && hasBet && betDir === 'down' && 'text-danger',
+              priceTrend === 'up' ? 'text-success' : 'text-danger',
             )}
               style={{
-                textShadow: priceFlash === 'up' || (!priceFlash && hasBet && betDir === 'up')
-                  ? '0 0 30px hsl(160 100% 51% / 0.5)'
-                  : priceFlash === 'down' || (!priceFlash && hasBet && betDir === 'down')
-                    ? '0 0 30px hsl(0 100% 63% / 0.5)'
-                    : '0 0 20px hsl(160 100% 51% / 0.3)',
+                textShadow: priceTrend === 'up'
+                  ? '0 0 30px hsl(160 100% 51% / 0.4)'
+                  : '0 0 30px hsl(0 100% 63% / 0.4)',
               }}
             >
               ${currentPrice?.toFixed(2) ?? '---'}
             </span>
           </div>
 
-          {/* Price change indicator */}
+          {/* Price change indicator when bet active */}
           {hasBet && priceDelta != null && (
             <div className={cn(
               'mt-2 px-3 py-1 rounded-full text-xs font-display font-bold flex items-center gap-1',
@@ -180,11 +183,37 @@ const PriceCard = ({
             </div>
           )}
 
-          {!hasBet && priceFlash === 'up' && (
+          {/* Selected price display (without quick bet) */}
+          {!hasBet && selectedPrice != null && selectedDirection && (
+            <div className={cn(
+              'mt-3 px-4 py-2 rounded-xl border flex flex-col items-center animate-in fade-in zoom-in duration-300',
+              selectedDirection === 'up'
+                ? 'bg-success/8 border-success/25 text-success'
+                : 'bg-danger/8 border-danger/25 text-danger',
+            )}>
+              <span className="text-[9px] uppercase tracking-widest font-bold opacity-70">Selected</span>
+              <span className="font-display text-xl font-black tabular-nums">
+                ${selectedPrice.toFixed(2)}
+              </span>
+              <span className="text-[10px] font-bold uppercase tracking-wider">
+                {selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}
+              </span>
+            </div>
+          )}
+
+          {/* Trend arrows */}
+          {!hasBet && !selectedPrice && priceFlash === 'up' && (
             <span className="text-success text-sm font-display mt-1 animate-fade-arrow-up">▲</span>
           )}
-          {!hasBet && priceFlash === 'down' && (
+          {!hasBet && !selectedPrice && priceFlash === 'down' && (
             <span className="text-danger text-sm font-display mt-1 animate-fade-arrow-down">▼</span>
+          )}
+
+          {/* Active bets count */}
+          {activeBets.length > 1 && (
+            <div className="mt-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-display font-bold uppercase tracking-widest">
+              {activeBets.length} Active Bets
+            </div>
           )}
         </div>
 
