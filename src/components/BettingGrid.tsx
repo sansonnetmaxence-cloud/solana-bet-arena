@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import PriceCard from './PriceCard';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ActiveBet {
   id: string;
@@ -31,15 +32,23 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
   const basePrice = currentPrice ?? 150;
   const hasBets = activeBets.length > 0;
   const primaryBet = hasBets ? activeBets[0] : null;
+  const isMobile = useIsMobile();
 
   const offsets = useMemo(() => {
+    if (isMobile) {
+      // Fewer cards on mobile
+      return [
+        ...Array.from({ length: 6 }, (_, i) => 0.1 + i * 0.15),
+        ...Array.from({ length: 6 }, (_, i) => 1.25 + i * 0.5),
+      ];
+    }
     const steps = [
       ...Array.from({ length: 10 }, (_, i) => 0.1 + i * 0.1),
       ...Array.from({ length: 10 }, (_, i) => 1.25 + i * 0.25),
       ...Array.from({ length: 10 }, (_, i) => 4 + i * 1),
     ];
     return steps;
-  }, []);
+  }, [isMobile]);
 
   const downPrices = useMemo(() =>
     offsets.map(o => Math.round((basePrice - o) * 100) / 100).reverse()
@@ -62,7 +71,6 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     return parseInt(label);
   };
 
-  // Match by price AND direction — use rounded comparison to avoid float issues
   const isCardActive = (p: number, dir: 'up' | 'down') => {
     return activeBets.some(b => Math.abs(b.price - p) < 0.001 && b.direction === dir);
   };
@@ -76,10 +84,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     const active = isCardActive(p, dir);
     const selected = isCardSelected(p, dir);
     return (
-      <div
-        key={`${dir}-${p}`}
-        className="transition-all duration-200"
-      >
+      <div key={`${dir}-${p}`} className="transition-all duration-200">
         <PriceCard
           price={p}
           direction={dir}
@@ -93,7 +98,6 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     );
   };
 
-  // For center card, pass the primary bet as activeBet
   const centerActiveBet = primaryBet ? {
     price: primaryBet.price,
     direction: primaryBet.direction,
@@ -102,18 +106,56 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     amount: primaryBet.amount,
   } : null;
 
+  const gridCols = isMobile ? 3 : 5;
+
   return (
     <div className={cn(
-      'relative flex items-center justify-center gap-3 md:gap-5 transition-all duration-500',
+      'relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-5 transition-all duration-500 w-full px-2 sm:px-0',
     )}>
-      {/* Down bets */}
-      <div className="grid grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
+      {/* Mobile: Center card on top */}
+      <div className={cn(
+        'sm:hidden transition-all duration-700 shrink-0 relative z-0 w-full flex justify-center',
+        hasBets && 'scale-[1.02]',
+      )}>
+        <PriceCard
+          price={0}
+          direction="up"
+          isCenter
+          currentPrice={currentPrice ?? undefined}
+          previousPrice={previousPrice ?? undefined}
+          priceHistory={priceHistory}
+          activeBet={centerActiveBet}
+          activeBets={activeBets.map(b => ({
+            price: b.price,
+            direction: b.direction,
+            timeframe: b.timeframe,
+            startPrice: b.startPrice,
+            amount: b.amount,
+            countdown: b.countdown,
+          }))}
+          countdown={countdown}
+          selectedPrice={selectedPrice}
+          selectedDirection={selectedDirection}
+        />
+      </div>
+
+      {/* Mobile: grids side by side below center */}
+      <div className="flex sm:hidden gap-2 w-full justify-center">
+        <div className={`grid grid-cols-${gridCols} gap-1 max-h-[40vh] overflow-y-auto scrollbar-hide`}>
+          {downPrices.map((p, i) => renderCard(p, 'down', i))}
+        </div>
+        <div className={`grid grid-cols-${gridCols} gap-1 max-h-[40vh] overflow-y-auto scrollbar-hide`}>
+          {upPrices.map((p, i) => renderCard(p, 'up', i))}
+        </div>
+      </div>
+
+      {/* Desktop layout */}
+      <div className="hidden sm:grid grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
         {downPrices.map((p, i) => renderCard(p, 'down', i))}
       </div>
 
-      {/* Center */}
       <div className={cn(
-        'transition-all duration-700 shrink-0 relative z-0',
+        'hidden sm:block transition-all duration-700 shrink-0 relative z-0',
         hasBets && 'scale-105',
       )}>
         <PriceCard
@@ -138,8 +180,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
         />
       </div>
 
-      {/* Up bets */}
-      <div className="grid grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
+      <div className="hidden sm:grid grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
         {upPrices.map((p, i) => renderCard(p, 'up', i))}
       </div>
     </div>
