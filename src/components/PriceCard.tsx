@@ -175,22 +175,35 @@ const PriceCard = ({
 
         {/* Price */}
         <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1">
-          <div className="relative">
-            <span className={cn(
-              'font-display font-black leading-none tabular-nums transition-colors duration-500',
-              hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-[5.5rem]',
-              priceTrend === 'up' ? 'text-success' : 'text-danger',
-            )}
+          <div className="relative overflow-hidden">
+            <span
+              key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
+              className={cn(
+                'font-display font-black leading-none tabular-nums block',
+                hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-[5.5rem]',
+                priceTrend === 'up' ? 'text-success' : 'text-danger',
+                priceFlash === 'up' && 'animate-price-fly-up',
+                priceFlash === 'down' && 'animate-price-fly-down',
+              )}
               style={{
                 textShadow: priceTrend === 'up'
                   ? `0 0 ${20 + glowIntensity.current * 30}px hsl(160 100% 51% / ${0.2 + glowIntensity.current * 0.4})`
                   : `0 0 ${20 + glowIntensity.current * 30}px hsl(0 100% 63% / ${0.2 + glowIntensity.current * 0.4})`,
-                transition: 'text-shadow 0.3s ease-out',
               }}
             >
               ${displayPrice.toFixed(2)}
             </span>
           </div>
+
+          {/* Trend arrow */}
+          {!hasBet && !selectedPrice && priceFlash && (
+            <span className={cn(
+              'text-lg font-display mt-1 block',
+              priceFlash === 'up' ? 'text-success animate-arrow-float-up' : 'text-danger animate-arrow-float-down',
+            )}>
+              {priceFlash === 'up' ? '▲' : '▼'}
+            </span>
+          )}
 
           {/* Delta pill */}
           {hasBet && priceDelta != null && (
@@ -217,14 +230,6 @@ const PriceCard = ({
               <span className="font-display text-xl font-black tabular-nums">${selectedPrice.toFixed(2)}</span>
               <span className="text-[9px] font-bold uppercase">{selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}</span>
             </div>
-          )}
-
-          {/* Trend dot */}
-          {!hasBet && !selectedPrice && priceFlash && (
-            <div className={cn(
-              'w-2 h-2 rounded-full mt-2 transition-all duration-500',
-              priceFlash === 'up' ? 'bg-success shadow-[0_0_8px_hsl(160_100%_51%/0.6)]' : 'bg-danger shadow-[0_0_8px_hsl(0_100%_63%/0.6)]',
-            )} />
           )}
         </div>
 
