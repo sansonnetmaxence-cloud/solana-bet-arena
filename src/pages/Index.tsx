@@ -278,6 +278,8 @@ const Index = () => {
       <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
         <BetHistory history={betHistory} />
       </div>
+
+      <MarketRules />
     </div>
   );
 };
