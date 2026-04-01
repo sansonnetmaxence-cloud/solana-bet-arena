@@ -1,21 +1,23 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import type { MarketSymbol } from '@/hooks/useCryptoPrice';
 
 interface HeaderProps {
   priceDirection: 'up' | 'down' | 'neutral';
+  selectedMarket: MarketSymbol;
+  onMarketChange: (market: MarketSymbol) => void;
 }
 
-const markets = [
-  { pair: 'SOL / USD', soon: false },
-  { pair: 'BTC / USD', soon: false },
-  { pair: 'ETH / USD', soon: false },
-  { pair: 'XRP / USD', soon: false },
-  { pair: 'Stock Market', soon: true },
+const markets: { pair: string; symbol: MarketSymbol | null; soon?: boolean }[] = [
+  { pair: 'SOL / USD', symbol: 'SOL' },
+  { pair: 'BTC / USD', symbol: 'BTC' },
+  { pair: 'ETH / USD', symbol: 'ETH' },
+  { pair: 'XRP / USD', symbol: 'XRP' },
+  { pair: 'Stock Market', symbol: null, soon: true },
 ];
 
-const Header = ({ priceDirection }: HeaderProps) => {
+const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps) => {
   const [totalSol, setTotalSol] = useState(124_853.42);
-  const [selectedMarket, setSelectedMarket] = useState('SOL / USD');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,11 +72,11 @@ const Header = ({ priceDirection }: HeaderProps) => {
         {markets.map((m) => (
           <button
             key={m.pair}
-            onClick={() => !m.soon && setSelectedMarket(m.pair)}
+            onClick={() => m.symbol && onMarketChange(m.symbol)}
             disabled={m.soon}
             className={cn(
               'relative px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-display font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border',
-              selectedMarket === m.pair
+              m.symbol === selectedMarket
                 ? 'border-primary/40 text-primary bg-primary/10'
                 : m.soon
                   ? 'border-border/20 text-muted-foreground/30 cursor-not-allowed'
