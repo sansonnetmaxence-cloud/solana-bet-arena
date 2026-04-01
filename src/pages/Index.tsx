@@ -10,11 +10,13 @@ import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { cn } from '@/lib/utils';
 
 interface ActiveBet {
+  id: string;
   price: number;
   direction: 'up' | 'down';
   timeframe: number;
   startPrice: number;
   amount: number;
+  countdown: number;
 }
 
 const Index = () => {
@@ -23,35 +25,34 @@ const Index = () => {
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
   const sfx = useSoundEffects();
-  const [activeBet, setActiveBet] = useState<ActiveBet | null>(null);
-  const [betResult, setBetResult] = useState<'won' | 'lost' | null>(null);
+  const [activeBets, setActiveBets] = useState<ActiveBet[]>([]);
+  const [latestResult, setLatestResult] = useState<'won' | 'lost' | null>(null);
+  const [latestResultBet, setLatestResultBet] = useState<ActiveBet | null>(null);
   const [selectedDirection, setSelectedDirection] = useState<'up' | 'down' | null>(null);
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
-  const [countdown, setCountdown] = useState<number>(0);
   const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
 
   const handleSelectBet = useCallback((targetPrice: number, direction: 'up' | 'down', quickTimeframe?: number) => {
     if (!wallet.connected) return;
     sfx.playClick();
 
-    // Quick bet mode: instantly place the bet
     if (quickBetMode && quickTimeframe != null && price) {
       const bet: ActiveBet = {
+        id: crypto.randomUUID(),
         price: targetPrice,
         direction,
         timeframe: quickTimeframe,
         startPrice: price,
         amount: quickBetAmount,
+        countdown: quickTimeframe * 60,
       };
-      setActiveBet(bet);
-      setCountdown(quickTimeframe * 60);
-      setBetResult(null);
+      setActiveBets(prev => [...prev, bet]);
       return;
     }
 
     setSelectedPrice(targetPrice);
     setSelectedDirection(direction);
-  }, [wallet.connected, sfx, quickBetMode, price]);
+  }, [wallet.connected, sfx, quickBetMode, price, quickBetAmount]);
 
   const handlePlaceBet = useCallback((amount: number, customPrice: number | null, timeframe: number) => {
     if (!price) return;
@@ -63,67 +64,80 @@ const Index = () => {
     if (!targetPrice || !direction) return;
 
     const bet: ActiveBet = {
+      id: crypto.randomUUID(),
       price: targetPrice,
       direction,
       timeframe,
       startPrice: price,
       amount,
+      countdown: timeframe * 60,
     };
-    setActiveBet(bet);
+    setActiveBets(prev => [...prev, bet]);
     sfx.playClick();
-    setCountdown(timeframe * 60);
-    setBetResult(null);
+    setSelectedPrice(null);
+    setSelectedDirection(null);
   }, [price, selectedPrice, selectedDirection, sfx]);
 
-  // Countdown timer
+  // Countdown timer for all active bets
   useEffect(() => {
-    if (!activeBet || countdown <= 0) return;
+    if (activeBets.length === 0) return;
     const timer = setInterval(() => {
-      setCountdown((c) => {
-        if (c <= 1) {
-          clearInterval(timer);
-          if (price) {
-            const won = activeBet.direction === 'up'
-              ? price >= activeBet.price
-              : price <= activeBet.price;
+      setActiveBets(prev => {
+        const updated: ActiveBet[] = [];
+        const resolved: ActiveBet[] = [];
+
+        prev.forEach(bet => {
+          if (bet.countdown <= 1) {
+            resolved.push(bet);
+          } else {
+            updated.push({ ...bet, countdown: bet.countdown - 1 });
+          }
+        });
+
+        // Resolve finished bets
+        if (resolved.length > 0 && price) {
+          resolved.forEach(bet => {
+            const won = bet.direction === 'up'
+              ? price >= bet.price
+              : price <= bet.price;
             const result = won ? 'won' : 'lost';
-            setBetResult(result);
             if (won) sfx.playWin(); else sfx.playLose();
 
-            // Record to history
+            setLatestResult(result);
+            setLatestResultBet(bet);
+
             const record: BetRecord = {
               id: crypto.randomUUID(),
-              direction: activeBet.direction,
-              targetPrice: activeBet.price,
-              startPrice: activeBet.startPrice,
+              direction: bet.direction,
+              targetPrice: bet.price,
+              startPrice: bet.startPrice,
               endPrice: price,
-              amount: activeBet.amount,
-              timeframe: activeBet.timeframe,
+              amount: bet.amount,
+              timeframe: bet.timeframe,
               result,
               timestamp: new Date(),
             };
             setBetHistory(prev => [...prev, record]);
+          });
 
-            setTimeout(() => {
-              setActiveBet(null);
-              setBetResult(null);
-              setSelectedPrice(null);
-              setSelectedDirection(null);
-            }, 4000);
-          }
-          return 0;
+          setTimeout(() => {
+            setLatestResult(null);
+            setLatestResultBet(null);
+          }, 4000);
         }
-        return c - 1;
+
+        return updated;
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [activeBet, price, sfx]);
+  }, [activeBets.length, price, sfx]);
 
-  const formatCountdown = (s: number) => {
-    const min = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${min}:${sec.toString().padStart(2, '0')}`;
-  };
+  // First active bet for backward compat display
+  const primaryBet = activeBets.length > 0 ? activeBets[0] : null;
+  const primaryCountdown = primaryBet?.countdown ?? 0;
+
+  // Grid overlay direction: use the latest bet's direction
+  const gridDirection = primaryBet?.direction ?? null;
 
   return (
     <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
@@ -131,30 +145,30 @@ const Index = () => {
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
         style={{
-          opacity: activeBet?.direction === 'up' ? 1 : 0,
+          opacity: gridDirection === 'up' ? 1 : 0,
           backgroundImage: 
           'linear-gradient(hsl(160 100% 51% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.3) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: activeBet?.direction === 'up' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'up' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
         }}
       />
       {/* Red grid overlay */}
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
         style={{
-          opacity: activeBet?.direction === 'down' ? 1 : 0,
+          opacity: gridDirection === 'down' ? 1 : 0,
           backgroundImage:
             'linear-gradient(hsl(0 100% 63% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.3) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: activeBet?.direction === 'down' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'down' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
         }}
       />
       {/* Radial glow */}
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
         style={{
-          opacity: activeBet ? 1 : 0,
-          background: activeBet?.direction === 'up'
+          opacity: primaryBet ? 1 : 0,
+          background: gridDirection === 'up'
             ? 'radial-gradient(ellipse at center, hsl(160 100% 51% / 0.1) 0%, transparent 60%)'
             : 'radial-gradient(ellipse at center, hsl(0 100% 63% / 0.1) 0%, transparent 60%)',
         }}
@@ -167,33 +181,33 @@ const Index = () => {
         {/* Main area */}
         <div className={cn(
           'flex-1 flex flex-col items-center justify-center p-4 md:p-8 transition-all duration-500',
-          betResult && 'relative'
+          latestResult && 'relative'
         )}>
 
-          {betResult && (
+          {latestResult && latestResultBet && (
             <div className={cn(
               'absolute inset-0 flex items-center justify-center z-40 backdrop-blur-md',
               'animate-in fade-in duration-300'
             )}>
               <div className={cn(
                 'text-center p-12 rounded-2xl border-2 animate-result-pop',
-                betResult === 'won'
+                latestResult === 'won'
                   ? 'border-success glow-green bg-success/5'
                   : 'border-danger glow-red bg-danger/5'
               )}>
                 <span className={cn(
                   'font-display text-7xl md:text-9xl font-black block animate-result-text',
-                  betResult === 'won' ? 'text-success text-glow-green' : 'text-danger text-glow-red'
+                  latestResult === 'won' ? 'text-success text-glow-green' : 'text-danger text-glow-red'
                 )}>
-                  {betResult === 'won' ? '🏆 WIN' : '💀 LOSS'}
+                  {latestResult === 'won' ? '🏆 WIN' : '💀 LOSS'}
                 </span>
                 <p className={cn(
                   'font-display text-xl md:text-2xl mt-4 uppercase tracking-widest font-bold animate-result-amount',
-                  betResult === 'won' ? 'text-success' : 'text-danger'
+                  latestResult === 'won' ? 'text-success' : 'text-danger'
                 )}>
-                  {betResult === 'won' ? `+${activeBet?.amount} SOL` : `-${activeBet?.amount} SOL`}
+                  {latestResult === 'won' ? `+${latestResultBet.amount} SOL` : `-${latestResultBet.amount} SOL`}
                 </p>
-                {betResult === 'won' && (
+                {latestResult === 'won' && (
                   <div className="mt-2 text-2xl animate-bounce">🎉🎉🎉</div>
                 )}
               </div>
@@ -210,10 +224,12 @@ const Index = () => {
               previousPrice={previousPrice}
               priceHistory={priceHistory}
               onSelectBet={handleSelectBet}
-              activeBet={activeBet}
-              betResult={betResult}
+              activeBets={activeBets}
+              betResult={latestResult}
               quickBetMode={quickBetMode}
-              countdown={countdown}
+              countdown={primaryCountdown}
+              selectedPrice={selectedPrice}
+              selectedDirection={selectedDirection}
             />
           )}
         </div>
@@ -225,7 +241,7 @@ const Index = () => {
         )}>
           <WalletPanel
             onPlaceBet={handlePlaceBet}
-            activeBet={activeBet}
+            activeBet={primaryBet}
             connected={wallet.connected}
             walletAddress={wallet.walletAddress}
             walletType={wallet.walletType}
@@ -243,7 +259,7 @@ const Index = () => {
           <div className="fixed bottom-6 right-6 z-30">
             <WalletPanel
               onPlaceBet={handlePlaceBet}
-              activeBet={activeBet}
+              activeBet={primaryBet}
               connected={wallet.connected}
               walletAddress={wallet.walletAddress}
               walletType={wallet.walletType}
