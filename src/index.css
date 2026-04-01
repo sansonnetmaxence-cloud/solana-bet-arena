@@ -52,51 +52,6 @@
     --glow-secondary: 0 0 20px hsl(263 80% 63% / 0.4), 0 0 40px hsl(263 80% 63% / 0.2);
   }
 
-  .light {
-    --background: 220 20% 96%;
-    --foreground: 230 25% 12%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 230 25% 12%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 230 25% 12%;
-
-    --primary: 160 85% 32%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 263 55% 48%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 220 14% 90%;
-    --muted-foreground: 220 10% 38%;
-
-    --accent: 263 55% 48%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 80% 48%;
-    --destructive-foreground: 0 0% 100%;
-
-    --success: 160 85% 28%;
-    --success-foreground: 0 0% 100%;
-
-    --danger: 0 80% 48%;
-    --danger-foreground: 0 0% 100%;
-
-    --border: 220 15% 78%;
-    --input: 220 15% 78%;
-    --ring: 160 85% 32%;
-
-    --radius: 0.5rem;
-
-    --font-display: 'Space Grotesk', sans-serif;
-    --font-mono: 'IBM Plex Mono', monospace;
-
-    --glow-green: 0 0 15px hsl(160 100% 38% / 0.3), 0 0 30px hsl(160 100% 38% / 0.15);
-    --glow-red: 0 0 15px hsl(0 85% 55% / 0.3), 0 0 30px hsl(0 85% 55% / 0.15);
-    --glow-primary: 0 0 15px hsl(160 100% 38% / 0.2), 0 0 30px hsl(160 100% 38% / 0.1);
-    --glow-secondary: 0 0 15px hsl(263 60% 55% / 0.2), 0 0 30px hsl(263 60% 55% / 0.1);
-  }
 }
 
 @layer base {
