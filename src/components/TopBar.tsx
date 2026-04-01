@@ -153,18 +153,31 @@ const TopBar = ({
           </div>
         )}
         {showWalletMenu && !connecting && (
-          <div className="absolute right-3 sm:right-5 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-lg p-1.5 shadow-xl z-50 min-w-[160px] animate-in fade-in zoom-in-95 duration-150">
+          <div className="absolute right-3 sm:right-5 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-xl p-2 shadow-2xl z-50 min-w-[200px] animate-in fade-in zoom-in-95 duration-150">
+            <span className="text-[9px] font-display uppercase tracking-widest text-muted-foreground/40 px-3 pt-1 pb-1">Select Wallet</span>
             <button
               onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[11px] font-display text-foreground hover:bg-primary/10 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
             >
-              👻 Phantom
+              <div className="w-7 h-7 rounded-lg bg-[#AB9FF2] flex items-center justify-center shadow-md shadow-[#AB9FF2]/20 group-hover:shadow-[#AB9FF2]/40 transition-shadow">
+                <span className="text-background font-black text-sm">P</span>
+              </div>
+              <div className="flex flex-col items-start">
+                <span>Phantom</span>
+                <span className="text-[9px] text-muted-foreground/50 font-normal">phantom.app</span>
+              </div>
             </button>
             <button
               onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-[11px] font-display text-foreground hover:bg-primary/10 transition-colors"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
             >
-              ☀️ Solflare
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#FC7227] to-[#FCC827] flex items-center justify-center shadow-md shadow-[#FC7227]/20 group-hover:shadow-[#FC7227]/40 transition-shadow">
+                <span className="text-background font-black text-sm">S</span>
+              </div>
+              <div className="flex flex-col items-start">
+                <span>Solflare</span>
+                <span className="text-[9px] text-muted-foreground/50 font-normal">solflare.com</span>
+              </div>
             </button>
           </div>
         )}
