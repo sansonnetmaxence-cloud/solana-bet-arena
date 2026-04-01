@@ -40,6 +40,8 @@ const Index = () => {
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const [betHistory, setBetHistory] = useState<BetRecord[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const priceRef = useRef(price);
+  useEffect(() => { priceRef.current = price; }, [price]);
 
   const addNotification = useCallback((message: string, type: 'win' | 'loss' | 'info') => {
     const notif: Notification = { id: crypto.randomUUID(), message, type, timestamp: Date.now() };
