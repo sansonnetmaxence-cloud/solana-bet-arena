@@ -17,7 +17,7 @@ interface PriceCardProps {
   disabled?: boolean;
   timeLabel?: string;
   activeBet?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number } | null;
-  activeBets?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number }[];
+  activeBets?: { price: number; direction: 'up' | 'down'; timeframe: number; startPrice: number; amount: number; countdown?: number }[];
   countdown?: number;
   selectedPrice?: number | null;
   selectedDirection?: 'up' | 'down' | null;
@@ -111,36 +111,44 @@ const PriceCard = ({
           </div>
         </div>
 
-        {/* Timer section when bet is active */}
-        {hasBet && countdown != null && countdown > 0 && (
-          <div className={cn(
-            'mx-4 rounded-lg px-4 py-3 flex items-center justify-between z-[1] animate-in fade-in slide-in-from-top-2 duration-500',
-            betDir === 'up' ? 'bg-success/8 border border-success/20' : 'bg-danger/8 border border-danger/20',
-          )}>
-            <div className="flex flex-col">
-              <span className="font-display text-[9px] text-muted-foreground uppercase tracking-widest">Time left</span>
-              <span className={cn(
-                'font-display text-3xl md:text-4xl font-black tabular-nums leading-tight',
-                betDir === 'up' ? 'text-success' : 'text-danger',
-              )}>
-                {formatCountdown(countdown)}
-              </span>
-            </div>
-            <div className="flex flex-col items-end">
-              <span className="font-display text-[9px] text-muted-foreground uppercase tracking-widest">Target</span>
-              <span className={cn(
-                'font-display text-lg md:text-xl font-black tabular-nums',
-                betDir === 'up' ? 'text-success' : 'text-danger',
-              )}>
-                ${activeBet.price.toFixed(2)}
-              </span>
-              <span className={cn(
-                'font-display text-[10px] font-bold mt-0.5',
-                betDir === 'up' ? 'text-success/70' : 'text-danger/70',
-              )}>
-                {betDir === 'up' ? '▲ UP' : '▼ DOWN'} • {activeBet.amount} SOL
-              </span>
-            </div>
+        {/* Active bets list */}
+        {activeBets.length > 0 && (
+          <div className="flex flex-col gap-2 mx-4 z-[1] max-h-[140px] overflow-y-auto scrollbar-hide">
+            {activeBets.map((bet, i) => (
+              <div
+                key={i}
+                className={cn(
+                  'rounded-lg px-3 py-2 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-500',
+                  bet.direction === 'up' ? 'bg-success/8 border border-success/20' : 'bg-danger/8 border border-danger/20',
+                )}
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <div className="flex flex-col">
+                  <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">Time</span>
+                  <span className={cn(
+                    'font-display text-xl md:text-2xl font-black tabular-nums leading-tight',
+                    bet.direction === 'up' ? 'text-success' : 'text-danger',
+                  )}>
+                    {bet.countdown != null ? formatCountdown(bet.countdown) : `${bet.timeframe}min`}
+                  </span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">Target</span>
+                  <span className={cn(
+                    'font-display text-base md:text-lg font-black tabular-nums',
+                    bet.direction === 'up' ? 'text-success' : 'text-danger',
+                  )}>
+                    ${bet.price.toFixed(2)}
+                  </span>
+                  <span className={cn(
+                    'font-display text-[9px] font-bold',
+                    bet.direction === 'up' ? 'text-success/70' : 'text-danger/70',
+                  )}>
+                    {bet.direction === 'up' ? '▲ UP' : '▼ DOWN'} • {bet.amount} SOL
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
