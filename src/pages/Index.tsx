@@ -99,7 +99,9 @@ const Index = () => {
   // Countdown timer for all active bets
   useEffect(() => {
     if (activeBets.length === 0) return;
+    console.log('Starting countdown interval, bets:', activeBets.length);
     const timer = setInterval(() => {
+      console.log('Countdown tick');
       setActiveBets(prev => {
         const updated: ActiveBet[] = [];
         const resolved: ActiveBet[] = [];
