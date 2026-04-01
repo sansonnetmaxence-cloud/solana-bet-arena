@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { DollarSign, CircleDot, ArrowLeftRight } from 'lucide-react';
 
 interface BetRecord {
   id: string;
