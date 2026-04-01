@@ -30,7 +30,7 @@
     --destructive: 0 100% 63%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 145 100% 50%;
+    --success: 160 100% 51%;
     --success-foreground: 240 20% 4%;
 
     --danger: 0 100% 63%;
@@ -45,7 +45,7 @@
     --font-display: 'Inter', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
 
-    --glow-green: 0 0 20px hsl(145 100% 50% / 0.6), 0 0 40px hsl(145 100% 50% / 0.3), 0 0 80px hsl(145 100% 50% / 0.1);
+    --glow-green: 0 0 20px hsl(160 100% 51% / 0.6), 0 0 40px hsl(160 100% 51% / 0.3), 0 0 80px hsl(160 100% 51% / 0.1);
     --glow-red: 0 0 20px hsl(0 100% 63% / 0.6), 0 0 40px hsl(0 100% 63% / 0.3), 0 0 80px hsl(0 100% 63% / 0.1);
     --glow-primary: 0 0 20px hsl(160 100% 51% / 0.4), 0 0 40px hsl(160 100% 51% / 0.2);
     --glow-secondary: 0 0 20px hsl(263 80% 63% / 0.4), 0 0 40px hsl(263 80% 63% / 0.2);
