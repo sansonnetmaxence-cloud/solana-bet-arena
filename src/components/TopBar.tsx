@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { WalletType } from '@/hooks/useWallet';
+import phantomLogo from '@/assets/phantom-logo.png';
+import solflareLogo from '@/assets/solflare-logo.png';
 
 interface Notification {
   id: string;
@@ -159,8 +161,8 @@ const TopBar = ({
               onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
             >
-              <div className="w-7 h-7 rounded-lg bg-[#AB9FF2] flex items-center justify-center shadow-md shadow-[#AB9FF2]/20 group-hover:shadow-[#AB9FF2]/40 transition-shadow">
-                <span className="text-background font-black text-sm">P</span>
+              <div className="w-8 h-8 rounded-lg bg-[#AB9FF2]/10 border border-[#AB9FF2]/20 flex items-center justify-center shadow-md shadow-[#AB9FF2]/10 group-hover:shadow-[#AB9FF2]/30 transition-shadow overflow-hidden">
+                <img src={phantomLogo} alt="Phantom" width={24} height={24} className="w-6 h-6 object-contain" />
               </div>
               <div className="flex flex-col items-start">
                 <span>Phantom</span>
@@ -171,8 +173,8 @@ const TopBar = ({
               onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
             >
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#FC7227] to-[#FCC827] flex items-center justify-center shadow-md shadow-[#FC7227]/20 group-hover:shadow-[#FC7227]/40 transition-shadow">
-                <span className="text-background font-black text-sm">S</span>
+              <div className="w-8 h-8 rounded-lg bg-[#FC7227]/10 border border-[#FC7227]/20 flex items-center justify-center shadow-md shadow-[#FC7227]/10 group-hover:shadow-[#FC7227]/30 transition-shadow overflow-hidden">
+                <img src={solflareLogo} alt="Solflare" width={24} height={24} className="w-6 h-6 object-contain" />
               </div>
               <div className="flex flex-col items-start">
                 <span>Solflare</span>
@@ -191,8 +193,8 @@ const TopBar = ({
             onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
           >
-            <div className="w-6 h-6 rounded-md bg-[#AB9FF2] flex items-center justify-center shadow-sm shadow-[#AB9FF2]/20">
-              <span className="text-background font-black text-xs">P</span>
+            <div className="w-7 h-7 rounded-md bg-[#AB9FF2]/10 border border-[#AB9FF2]/20 flex items-center justify-center overflow-hidden">
+              <img src={phantomLogo} alt="Phantom" width={20} height={20} className="w-5 h-5 object-contain" />
             </div>
             <span>Phantom</span>
           </button>
@@ -200,8 +202,8 @@ const TopBar = ({
             onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
           >
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[#FC7227] to-[#FCC827] flex items-center justify-center shadow-sm shadow-[#FC7227]/20">
-              <span className="text-background font-black text-xs">S</span>
+            <div className="w-7 h-7 rounded-md bg-[#FC7227]/10 border border-[#FC7227]/20 flex items-center justify-center overflow-hidden">
+              <img src={solflareLogo} alt="Solflare" width={20} height={20} className="w-5 h-5 object-contain" />
             </div>
             <span>Solflare</span>
           </button>
