@@ -211,27 +211,37 @@ const Index = () => {
         latestResult && 'relative'
       )}>
         {latestResult && latestResultBet && (
-          <div className="absolute inset-0 flex items-center justify-center z-40 backdrop-blur-sm bg-background/60 animate-in fade-in duration-300">
+          <div className="fixed inset-0 flex items-center justify-center z-50 animate-result-backdrop bg-background/70">
+            {/* Radial glow behind */}
+            <div
+              className={cn(
+                'absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full animate-result-glow',
+                latestResult === 'won' ? 'bg-success/10' : 'bg-danger/10',
+              )}
+              style={{
+                filter: 'blur(80px)',
+              }}
+            />
             <div className={cn(
-              'text-center p-10 md:p-14 rounded-2xl border animate-result-pop',
+              'relative text-center p-8 sm:p-10 md:p-16 rounded-3xl border animate-result-pop',
               latestResult === 'won'
-                ? 'border-success/30 bg-card/90'
-                : 'border-danger/30 bg-card/90'
+                ? 'border-success/20 bg-card/95 shadow-[0_0_80px_hsl(160_100%_51%/0.15)]'
+                : 'border-danger/20 bg-card/95 shadow-[0_0_80px_hsl(0_100%_63%/0.15)]'
             )}>
               <span className={cn(
-                'font-display text-6xl md:text-8xl font-black block',
+                'font-display text-5xl sm:text-7xl md:text-9xl font-black block animate-result-text tracking-wider',
                 latestResult === 'won' ? 'text-success' : 'text-danger'
               )}
                 style={{
                   textShadow: latestResult === 'won'
-                    ? '0 0 40px hsl(160 100% 51% / 0.3)'
-                    : '0 0 40px hsl(0 100% 63% / 0.3)',
+                    ? '0 0 60px hsl(160 100% 51% / 0.5), 0 0 120px hsl(160 100% 51% / 0.2)'
+                    : '0 0 60px hsl(0 100% 63% / 0.5), 0 0 120px hsl(0 100% 63% / 0.2)',
                 }}
               >
                 {latestResult === 'won' ? 'WIN' : 'LOSS'}
               </span>
               <p className={cn(
-                'font-display text-2xl md:text-3xl mt-3 font-black tabular-nums',
+                'font-display text-xl sm:text-2xl md:text-4xl mt-4 font-black tabular-nums animate-result-amount',
                 latestResult === 'won' ? 'text-success/80' : 'text-danger/80'
               )}>
                 {latestResult === 'won' ? `+${latestResultBet.amount}` : `-${latestResultBet.amount}`} SOL
