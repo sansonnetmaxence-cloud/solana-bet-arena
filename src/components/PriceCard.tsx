@@ -69,7 +69,7 @@ const PriceCard = ({
   if (isCenter) {
     return (
       <div className={cn(
-        'relative flex flex-col items-center justify-center rounded-2xl border-2 bg-card mx-4 shrink-0 transition-all duration-700 ease-out',
+        'relative flex flex-col items-center justify-center rounded-2xl border-2 bg-card mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden',
         hasBet
           ? 'w-[22rem] h-[26rem] md:w-[30rem] md:h-[34rem] scale-105'
           : 'w-72 h-[22rem] md:w-96 md:h-[28rem]',
@@ -78,49 +78,20 @@ const PriceCard = ({
         !hasBet && 'border-primary/60 glow-primary',
         'animate-float'
       )}>
-        {/* Timer overlay when bet active */}
+        {/* Timer banner at top when bet active */}
         {hasBet && countdown != null && countdown > 0 && (
-          <div className="animate-in fade-in zoom-in duration-500 mb-2">
+          <div className={cn(
+            'absolute top-0 left-0 right-0 flex flex-col items-center py-3 z-10 animate-in fade-in slide-in-from-top duration-500',
+            betDir === 'up' ? 'bg-success/10 border-b border-success/20' : 'bg-danger/10 border-b border-danger/20',
+          )}>
             <span className={cn(
-              'font-display text-5xl md:text-7xl font-black tabular-nums transition-colors duration-300',
+              'font-display text-4xl md:text-5xl font-black tabular-nums',
               betDir === 'up' ? 'text-success text-glow-green' : 'text-danger text-glow-red',
             )}>
               {formatCountdown(countdown)}
             </span>
-          </div>
-        )}
-
-        <span className="font-display text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-2">SOL/USD</span>
-        <div className={cn(
-          'transition-all duration-300',
-          bounce && 'scale-110',
-          priceFlash === 'up' && 'animate-price-up',
-          priceFlash === 'down' && 'animate-price-down',
-        )}>
-          <span className={cn(
-            'font-display font-black transition-colors duration-300',
-            hasBet ? 'text-4xl md:text-5xl' : 'text-5xl md:text-7xl',
-            priceFlash === 'up' && 'text-success text-glow-green',
-            priceFlash === 'down' && 'text-danger text-glow-red',
-            !priceFlash && !hasBet && 'text-primary text-glow-primary',
-            !priceFlash && hasBet && betDir === 'up' && 'text-success text-glow-green',
-            !priceFlash && hasBet && betDir === 'down' && 'text-danger text-glow-red',
-          )}>
-            ${currentPrice?.toFixed(2) ?? '---'}
-          </span>
-        </div>
-        {priceFlash === 'up' && (
-          <span className="text-success text-xs font-display animate-fade-arrow-up absolute top-16 md:top-20">▲▲▲</span>
-        )}
-        {priceFlash === 'down' && (
-          <span className="text-danger text-xs font-display animate-fade-arrow-down absolute top-16 md:top-20">▼▼▼</span>
-        )}
-
-        {/* Target info when bet active */}
-        {hasBet && (
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500 mt-1">
             <p className={cn(
-              'font-display text-[10px] md:text-xs uppercase tracking-widest font-bold',
+              'font-display text-[10px] md:text-xs uppercase tracking-widest font-bold mt-1',
               betDir === 'up' ? 'text-success/80' : 'text-danger/80'
             )}>
               {betDir === 'up' ? '▲' : '▼'} Target: ${activeBet.price.toFixed(2)} • {activeBet.amount} SOL
@@ -128,8 +99,41 @@ const PriceCard = ({
           </div>
         )}
 
-        <span className="font-display text-[10px] md:text-xs text-danger mt-1 mb-3 animate-pulse-glow">● LIVE</span>
-        <MiniChart data={priceHistory} width={hasBet ? 340 : 280} height={hasBet ? 130 : 110} />
+        {/* Center content */}
+        <div className="flex flex-col items-center justify-center flex-1 z-[1]">
+          <span className="font-display text-[10px] md:text-xs text-muted-foreground tracking-widest uppercase mb-2">SOL/USD</span>
+          <div className={cn(
+            'transition-all duration-300',
+            bounce && 'scale-110',
+            priceFlash === 'up' && 'animate-price-up',
+            priceFlash === 'down' && 'animate-price-down',
+          )}>
+            <span className={cn(
+              'font-display font-black transition-colors duration-300',
+              hasBet ? 'text-4xl md:text-5xl' : 'text-5xl md:text-7xl',
+              priceFlash === 'up' && 'text-success text-glow-green',
+              priceFlash === 'down' && 'text-danger text-glow-red',
+              !priceFlash && !hasBet && 'text-primary text-glow-primary',
+              !priceFlash && hasBet && betDir === 'up' && 'text-success text-glow-green',
+              !priceFlash && hasBet && betDir === 'down' && 'text-danger text-glow-red',
+            )}>
+              ${currentPrice?.toFixed(2) ?? '---'}
+            </span>
+          </div>
+          {priceFlash === 'up' && (
+            <span className="text-success text-xs font-display animate-fade-arrow-up">▲▲▲</span>
+          )}
+          {priceFlash === 'down' && (
+            <span className="text-danger text-xs font-display animate-fade-arrow-down">▼▼▼</span>
+          )}
+          <span className="font-display text-[10px] md:text-xs text-danger mt-1 animate-pulse-glow">● LIVE</span>
+        </div>
+
+        {/* Chart filling bottom of card */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <MiniChart data={priceHistory} width={hasBet ? 480 : 384} height={hasBet ? 180 : 160} />
+        </div>
+
         <div className="absolute inset-0 rounded-2xl scanline pointer-events-none" />
       </div>
     );
