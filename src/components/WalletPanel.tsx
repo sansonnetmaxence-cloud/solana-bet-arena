@@ -80,75 +80,34 @@ const WalletPanel = ({
 
       <div className="h-px bg-border" />
 
-      {/* Quick Bet Mode Toggle */}
-      <div className="flex items-center justify-between">
-        <div>
-          <span className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block">Quick Bet</span>
-          <span className="text-[9px] text-muted-foreground/70">Random price + time cards</span>
+      {/* Bet Amount */}
+      <div>
+        <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
+          Bet Amount (SOL)
+        </label>
+        <div className="flex gap-2">
+          {[0.05, 0.1, 0.5, 1].map((a) => (
+            <button
+              key={a}
+              onClick={() => onQuickBetAmountChange(a)}
+              className={cn(
+                'flex-1 py-1.5 rounded text-[10px] font-display uppercase border transition-all',
+                quickBetAmount === a
+                  ? 'border-primary/60 text-primary bg-primary/10 glow-primary'
+                  : 'border-border text-muted-foreground hover:border-primary/30'
+              )}
+            >
+              {a}
+            </button>
+          ))}
         </div>
-        <Switch checked={quickBetMode} onCheckedChange={onToggleQuickBet} />
       </div>
 
-      {/* Quick Bet Amount */}
-      {quickBetMode && (
-        <div>
-          <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
-            Quick Bet Amount (SOL)
-          </label>
-          <div className="flex gap-2">
-            {[0.05, 0.1, 0.5, 1].map((a) => (
-              <button
-                key={a}
-                onClick={() => onQuickBetAmountChange(a)}
-                className={cn(
-                  'flex-1 py-1.5 rounded text-[10px] font-display uppercase border transition-all',
-                  quickBetAmount === a
-                    ? 'border-primary/60 text-primary bg-primary/10 glow-primary'
-                    : 'border-border text-muted-foreground hover:border-primary/30'
-                )}
-              >
-                {a}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {!quickBetMode && (
-        <>
-          <div className="h-px bg-border" />
-          {/* Timeframe */}
-          <div>
-            <label className="font-display text-[10px] text-muted-foreground uppercase tracking-widest block mb-2">
-              Timeframe
-            </label>
-            <div className="flex gap-2">
-              {[1, 2, 5].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTimeframe(t)}
-                  className={cn(
-                    'flex-1 py-2 rounded-md font-display text-xs uppercase tracking-wider border transition-all',
-                    timeframe === t
-                      ? 'bg-primary/20 border-primary text-primary glow-primary'
-                      : 'border-border text-muted-foreground hover:border-primary/40'
-                  )}
-                >
-                  {t}min
-                </button>
-              ))}
-            </div>
-          </div>
-        </>
-      )}
-
-      {quickBetMode && (
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
-          <span className="font-display text-[9px] text-primary/70 uppercase tracking-widest">
-            ⚡ Quick Bet active — timeframe is shown on each card
-          </span>
-        </div>
-      )}
+      <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
+        <span className="font-display text-[9px] text-primary/70 uppercase tracking-widest">
+          ⚡ Click any card to instantly place a bet
+        </span>
+      </div>
 
       {/* Custom price */}
       <div>

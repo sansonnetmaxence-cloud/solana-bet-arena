@@ -96,12 +96,20 @@ const BetHistory = ({ history }: BetHistoryProps) => {
                 </td>
                 <td className="py-3 px-3">
                   <span className={cn(
+                    'font-mono text-sm font-bold tabular-nums',
+                    bet.result === 'won' ? 'text-success' : 'text-danger'
+                  )}>
+                    {bet.result === 'won' ? '+' : '-'}{bet.amount.toFixed(2)} SOL
+                  </span>
+                </td>
+                <td className="py-3 px-3">
+                  <span className={cn(
                     'font-display text-sm font-black uppercase px-3 py-1 rounded',
                     bet.result === 'won'
                       ? 'text-success bg-success/10 border border-success/30'
                       : 'text-danger bg-danger/10 border border-danger/30'
                   )}>
-                    {bet.result === 'won' ? `+${bet.amount}` : `-${bet.amount}`}
+                    {bet.result === 'won' ? 'WIN' : 'LOSS'}
                   </span>
                 </td>
               </tr>

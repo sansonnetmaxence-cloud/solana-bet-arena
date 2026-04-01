@@ -46,9 +46,9 @@ const MiniChart = ({ data, width = 240, height = 90 }: MiniChartProps) => {
     const isUp = data[data.length - 1] >= data[data.length - 2];
     const trendUp = data[data.length - 1] >= data[0];
     
-    // Use primary green (hsl 160 100% 51% → #00ff84) vs danger red
-    const colorMain = trendUp ? '#00ff84' : '#ff4466';
-    const colorDim = trendUp ? '#00cc6a' : '#cc3355';
+    // Primary green (#00ff84 = hsl 160 100% 51%) and danger red (#ff4444 = hsl 0 100% 63%)
+    const colorMain = trendUp ? '#00ff84' : '#ff4444';
+    const colorDim = trendUp ? '#00cc6a' : '#cc3333';
 
     // Points with cubic bezier
     const points = data.map((val, i) => ({
