@@ -161,8 +161,8 @@ const TopBar = ({
               onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
             >
-              <div className="w-7 h-7 rounded-lg bg-[#AB9FF2] flex items-center justify-center shadow-md shadow-[#AB9FF2]/20 group-hover:shadow-[#AB9FF2]/40 transition-shadow">
-                <span className="text-background font-black text-sm">P</span>
+              <div className="w-8 h-8 rounded-lg bg-[#AB9FF2]/10 border border-[#AB9FF2]/20 flex items-center justify-center shadow-md shadow-[#AB9FF2]/10 group-hover:shadow-[#AB9FF2]/30 transition-shadow overflow-hidden">
+                <img src={phantomLogo} alt="Phantom" width={24} height={24} className="w-6 h-6 object-contain" />
               </div>
               <div className="flex flex-col items-start">
                 <span>Phantom</span>
