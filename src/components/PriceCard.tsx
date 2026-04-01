@@ -250,26 +250,41 @@ const PriceCard = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'group relative flex flex-col items-center justify-center rounded-lg border transition-all duration-200 cursor-pointer font-display backdrop-blur-md',
+        'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
+        'transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
+        'hover:scale-[1.08] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
         timeLabel ? 'w-[88px] h-[88px] md:w-[96px] md:h-[96px]' : 'w-[68px] h-[68px] md:w-[76px] md:h-[76px]',
         isUp
-          ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.06]'
-          : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.06]',
-        selected && isUp && 'border-success/50 bg-success/[0.08] ring-1 ring-success/30',
-        selected && !isUp && 'border-danger/50 bg-danger/[0.08] ring-1 ring-danger/30',
+          ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.08]'
+          : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.08]',
+        isUp
+          ? 'hover:shadow-[0_0_20px_hsl(160_100%_51%/0.15),0_4px_12px_hsl(0_0%_0%/0.3)]'
+          : 'hover:shadow-[0_0_20px_hsl(0_100%_63%/0.15),0_4px_12px_hsl(0_0%_0%/0.3)]',
+        selected && isUp && 'border-success/50 bg-success/[0.08] ring-1 ring-success/30 scale-[1.05]',
+        selected && !isUp && 'border-danger/50 bg-danger/[0.08] ring-1 ring-danger/30 scale-[1.05]',
         result === 'won' && 'border-success/60 bg-success/10',
         result === 'lost' && 'border-danger/60 bg-danger/10',
-        disabled && 'opacity-30 cursor-not-allowed',
+        disabled && 'opacity-30 cursor-not-allowed hover:scale-100 hover:translate-y-0',
       )}
     >
+      {/* Hover glow overlay */}
+      <div className={cn(
+        'absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg',
+        isUp
+          ? 'bg-gradient-to-t from-success/[0.06] to-transparent'
+          : 'bg-gradient-to-b from-danger/[0.06] to-transparent',
+      )} />
+
       <span className={cn(
-        'text-[7px] uppercase tracking-wider mb-0.5 transition-colors',
-        isUp ? 'text-success/50 group-hover:text-success/80' : 'text-danger/50 group-hover:text-danger/80'
+        'text-[7px] uppercase tracking-wider mb-0.5 transition-all duration-300 relative z-[1]',
+        'group-hover:tracking-[0.2em]',
+        isUp ? 'text-success/50 group-hover:text-success/90' : 'text-danger/50 group-hover:text-danger/90'
       )}>
         {isUp ? '▲ UP' : '▼ DN'}
       </span>
       <span className={cn(
-        'font-bold tabular-nums transition-colors',
+        'font-bold tabular-nums transition-all duration-300 relative z-[1]',
+        'group-hover:font-extrabold',
         timeLabel ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs',
         isUp ? 'text-success/80 group-hover:text-success' : 'text-danger/80 group-hover:text-danger',
       )}>
@@ -277,8 +292,9 @@ const PriceCard = ({
       </span>
       {timeLabel && (
         <span className={cn(
-          'text-[8px] mt-0.5 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded transition-colors',
-          isUp ? 'text-success/60 bg-success/[0.05]' : 'text-danger/60 bg-danger/[0.05]'
+          'text-[8px] mt-0.5 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded transition-all duration-300 relative z-[1]',
+          'group-hover:px-2',
+          isUp ? 'text-success/60 bg-success/[0.05] group-hover:bg-success/[0.1]' : 'text-danger/60 bg-danger/[0.05] group-hover:bg-danger/[0.1]'
         )}>
           {timeLabel}
         </span>
