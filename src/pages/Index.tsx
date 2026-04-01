@@ -196,7 +196,11 @@ const Index = () => {
         }}
       />
 
-      <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
+      <Header
+        priceDirection={priceDirection as 'up' | 'down' | 'neutral'}
+        selectedMarket={selectedMarket}
+        onMarketChange={setSelectedMarket}
+      />
 
       <TopBar
         connected={wallet.connected}
