@@ -28,7 +28,6 @@ const PriceCard = ({
   direction,
   isCenter = false,
   currentPrice,
-  previousPrice,
   priceHistory = [],
   onClick,
   selected = false,
@@ -37,7 +36,6 @@ const PriceCard = ({
   timeLabel,
   activeBet,
   activeBets = [],
-  countdown,
   selectedPrice,
   selectedDirection,
 }: PriceCardProps) => {
@@ -61,8 +59,8 @@ const PriceCard = ({
       setBounce(true);
     }
     prevPriceRef.current = currentPrice;
-    const t1 = setTimeout(() => setPriceFlash(null), 800);
-    const t2 = setTimeout(() => setBounce(false), 400);
+    const t1 = setTimeout(() => setPriceFlash(null), 600);
+    const t2 = setTimeout(() => setBounce(false), 300);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [currentPrice, isCenter]);
 
@@ -80,171 +78,150 @@ const PriceCard = ({
       ? currentPrice - activeBet.startPrice 
       : null;
     const priceDeltaPositive = priceDelta != null ? priceDelta >= 0 : null;
+    const trendColor = priceTrend === 'up' ? 'success' : 'danger';
 
     return (
       <div className={cn(
-          'relative flex flex-col rounded-2xl border border-border/20 bg-card mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden',
-          hasBet
-            ? 'w-[22rem] h-[28rem] md:w-[30rem] md:h-[36rem] scale-105'
-            : 'w-80 h-[24rem] md:w-[26rem] md:h-[30rem]',
-          'animate-float'
-        )}
-          style={{
-            boxShadow: hasBet
-              ? betDir === 'up'
-                ? '0 0 60px hsl(160 100% 51% / 0.25), 0 0 120px hsl(160 100% 51% / 0.12), 0 0 200px hsl(160 100% 51% / 0.06)'
-                : '0 0 60px hsl(0 100% 63% / 0.25), 0 0 120px hsl(0 100% 63% / 0.12), 0 0 200px hsl(0 100% 63% / 0.06)'
-              : '0 0 40px hsl(160 100% 51% / 0.12), 0 0 80px hsl(160 100% 51% / 0.05)',
+        'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden border',
+        hasBet ? 'w-[22rem] h-[28rem] md:w-[28rem] md:h-[34rem]' : 'w-80 h-[24rem] md:w-[24rem] md:h-[30rem]',
+        hasBet && betDir === 'up' && 'border-success/20',
+        hasBet && betDir === 'down' && 'border-danger/20',
+        !hasBet && 'border-border/30',
+      )}
+        style={{
+          boxShadow: hasBet
+            ? betDir === 'up'
+              ? '0 0 60px hsl(160 100% 51% / 0.12), 0 0 120px hsl(160 100% 51% / 0.04)'
+              : '0 0 60px hsl(0 100% 63% / 0.12), 0 0 120px hsl(0 100% 63% / 0.04)'
+            : '0 4px 40px hsl(0 0% 0% / 0.4)',
         }}
       >
-        {/* Top bar — pair label + live badge */}
+        {/* Header */}
         <div className="flex items-center justify-between px-5 pt-4 pb-2 z-[1]">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center">
-              <span className="text-[9px] font-black text-primary">S</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <span className="text-[10px] font-black text-primary">◎</span>
             </div>
-            <span className="font-display text-sm md:text-base text-foreground/90 font-bold tracking-wide">SOL / USD</span>
+            <div className="flex flex-col">
+              <span className="font-display text-sm text-foreground font-bold tracking-wide">SOL / USD</span>
+              <span className="font-display text-[9px] text-muted-foreground tracking-wider">Solana</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-danger/8 border border-danger/15">
             <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse" />
-            <span className="font-display text-[9px] text-danger font-bold uppercase tracking-widest">Live</span>
+            <span className="font-display text-[8px] text-danger font-bold uppercase tracking-widest">Live</span>
           </div>
         </div>
 
-        {/* Active bets list */}
+        {/* Active bets */}
         {activeBets.length > 0 && (
-          <div className="flex flex-col gap-2 mx-4 z-[1] max-h-[140px] overflow-y-auto scrollbar-hide">
-            {activeBets.map((bet, i) => (
-              <div
-                key={i}
-                className={cn(
-                  'rounded-lg px-3 py-2 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-500',
-                  bet.direction === 'up' ? 'bg-success/8 border border-success/20' : 'bg-danger/8 border border-danger/20',
-                )}
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div className="flex flex-col">
-                  <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">Time</span>
-                  <span className={cn(
-                    'font-display text-xl md:text-2xl font-black tabular-nums leading-tight',
-                    bet.direction === 'up' ? 'text-success' : 'text-danger',
-                  )}>
-                    {bet.countdown != null ? formatCountdown(bet.countdown) : `${bet.timeframe}min`}
-                  </span>
+          <div className="flex flex-col gap-1.5 mx-4 mt-1 z-[1] max-h-[120px] overflow-y-auto scrollbar-hide">
+            {activeBets.map((bet, i) => {
+              const isUp = bet.direction === 'up';
+              return (
+                <div
+                  key={i}
+                  className={cn(
+                    'rounded-lg px-3 py-2 flex items-center justify-between',
+                    isUp ? 'bg-success/6 border border-success/15' : 'bg-danger/6 border border-danger/15',
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={cn(
+                      'font-display text-2xl font-black tabular-nums',
+                      isUp ? 'text-success' : 'text-danger',
+                    )}>
+                      {bet.countdown != null ? formatCountdown(bet.countdown) : '--:--'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex flex-col items-end">
+                      <span className={cn(
+                        'font-display text-sm font-black tabular-nums',
+                        isUp ? 'text-success' : 'text-danger',
+                      )}>
+                        ${bet.price.toFixed(2)}
+                      </span>
+                      <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">
+                        {isUp ? '▲ UP' : '▼ DN'} · {bet.amount} SOL
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col items-end">
-                  <span className="font-display text-[8px] text-muted-foreground uppercase tracking-widest">Target</span>
-                  <span className={cn(
-                    'font-display text-base md:text-lg font-black tabular-nums',
-                    bet.direction === 'up' ? 'text-success' : 'text-danger',
-                  )}>
-                    ${bet.price.toFixed(2)}
-                  </span>
-                  <span className={cn(
-                    'font-display text-[9px] font-bold',
-                    bet.direction === 'up' ? 'text-success/70' : 'text-danger/70',
-                  )}>
-                    {bet.direction === 'up' ? '▲ UP' : '▼ DOWN'} • {bet.amount} SOL
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
-        {/* Main price display */}
-        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-2">
+        {/* Price */}
+        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1">
           <div className={cn(
-            'transition-all duration-300',
-            bounce && 'scale-105',
-            priceFlash === 'up' && 'animate-price-up',
-            priceFlash === 'down' && 'animate-price-down',
+            'transition-transform duration-200',
+            bounce && 'scale-[1.03]',
           )}>
             <span className={cn(
-              'font-display font-black transition-colors duration-300 leading-none',
-              hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-8xl',
-              priceTrend === 'up' ? 'text-success' : 'text-danger',
+              'font-display font-black transition-colors duration-200 leading-none tabular-nums',
+              hasBet ? 'text-5xl md:text-6xl' : 'text-6xl md:text-[5.5rem]',
+              `text-${trendColor}`,
             )}
               style={{
                 textShadow: priceTrend === 'up'
-                  ? '0 0 30px hsl(160 100% 51% / 0.4)'
-                  : '0 0 30px hsl(0 100% 63% / 0.4)',
+                  ? '0 0 20px hsl(160 100% 51% / 0.25)'
+                  : '0 0 20px hsl(0 100% 63% / 0.25)',
               }}
             >
               ${currentPrice?.toFixed(2) ?? '---'}
             </span>
           </div>
 
-          {/* Price change indicator when bet active */}
+          {/* Delta pill */}
           {hasBet && priceDelta != null && (
             <div className={cn(
-              'mt-2 px-3 py-1 rounded-full text-xs font-display font-bold flex items-center gap-1',
+              'mt-2 px-3 py-0.5 rounded-full text-[11px] font-display font-bold flex items-center gap-1 tabular-nums',
               priceDeltaPositive
-                ? 'bg-success/10 text-success border border-success/20'
-                : 'bg-danger/10 text-danger border border-danger/20',
+                ? 'bg-success/8 text-success border border-success/15'
+                : 'bg-danger/8 text-danger border border-danger/15',
             )}>
-              <span>{priceDeltaPositive ? '▲' : '▼'}</span>
-              <span className="tabular-nums">{priceDeltaPositive ? '+' : ''}{priceDelta.toFixed(2)}</span>
+              <span>{priceDeltaPositive ? '↑' : '↓'}</span>
+              <span>{priceDeltaPositive ? '+' : ''}{priceDelta.toFixed(2)}</span>
             </div>
           )}
 
-          {/* Selected price display (without quick bet) */}
+          {/* Selected price (non-quick-bet) */}
           {!hasBet && selectedPrice != null && selectedDirection && (
             <div className={cn(
-              'mt-3 px-4 py-2 rounded-xl border flex flex-col items-center animate-in fade-in zoom-in duration-300',
+              'mt-3 px-4 py-2 rounded-xl border flex flex-col items-center animate-in fade-in zoom-in-95 duration-200',
               selectedDirection === 'up'
-                ? 'bg-success/8 border-success/25 text-success'
-                : 'bg-danger/8 border-danger/25 text-danger',
+                ? 'bg-success/6 border-success/20 text-success'
+                : 'bg-danger/6 border-danger/20 text-danger',
             )}>
-              <span className="text-[9px] uppercase tracking-widest font-bold opacity-70">Selected</span>
-              <span className="font-display text-xl font-black tabular-nums">
-                ${selectedPrice.toFixed(2)}
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider">
-                {selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}
-              </span>
+              <span className="text-[8px] uppercase tracking-widest font-bold opacity-60">Selected</span>
+              <span className="font-display text-xl font-black tabular-nums">${selectedPrice.toFixed(2)}</span>
+              <span className="text-[9px] font-bold uppercase">{selectedDirection === 'up' ? '▲ UP' : '▼ DOWN'}</span>
             </div>
           )}
 
-          {/* Trend arrows */}
-          {!hasBet && !selectedPrice && priceFlash === 'up' && (
-            <span className="text-success text-sm font-display mt-1 animate-fade-arrow-up">▲</span>
-          )}
-          {!hasBet && !selectedPrice && priceFlash === 'down' && (
-            <span className="text-danger text-sm font-display mt-1 animate-fade-arrow-down">▼</span>
-          )}
-
-          {/* Active bets count */}
-          {activeBets.length > 1 && (
-            <div className="mt-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-[10px] font-display font-bold uppercase tracking-widest">
-              {activeBets.length} Active Bets
-            </div>
+          {/* Trend indicator */}
+          {!hasBet && !selectedPrice && priceFlash && (
+            <span className={cn(
+              'text-xs font-display mt-1',
+              priceFlash === 'up' ? 'text-success animate-fade-arrow-up' : 'text-danger animate-fade-arrow-down',
+            )}>
+              {priceFlash === 'up' ? '▲' : '▼'}
+            </span>
           )}
         </div>
 
-        {/* Chart at bottom — full width */}
+        {/* Chart */}
         <div className="relative w-full z-[1]">
-          <div className="absolute bottom-full left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
-          <MiniChart data={priceHistory} width={hasBet ? 480 : 416} height={hasBet ? 160 : 140} />
+          <div className="absolute bottom-full left-0 right-0 h-16 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
+          <MiniChart data={priceHistory} width={hasBet ? 448 : 384} height={hasBet ? 140 : 120} />
         </div>
-
-        {/* Subtle inner glow overlay */}
-        <div className={cn(
-          'absolute inset-0 rounded-2xl pointer-events-none transition-opacity duration-700',
-          hasBet ? 'opacity-100' : 'opacity-0',
-        )}
-          style={{
-            background: hasBet
-              ? betDir === 'up'
-                ? 'radial-gradient(ellipse at 50% 30%, hsl(160 100% 51% / 0.04) 0%, transparent 70%)'
-                : 'radial-gradient(ellipse at 50% 30%, hsl(0 100% 63% / 0.04) 0%, transparent 70%)'
-              : 'none',
-          }}
-        />
       </div>
     );
   }
 
+  // Small bet cards
   const isUp = direction === 'up';
 
   return (
@@ -252,37 +229,35 @@ const PriceCard = ({
       onClick={onClick}
       disabled={disabled}
       className={cn(
-        'relative flex flex-col items-center justify-center rounded-lg border transition-all duration-300 cursor-pointer font-display',
-        timeLabel ? 'w-[90px] h-[90px] md:w-[100px] md:h-[100px]' : 'w-[70px] h-[70px] md:w-[80px] md:h-[80px]',
+        'group relative flex flex-col items-center justify-center rounded-lg border transition-all duration-200 cursor-pointer font-display backdrop-blur-md',
+        timeLabel ? 'w-[88px] h-[88px] md:w-[96px] md:h-[96px]' : 'w-[68px] h-[68px] md:w-[76px] md:h-[76px]',
         isUp
-          ? 'border-primary/30 hover:border-primary/70 hover:glow-primary'
-          : 'border-danger/30 hover:border-danger/70 hover:glow-red',
-        selected && isUp && 'border-primary glow-primary',
-        selected && !isUp && 'border-danger glow-red',
-        result === 'won' && 'border-success glow-green',
-        result === 'lost' && 'border-danger glow-red',
-        disabled && 'opacity-40 cursor-not-allowed',
-        !selected && !result && 'bg-card/40 backdrop-blur-xl hover:bg-card/60'
+          ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.06]'
+          : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.06]',
+        selected && isUp && 'border-success/50 bg-success/[0.08] ring-1 ring-success/30',
+        selected && !isUp && 'border-danger/50 bg-danger/[0.08] ring-1 ring-danger/30',
+        result === 'won' && 'border-success/60 bg-success/10',
+        result === 'lost' && 'border-danger/60 bg-danger/10',
+        disabled && 'opacity-30 cursor-not-allowed',
       )}
     >
       <span className={cn(
-        'text-[8px] uppercase tracking-wider mb-0.5',
-        isUp ? 'text-primary/70' : 'text-danger/70'
+        'text-[7px] uppercase tracking-wider mb-0.5 transition-colors',
+        isUp ? 'text-success/50 group-hover:text-success/80' : 'text-danger/50 group-hover:text-danger/80'
       )}>
-        {isUp ? '▲ UP' : '▼ DOWN'}
+        {isUp ? '▲ UP' : '▼ DN'}
       </span>
       <span className={cn(
-        timeLabel ? 'text-xs md:text-sm font-bold' : 'text-[10px] md:text-xs font-bold',
-        isUp ? 'text-primary' : 'text-danger',
-        result === 'won' && 'text-glow-green',
-        result === 'lost' && 'text-glow-red'
+        'font-bold tabular-nums transition-colors',
+        timeLabel ? 'text-xs md:text-sm' : 'text-[10px] md:text-xs',
+        isUp ? 'text-success/80 group-hover:text-success' : 'text-danger/80 group-hover:text-danger',
       )}>
         ${price.toFixed(2)}
       </span>
       {timeLabel && (
         <span className={cn(
-          'text-[9px] mt-1 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded-sm',
-          isUp ? 'text-primary/90 bg-primary/10' : 'text-danger/90 bg-danger/10'
+          'text-[8px] mt-0.5 uppercase tracking-wider font-bold px-1.5 py-0.5 rounded transition-colors',
+          isUp ? 'text-success/60 bg-success/[0.05]' : 'text-danger/60 bg-danger/[0.05]'
         )}>
           {timeLabel}
         </span>
