@@ -47,6 +47,8 @@ const Index = () => {
         countdown: quickTimeframe * 60,
       };
       setActiveBets(prev => [...prev, bet]);
+      setSelectedPrice(null);
+      setSelectedDirection(null);
       return;
     }
 
@@ -140,40 +142,28 @@ const Index = () => {
   const gridDirection = primaryBet?.direction ?? null;
 
   return (
-    <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
-      {/* Green grid overlay */}
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
+      {/* Grid color overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'up' ? 1 : 0,
+          opacity: gridDirection === 'up' ? 0.6 : 0,
           backgroundImage: 
-          'linear-gradient(hsl(160 100% 51% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.3) 1px, transparent 1px)',
+          'linear-gradient(hsl(160 100% 51% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(160 100% 51% / 0.15) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'up' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'up' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Red grid overlay */}
       <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
+        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
         style={{
-          opacity: gridDirection === 'down' ? 1 : 0,
+          opacity: gridDirection === 'down' ? 0.6 : 0,
           backgroundImage:
-            'linear-gradient(hsl(0 100% 63% / 0.3) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.3) 1px, transparent 1px)',
+            'linear-gradient(hsl(0 100% 63% / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(0 100% 63% / 0.15) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
-          animation: gridDirection === 'down' ? 'grid-breathe 2s ease-in-out infinite' : 'none',
+          animation: gridDirection === 'down' ? 'grid-breathe 3s ease-in-out infinite' : 'none',
         }}
       />
-      {/* Radial glow */}
-      <div
-        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1000 ease-in-out"
-        style={{
-          opacity: primaryBet ? 1 : 0,
-          background: gridDirection === 'up'
-            ? 'radial-gradient(ellipse at center, hsl(160 100% 51% / 0.1) 0%, transparent 60%)'
-            : 'radial-gradient(ellipse at center, hsl(0 100% 63% / 0.1) 0%, transparent 60%)',
-        }}
-      />
-      <div className="absolute inset-0 scanline pointer-events-none z-50" />
       
       <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
 
@@ -185,31 +175,31 @@ const Index = () => {
         )}>
 
           {latestResult && latestResultBet && (
-            <div className={cn(
-              'absolute inset-0 flex items-center justify-center z-40 backdrop-blur-md',
-              'animate-in fade-in duration-300'
-            )}>
+            <div className="absolute inset-0 flex items-center justify-center z-40 backdrop-blur-sm bg-background/60 animate-in fade-in duration-300">
               <div className={cn(
-                'text-center p-12 rounded-2xl border-2 animate-result-pop',
+                'text-center p-10 md:p-14 rounded-2xl border animate-result-pop',
                 latestResult === 'won'
-                  ? 'border-success glow-green bg-success/5'
-                  : 'border-danger glow-red bg-danger/5'
+                  ? 'border-success/30 bg-card/90'
+                  : 'border-danger/30 bg-card/90'
               )}>
                 <span className={cn(
-                  'font-display text-7xl md:text-9xl font-black block animate-result-text',
-                  latestResult === 'won' ? 'text-success text-glow-green' : 'text-danger text-glow-red'
-                )}>
-                  {latestResult === 'won' ? '🏆 WIN' : '💀 LOSS'}
+                  'font-display text-6xl md:text-8xl font-black block animate-result-text',
+                  latestResult === 'won' ? 'text-success' : 'text-danger'
+                )}
+                  style={{
+                    textShadow: latestResult === 'won'
+                      ? '0 0 40px hsl(160 100% 51% / 0.3)'
+                      : '0 0 40px hsl(0 100% 63% / 0.3)',
+                  }}
+                >
+                  {latestResult === 'won' ? 'WIN' : 'LOSS'}
                 </span>
                 <p className={cn(
-                  'font-display text-xl md:text-2xl mt-4 uppercase tracking-widest font-bold animate-result-amount',
-                  latestResult === 'won' ? 'text-success' : 'text-danger'
+                  'font-display text-2xl md:text-3xl mt-3 font-black animate-result-amount tabular-nums',
+                  latestResult === 'won' ? 'text-success/80' : 'text-danger/80'
                 )}>
-                  {latestResult === 'won' ? `+${latestResultBet.amount} SOL` : `-${latestResultBet.amount} SOL`}
+                  {latestResult === 'won' ? `+${latestResultBet.amount}` : `-${latestResultBet.amount}`} SOL
                 </p>
-                {latestResult === 'won' && (
-                  <div className="mt-2 text-2xl animate-bounce">🎉🎉🎉</div>
-                )}
               </div>
             </div>
           )}

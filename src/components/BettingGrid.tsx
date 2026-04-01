@@ -62,12 +62,13 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
     return parseInt(label);
   };
 
+  // Match by price AND direction — use rounded comparison to avoid float issues
   const isCardActive = (p: number, dir: 'up' | 'down') => {
-    return activeBets.some(b => b.price === p && b.direction === dir);
+    return activeBets.some(b => Math.abs(b.price - p) < 0.001 && b.direction === dir);
   };
 
   const isCardSelected = (p: number, dir: 'up' | 'down') => {
-    return selectedPrice === p && selectedDirection === dir;
+    return selectedPrice != null && Math.abs(selectedPrice - p) < 0.001 && selectedDirection === dir;
   };
 
   const renderCard = (p: number, dir: 'up' | 'down', index: number) => {

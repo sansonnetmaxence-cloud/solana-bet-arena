@@ -89,7 +89,7 @@
   }
 
   .text-glow-green {
-    text-shadow: 0 0 10px hsl(145 100% 50% / 0.8), 0 0 20px hsl(145 100% 50% / 0.4);
+    text-shadow: 0 0 10px hsl(160 100% 51% / 0.8), 0 0 20px hsl(160 100% 51% / 0.4);
   }
 
   .text-glow-red {
@@ -112,8 +112,8 @@
 
   .grid-bg {
     background-image: 
-      linear-gradient(hsl(240 10% 18% / 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(240 10% 18% / 0.3) 1px, transparent 1px);
+      linear-gradient(hsl(240 10% 18% / 0.15) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(240 10% 18% / 0.15) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 }
