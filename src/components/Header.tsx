@@ -47,8 +47,11 @@ const Header = ({ priceDirection }: HeaderProps) => {
       </div>
 
       <div className="flex items-center gap-1.5 sm:gap-2">
-        <div className={`w-1.5 h-1.5 rounded-full ${priceDirection === 'up' ? 'bg-success' : priceDirection === 'down' ? 'bg-danger' : 'bg-muted-foreground'}`} />
-        <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground uppercase tracking-widest">Live</span>
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-danger opacity-75" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-danger" />
+        </span>
+        <span className="font-display text-[8px] sm:text-[9px] text-danger uppercase tracking-widest font-bold">Live</span>
       </div>
     </header>
   );
