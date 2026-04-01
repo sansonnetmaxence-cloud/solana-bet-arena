@@ -83,21 +83,18 @@ const PriceCard = ({
 
     return (
       <div className={cn(
-        'relative flex flex-col rounded-2xl border-2 bg-card mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden',
-        hasBet
-          ? 'w-[22rem] h-[28rem] md:w-[30rem] md:h-[36rem] scale-105'
-          : 'w-80 h-[24rem] md:w-[26rem] md:h-[30rem]',
-        hasBet && betDir === 'up' && 'border-success/60',
-        hasBet && betDir === 'down' && 'border-danger/60',
-        !hasBet && 'border-primary/40',
-        'animate-float'
-      )}
-        style={{
-          boxShadow: hasBet
-            ? betDir === 'up'
-              ? '0 0 40px hsl(160 100% 51% / 0.15), 0 0 80px hsl(160 100% 51% / 0.05), inset 0 1px 0 hsl(160 100% 51% / 0.1)'
-              : '0 0 40px hsl(0 100% 63% / 0.15), 0 0 80px hsl(0 100% 63% / 0.05), inset 0 1px 0 hsl(0 100% 63% / 0.1)'
-            : '0 0 30px hsl(160 100% 51% / 0.08), inset 0 1px 0 hsl(160 100% 51% / 0.06)',
+          'relative flex flex-col rounded-2xl border border-border/20 bg-card mx-4 shrink-0 transition-all duration-700 ease-out overflow-hidden',
+          hasBet
+            ? 'w-[22rem] h-[28rem] md:w-[30rem] md:h-[36rem] scale-105'
+            : 'w-80 h-[24rem] md:w-[26rem] md:h-[30rem]',
+          'animate-float'
+        )}
+          style={{
+            boxShadow: hasBet
+              ? betDir === 'up'
+                ? '0 0 60px hsl(160 100% 51% / 0.25), 0 0 120px hsl(160 100% 51% / 0.12), 0 0 200px hsl(160 100% 51% / 0.06)'
+                : '0 0 60px hsl(0 100% 63% / 0.25), 0 0 120px hsl(0 100% 63% / 0.12), 0 0 200px hsl(0 100% 63% / 0.06)'
+              : '0 0 40px hsl(160 100% 51% / 0.12), 0 0 80px hsl(160 100% 51% / 0.05)',
         }}
       >
         {/* Top bar — pair label + live badge */}
