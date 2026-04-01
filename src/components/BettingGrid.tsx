@@ -121,7 +121,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
 
       {/* Center */}
       <div className={cn(
-        'transition-all duration-700 shrink-0',
+        'transition-all duration-700 shrink-0 relative z-0',
         hasBets && 'scale-105',
       )}>
         <PriceCard

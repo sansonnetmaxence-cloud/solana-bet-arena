@@ -61,7 +61,7 @@ const BetHistory = ({ history }: BetHistoryProps) => {
         <table className="w-full text-left">
           <thead>
             <tr className="border-b border-border/50">
-              {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'Result'].map(h => (
+              {['Time', 'Direction', 'Target', 'Entry', 'Exit', 'Amount', 'P&L', 'Result'].map(h => (
                 <th key={h} className="font-display text-xs text-muted-foreground/70 uppercase tracking-widest pb-3 px-3">
                   {h}
                 </th>
@@ -96,12 +96,20 @@ const BetHistory = ({ history }: BetHistoryProps) => {
                 </td>
                 <td className="py-3 px-3">
                   <span className={cn(
+                    'font-mono text-sm font-bold tabular-nums',
+                    bet.result === 'won' ? 'text-success' : 'text-danger'
+                  )}>
+                    {bet.result === 'won' ? '+' : '-'}{bet.amount.toFixed(2)} SOL
+                  </span>
+                </td>
+                <td className="py-3 px-3">
+                  <span className={cn(
                     'font-display text-sm font-black uppercase px-3 py-1 rounded',
                     bet.result === 'won'
                       ? 'text-success bg-success/10 border border-success/30'
                       : 'text-danger bg-danger/10 border border-danger/30'
                   )}>
-                    {bet.result === 'won' ? `+${bet.amount}` : `-${bet.amount}`}
+                    {bet.result === 'won' ? 'WIN' : 'LOSS'}
                   </span>
                 </td>
               </tr>

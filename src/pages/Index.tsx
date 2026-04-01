@@ -21,7 +21,7 @@ interface ActiveBet {
 
 const Index = () => {
   const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
-  const [quickBetMode, setQuickBetMode] = useState(false);
+  const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
   const sfx = useSoundEffects();
@@ -249,7 +249,7 @@ const Index = () => {
             onConnect={wallet.connect}
             onDisconnect={wallet.disconnect}
             quickBetMode={quickBetMode}
-            onToggleQuickBet={setQuickBetMode}
+            onToggleQuickBet={() => {}}
             quickBetAmount={quickBetAmount}
             onQuickBetAmountChange={setQuickBetAmount}
           />
@@ -267,7 +267,7 @@ const Index = () => {
               onConnect={wallet.connect}
               onDisconnect={wallet.disconnect}
               quickBetMode={quickBetMode}
-              onToggleQuickBet={setQuickBetMode}
+              onToggleQuickBet={() => {}}
               quickBetAmount={quickBetAmount}
               onQuickBetAmountChange={setQuickBetAmount}
             />
