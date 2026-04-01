@@ -42,6 +42,7 @@ const PriceCard = ({
   selectedDirection,
 }: PriceCardProps) => {
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
+  const [priceTrend, setPriceTrend] = useState<'up' | 'down'>('up');
   const [bounce, setBounce] = useState(false);
   const prevPriceRef = useRef(currentPrice);
 
@@ -52,9 +53,11 @@ const PriceCard = ({
     }
     if (currentPrice > prevPriceRef.current) {
       setPriceFlash('up');
+      setPriceTrend('up');
       setBounce(true);
     } else if (currentPrice < prevPriceRef.current) {
       setPriceFlash('down');
+      setPriceTrend('down');
       setBounce(true);
     }
     prevPriceRef.current = currentPrice;
