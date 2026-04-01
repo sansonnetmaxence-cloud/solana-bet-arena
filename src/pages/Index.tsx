@@ -210,7 +210,7 @@ const Index = () => {
       />
 
       <MarketRules />
-      <OrderBook currentPrice={price} />
+      
 
       {/* Main area */}
       <div className={cn(
@@ -278,6 +278,8 @@ const Index = () => {
       </div>
 
       <LiveFeed />
+
+      <OrderBook currentPrice={price} />
 
       <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
         <BetHistory history={betHistory} />
