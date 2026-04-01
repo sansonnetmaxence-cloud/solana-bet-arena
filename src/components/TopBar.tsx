@@ -88,11 +88,12 @@ const TopBar = ({
               onClick={() => setWalletCurrency(c => c === 'SOL' ? 'USD' : 'SOL')}
               className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-success/[0.06] border border-success/15 hover:bg-success/[0.1] transition-all cursor-pointer"
             >
+              {walletCurrency === 'SOL'
+                ? <CircleDot size={14} className="text-success/70" />
+                : <DollarSign size={14} className="text-success/70" />
+              }
               <span className="font-display text-base font-black text-success tabular-nums">
                 {balanceDisplay}
-              </span>
-              <span className="font-display text-[8px] text-success/60 font-bold uppercase">
-                {walletCurrency}
               </span>
             </button>
             <div className="flex items-center gap-2">
