@@ -142,7 +142,7 @@ const Index = () => {
   const gridDirection = primaryBet?.direction ?? null;
 
   return (
-    <div className="min-h-screen bg-background grid-bg relative overflow-x-hidden">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       {/* Grid color overlay */}
       <div
         className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-1500 ease-in-out"
