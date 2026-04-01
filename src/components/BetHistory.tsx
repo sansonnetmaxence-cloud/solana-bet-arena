@@ -41,6 +41,22 @@ const BetHistory = ({ history }: BetHistoryProps) => {
   const totalWon = history.filter(b => b.result === 'won').length;
   const totalLost = history.filter(b => b.result === 'lost').length;
   const totalProfit = history.reduce((acc, b) => acc + (b.result === 'won' ? b.amount : -b.amount), 0);
+  const winrate = history.length > 0 ? ((totalWon / history.length) * 100).toFixed(1) : '0.0';
+
+  // Best trade
+  const bestTrade = history.reduce((best, b) => {
+    if (b.result === 'won' && b.amount > (best?.amount ?? 0)) return b;
+    return best;
+  }, null as (typeof history)[0] | null);
+
+  // Current streak
+  const reversed = [...history].reverse();
+  let streakType: 'won' | 'lost' | null = reversed[0]?.result ?? null;
+  let streakCount = 0;
+  for (const b of reversed) {
+    if (b.result === streakType) streakCount++;
+    else break;
+  }
 
   return (
     <div className="w-full px-3 sm:px-4 md:px-8 py-4 sm:py-6 md:py-8">
@@ -75,7 +91,34 @@ const BetHistory = ({ history }: BetHistoryProps) => {
         </div>
       </div>
 
-      {/* P&L Chart */}
+      {/* Detailed Stats */}
+      <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4 sm:mb-6">
+        <div className="rounded-xl border border-border/30 bg-card/60 backdrop-blur-sm p-3 sm:p-4 text-center">
+          <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest block mb-1">Winrate</span>
+          <span className={cn(
+            'font-display text-lg sm:text-2xl font-black tabular-nums',
+            parseFloat(winrate) >= 50 ? 'text-success' : 'text-danger'
+          )}>
+            {winrate}%
+          </span>
+        </div>
+        <div className="rounded-xl border border-border/30 bg-card/60 backdrop-blur-sm p-3 sm:p-4 text-center">
+          <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest block mb-1">Streak</span>
+          <span className={cn(
+            'font-display text-lg sm:text-2xl font-black tabular-nums',
+            streakType === 'won' ? 'text-success' : 'text-danger'
+          )}>
+            {streakCount}{streakType === 'won' ? 'W' : 'L'}
+          </span>
+        </div>
+        <div className="rounded-xl border border-border/30 bg-card/60 backdrop-blur-sm p-3 sm:p-4 text-center">
+          <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest block mb-1">Best Trade</span>
+          <span className="font-display text-lg sm:text-2xl font-black tabular-nums text-success">
+            {bestTrade ? formatAmount(bestTrade.amount, '+') : '—'}
+          </span>
+        </div>
+      </div>
+
       {history.length >= 1 && (
         <div className="mb-4 sm:mb-6 p-4 sm:p-5 rounded-2xl border border-border/30 bg-card/60 backdrop-blur-sm shadow-sm">
           <PnLChart history={history} currency={currency} solPrice={solPrice} />

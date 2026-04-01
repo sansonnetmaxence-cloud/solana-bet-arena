@@ -111,7 +111,7 @@ const PriceCard = ({
             ? betDir === 'up'
               ? '0 0 60px hsl(160 100% 51% / 0.12), 0 0 120px hsl(160 100% 51% / 0.04)'
               : '0 0 60px hsl(0 100% 63% / 0.12), 0 0 120px hsl(0 100% 63% / 0.04)'
-            : '0 4px 40px hsl(0 0% 0% / 0.4)',
+            : undefined,
         }}
       >
         {/* Header */}
@@ -226,7 +226,7 @@ const PriceCard = ({
 
         {/* Chart */}
         <div className="relative w-full z-[1]">
-          <div className="absolute bottom-full left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
+          <div className="absolute bottom-full left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-card/90 to-transparent pointer-events-none z-10" />
           <MiniChart data={priceHistory} height={hasBet ? 100 : 90} />
         </div>
       </div>
