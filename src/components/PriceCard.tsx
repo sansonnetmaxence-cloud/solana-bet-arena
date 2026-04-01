@@ -226,7 +226,7 @@ const PriceCard = ({
 
         {/* Chart */}
         <div className="relative w-full z-[1]">
-          <div className="absolute bottom-full left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-card to-transparent pointer-events-none z-10" />
+          <div className="absolute bottom-full left-0 right-0 h-12 sm:h-16 bg-gradient-to-t from-card/90 to-transparent pointer-events-none z-10" />
           <MiniChart data={priceHistory} height={hasBet ? 100 : 90} />
         </div>
       </div>
