@@ -262,7 +262,7 @@ const PriceCard = ({
         result === 'won' && 'border-success glow-green',
         result === 'lost' && 'border-danger glow-red',
         disabled && 'opacity-40 cursor-not-allowed',
-        !selected && !result && 'bg-card/60 hover:bg-card'
+        !selected && !result && 'bg-card/40 backdrop-blur-xl hover:bg-card/60'
       )}
     >
       <span className={cn(
