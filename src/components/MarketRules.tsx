@@ -24,7 +24,7 @@ const MarketRules = () => {
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-[10px] text-muted-foreground/70 pb-2 font-mono">
             <span>Predict SOL price direction — <span className="text-success">Long</span> / <span className="text-danger">Short</span></span>
             <span className="text-border/40">|</span>
-            <span>Timeframes: 30s · 1m · 5m</span>
+            <span>Timeframes: 30s · 1m · 2m · 5m</span>
             <span className="text-border/40">|</span>
             <span>Auto-resolved at expiry via live feed</span>
             <span className="text-border/40">|</span>
