@@ -79,9 +79,10 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
         key={`${dir}-${p}`}
         className={cn(
           'transition-all duration-500',
-          hasBets && !active && 'opacity-10 blur-[2px] scale-95',
-          active && 'z-20 scale-110',
-          !hasBets && selected && 'z-20 scale-110',
+          active && 'z-20 scale-110 ring-2 ring-offset-1 ring-offset-background',
+          active && dir === 'up' && 'ring-success/60',
+          active && dir === 'down' && 'ring-danger/60',
+          selected && !active && 'z-20 scale-110',
         )}
         style={{
           animationDelay: `${index * 20}ms`,
