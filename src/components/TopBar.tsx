@@ -91,11 +91,9 @@ const TopBar = ({
               <span className="font-display text-base font-black text-success tabular-nums">
                 {balanceDisplay}
               </span>
-              <ArrowLeftRight size={12} className="text-success/40" />
-              {walletCurrency === 'SOL'
-                ? <DollarSign size={13} className="text-success/40" />
-                : <CircleDot size={13} className="text-success/40" />
-              }
+              <span className="font-display text-[9px] text-success/40 font-bold">
+                {walletCurrency === 'SOL' ? 'SOL → $' : '$ → SOL'}
+              </span>
             </button>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-success" />
