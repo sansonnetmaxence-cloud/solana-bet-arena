@@ -100,6 +100,14 @@ export default {
           "20%": { opacity: "1" },
           "100%": { transform: "translateY(14px)", opacity: "0" },
         },
+        "flash-green": {
+          "0%": { backgroundColor: "hsl(var(--success) / 0.25)" },
+          "100%": { backgroundColor: "transparent" },
+        },
+        "flash-red": {
+          "0%": { backgroundColor: "hsl(var(--danger) / 0.25)" },
+          "100%": { backgroundColor: "transparent" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
