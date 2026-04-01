@@ -4,6 +4,7 @@ import BettingGrid from '@/components/BettingGrid';
 import TopBar from '@/components/TopBar';
 import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
+import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
