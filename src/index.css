@@ -42,8 +42,8 @@
 
     --radius: 0.5rem;
 
-    --font-display: 'Inter', sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
 
     --glow-green: 0 0 20px hsl(160 100% 51% / 0.6), 0 0 40px hsl(160 100% 51% / 0.3), 0 0 80px hsl(160 100% 51% / 0.1);
     --glow-red: 0 0 20px hsl(0 100% 63% / 0.6), 0 0 40px hsl(0 100% 63% / 0.3), 0 0 80px hsl(0 100% 63% / 0.1);
