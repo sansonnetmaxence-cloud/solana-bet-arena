@@ -7,7 +7,7 @@ import LiveFeed from '@/components/LiveFeed';
 import MarketRules from '@/components/MarketRules';
 import OrderBook from '@/components/OrderBook';
 import WinRain from '@/components/WinRain';
-import { useSolanaPrice } from '@/hooks/useSolanaPrice';
+import { useCryptoPrice, type MarketSymbol } from '@/hooks/useCryptoPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 
@@ -31,7 +31,8 @@ interface Notification {
 }
 
 const Index = () => {
-  const { price, previousPrice, priceDirection, loading, priceHistory } = useSolanaPrice();
+  const [selectedMarket, setSelectedMarket] = useState<MarketSymbol>('SOL');
+  const { price, previousPrice, priceDirection, loading, priceHistory } = useCryptoPrice(selectedMarket);
   const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
@@ -195,7 +196,11 @@ const Index = () => {
         }}
       />
 
-      <Header priceDirection={priceDirection as 'up' | 'down' | 'neutral'} />
+      <Header
+        priceDirection={priceDirection as 'up' | 'down' | 'neutral'}
+        selectedMarket={selectedMarket}
+        onMarketChange={setSelectedMarket}
+      />
 
       <TopBar
         connected={wallet.connected}
