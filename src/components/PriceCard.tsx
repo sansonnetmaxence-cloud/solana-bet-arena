@@ -98,7 +98,7 @@ const PriceCard = ({
       ? currentPrice - activeBet.startPrice 
       : null;
     const priceDeltaPositive = priceDelta != null ? priceDelta >= 0 : null;
-    const trendColor = priceTrend === 'up' ? 'success' : 'danger';
+    
 
     return (
       <div className={cn(
