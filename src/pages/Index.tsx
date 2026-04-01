@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Header from '@/components/Header';
 import BettingGrid from '@/components/BettingGrid';
 import TopBar from '@/components/TopBar';
