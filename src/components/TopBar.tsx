@@ -79,10 +79,15 @@ const TopBar = ({
       <div className="flex-1 flex items-center justify-end gap-3">
         {connected ? (
           <>
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-success/[0.06] border border-success/15">
+              <span className="font-display text-base font-black text-success tabular-nums">
+                4.20
+              </span>
+              <span className="font-display text-[8px] text-success/60 font-bold uppercase">SOL</span>
+            </div>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-success" />
               <span className="font-display text-[11px] text-primary tracking-wide">{walletAddress}</span>
-              <span className="font-display text-[8px] text-muted-foreground uppercase">{walletType}</span>
             </div>
             <button
               onClick={onDisconnect}
