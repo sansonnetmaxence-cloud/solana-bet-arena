@@ -267,7 +267,7 @@ const Index = () => {
               onConnect={wallet.connect}
               onDisconnect={wallet.disconnect}
               quickBetMode={quickBetMode}
-              onToggleQuickBet={setQuickBetMode}
+              onToggleQuickBet={() => {}}
               quickBetAmount={quickBetAmount}
               onQuickBetAmountChange={setQuickBetAmount}
             />
