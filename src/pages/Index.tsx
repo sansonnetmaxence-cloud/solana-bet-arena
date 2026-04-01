@@ -8,7 +8,7 @@ import WinRain from '@/components/WinRain';
 import { useSolanaPrice } from '@/hooks/useSolanaPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
-import { useTheme } from '@/hooks/useTheme';
+
 import { cn } from '@/lib/utils';
 
 interface ActiveBet {
@@ -33,7 +33,7 @@ const Index = () => {
   const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
-  const { theme, toggle: toggleTheme } = useTheme();
+  
   const sfx = useSoundEffects();
   const [activeBets, setActiveBets] = useState<ActiveBet[]>([]);
   const [latestResult, setLatestResult] = useState<'won' | 'lost' | null>(null);
@@ -205,8 +205,6 @@ const Index = () => {
         quickBetAmount={quickBetAmount}
         onQuickBetAmountChange={setQuickBetAmount}
         notifications={notifications}
-        theme={theme}
-        onToggleTheme={toggleTheme}
       />
 
       {/* Main area */}
