@@ -64,6 +64,13 @@ const LiveFeed = () => {
       const newTrade = generateFakeTrade();
       if (newTrade.won && newTrade.amount >= 5) showBigWinToast(newTrade);
       setTrades(prev => [newTrade, ...prev].slice(0, 40));
+      setTotalCount(prev => prev + 1);
+      // Flash the counter
+      if (countRef.current) {
+        countRef.current.classList.remove('animate-ping-once');
+        void countRef.current.offsetWidth;
+        countRef.current.classList.add('animate-ping-once');
+      }
     }, 1800 + Math.random() * 1500);
     return () => clearInterval(interval);
   }, [showBigWinToast]);
