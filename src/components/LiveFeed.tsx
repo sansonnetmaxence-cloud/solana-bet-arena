@@ -45,12 +45,12 @@ interface Trade {
 }
 
 const LiveFeed = () => {
-  const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 5 }, generateFakeTrade));
+  const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 8 }, generateFakeTrade));
 
   const showBigWinToast = useCallback((trade: Trade) => {
     playBigWinSound();
     toast({
-      title: `🏆 ${trade.pseudo} just won BIG!`,
+      title: `${trade.pseudo} just won BIG!`,
       description: `+${trade.amount} SOL on $${trade.price} ${trade.direction === 'up' ? '▲' : '▼'} (${trade.timeframe})`,
       className: 'border-success/60 bg-success/10 text-success font-display',
       duration: 5000,
@@ -67,50 +67,42 @@ const LiveFeed = () => {
   }, [showBigWinToast]);
 
   return (
-    <div className="w-full border-t border-border/30 bg-card/20 backdrop-blur-sm overflow-hidden">
-      <div className="flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 border-b border-border/20">
-        <span className="text-danger text-[9px] sm:text-[10px] animate-pulse">●</span>
-        <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground uppercase tracking-widest">Live Trades</span>
+    <div className="w-full py-2 px-2 sm:px-4 overflow-hidden">
+      <div className="flex items-center gap-1.5 mb-2 px-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse" />
+        <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground/60 uppercase tracking-widest">
+          Live Trades
+        </span>
       </div>
-      <div className="relative h-[120px] sm:h-[160px] md:h-[180px] overflow-hidden">
-        <div className="absolute inset-0 flex flex-col">
-          {trades.slice(0, 8).map((trade, i) => (
-            <div
-              key={trade.id}
-              className={cn(
-                'flex items-center justify-between px-3 sm:px-4 py-1 sm:py-1.5 border-b border-border/10 transition-all duration-500',
-                i === 0 && 'animate-slide-in-feed',
-              )}
-            >
-              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-                <span className={cn(
-                  'text-[9px] sm:text-[10px] font-bold',
-                  trade.direction === 'up' ? 'text-success' : 'text-danger'
-                )}>
-                  {trade.direction === 'up' ? '▲' : '▼'}
-                </span>
-                <span className="font-display text-[10px] sm:text-xs text-foreground/90 truncate max-w-[60px] sm:max-w-[100px]">
-                  {trade.pseudo}
-                </span>
-                <span className="text-[8px] sm:text-[9px] text-muted-foreground hidden sm:inline">
-                  ${trade.price} • {trade.timeframe}
-                </span>
-              </div>
-              <div className="flex items-center gap-1 sm:gap-2">
-                {trade.won ? (
-                  <span className="font-display text-[10px] sm:text-xs font-bold text-success">
-                    +{trade.amount} SOL 🏆
-                  </span>
-                ) : (
-                  <span className="font-display text-[10px] sm:text-xs text-danger/60">
-                    -{trade.amount} SOL
-                  </span>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-8 sm:h-10 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="flex flex-wrap gap-1.5 sm:gap-2">
+        {trades.slice(0, 12).map((trade, i) => (
+          <div
+            key={trade.id}
+            className={cn(
+              'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] sm:text-[11px]',
+              'backdrop-blur-md border transition-all duration-500',
+              'animate-fade-in',
+              trade.won
+                ? 'bg-success/[0.08] border-success/20 text-success'
+                : 'bg-danger/[0.06] border-danger/15 text-danger/70',
+              i === 0 && 'ring-1 ring-primary/20 scale-105',
+            )}
+            style={{ animationDelay: `${i * 50}ms` }}
+          >
+            <span className="font-bold text-[9px]">
+              {trade.direction === 'up' ? '▲' : '▼'}
+            </span>
+            <span className="font-display font-semibold truncate max-w-[60px] sm:max-w-[80px]">
+              {trade.pseudo}
+            </span>
+            <span className="font-mono font-bold">
+              {trade.won ? '+' : '-'}{trade.amount}
+            </span>
+            <span className="text-muted-foreground/40 text-[8px] hidden sm:inline">
+              {trade.timeframe}
+            </span>
+          </div>
+        ))}
       </div>
     </div>
   );
