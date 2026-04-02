@@ -36,7 +36,7 @@ const generateFakeTrade = () => {
   const amount = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10][Math.floor(Math.random() * 8)];
   const priceBase = 120 + Math.random() * 40;
   const direction = Math.random() > 0.5 ? 'up' : 'down';
-  const timeframe = ['30s', '1min', '2min', '5min'][Math.floor(Math.random() * 4)];
+  const timeframe = ['30s', '1m', '2m', '5m'][Math.floor(Math.random() * 4)];
   return { id: crypto.randomUUID(), pseudo: `${pseudo}${suffix}`, won, amount, price: priceBase.toFixed(2), direction, timeframe };
 };
 
@@ -45,7 +45,7 @@ interface Trade {
 }
 
 const LiveFeed = () => {
-  const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 8 }, generateFakeTrade));
+  const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 20 }, generateFakeTrade));
 
   const showBigWinToast = useCallback((trade: Trade) => {
     playBigWinSound();
@@ -61,48 +61,48 @@ const LiveFeed = () => {
     const interval = setInterval(() => {
       const newTrade = generateFakeTrade();
       if (newTrade.won && newTrade.amount >= 5) showBigWinToast(newTrade);
-      setTrades(prev => [newTrade, ...prev].slice(0, 30));
-    }, 1500 + Math.random() * 2000);
+      setTrades(prev => [newTrade, ...prev].slice(0, 40));
+    }, 1800 + Math.random() * 1500);
     return () => clearInterval(interval);
   }, [showBigWinToast]);
 
+  // Duplicate list for seamless loop
+  const displayed = trades.slice(0, 20);
+
   return (
-    <div className="w-full py-2 px-2 sm:px-4 overflow-hidden">
-      <div className="flex items-center gap-1.5 mb-2 px-1">
-        <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse" />
-        <span className="font-display text-[9px] sm:text-[10px] text-muted-foreground/60 uppercase tracking-widest">
-          Live Trades
-        </span>
+    <div className="w-full py-1.5 overflow-hidden border-b border-border/20">
+      <div className="flex items-center gap-1.5 px-3 mb-1">
+        <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse shrink-0" />
+        <span className="font-display text-[8px] text-muted-foreground/50 uppercase tracking-widest">Live</span>
       </div>
-      <div className="flex flex-wrap gap-1.5 sm:gap-2">
-        {trades.slice(0, 12).map((trade, i) => (
-          <div
-            key={trade.id}
-            className={cn(
-              'inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[10px] sm:text-[11px]',
-              'backdrop-blur-md border transition-all duration-500',
-              'animate-fade-in',
-              trade.won
-                ? 'bg-success/[0.08] border-success/20 text-success'
-                : 'bg-danger/[0.06] border-danger/15 text-danger/70',
-              i === 0 && 'ring-1 ring-primary/20 scale-105',
-            )}
-            style={{ animationDelay: `${i * 50}ms` }}
-          >
-            <span className="font-bold text-[9px]">
-              {trade.direction === 'up' ? '▲' : '▼'}
-            </span>
-            <span className="font-display font-semibold truncate max-w-[60px] sm:max-w-[80px]">
-              {trade.pseudo}
-            </span>
-            <span className="font-mono font-bold">
-              {trade.won ? '+' : '-'}{trade.amount}
-            </span>
-            <span className="text-muted-foreground/40 text-[8px] hidden sm:inline">
-              {trade.timeframe}
-            </span>
-          </div>
-        ))}
+      <div className="relative overflow-hidden">
+        <div className="flex gap-1.5 animate-marquee whitespace-nowrap">
+          {[...displayed, ...displayed].map((trade, i) => (
+            <div
+              key={`${trade.id}-${i}`}
+              className={cn(
+                'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px]',
+                'backdrop-blur-sm border shrink-0',
+                trade.won
+                  ? 'bg-success/[0.06] border-success/15 text-success/90'
+                  : 'bg-danger/[0.04] border-danger/10 text-danger/60',
+              )}
+            >
+              <span className="font-bold text-[8px]">
+                {trade.direction === 'up' ? '▲' : '▼'}
+              </span>
+              <span className="font-display font-medium truncate max-w-[50px]">
+                {trade.pseudo}
+              </span>
+              <span className="font-mono font-bold">
+                {trade.won ? '+' : '-'}{trade.amount}
+              </span>
+            </div>
+          ))}
+        </div>
+        {/* Fade edges */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
       </div>
     </div>
   );
