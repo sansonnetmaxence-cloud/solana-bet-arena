@@ -108,6 +108,10 @@ export default {
           "0%": { backgroundColor: "hsl(var(--danger) / 0.25)" },
           "100%": { backgroundColor: "transparent" },
         },
+        "marquee": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -120,6 +124,7 @@ export default {
         "arrow-float-down": "arrow-float-down 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
         "flash-green": "flash-green 0.4s ease-out",
         "flash-red": "flash-red 0.4s ease-out",
+        "marquee": "marquee 30s linear infinite",
       },
     },
   },
