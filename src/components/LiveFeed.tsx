@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 
@@ -46,6 +46,8 @@ interface Trade {
 
 const LiveFeed = () => {
   const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 20 }, generateFakeTrade));
+  const [totalCount, setTotalCount] = useState(20);
+  const countRef = useRef<HTMLSpanElement>(null);
 
   const showBigWinToast = useCallback((trade: Trade) => {
     playBigWinSound();
@@ -62,6 +64,13 @@ const LiveFeed = () => {
       const newTrade = generateFakeTrade();
       if (newTrade.won && newTrade.amount >= 5) showBigWinToast(newTrade);
       setTrades(prev => [newTrade, ...prev].slice(0, 40));
+      setTotalCount(prev => prev + 1);
+      // Flash the counter
+      if (countRef.current) {
+        countRef.current.classList.remove('animate-ping-once');
+        void countRef.current.offsetWidth;
+        countRef.current.classList.add('animate-ping-once');
+      }
     }, 1800 + Math.random() * 1500);
     return () => clearInterval(interval);
   }, [showBigWinToast]);
@@ -74,7 +83,7 @@ const LiveFeed = () => {
       <div className="flex items-center gap-1.5 px-3 mb-1">
         <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse shrink-0" />
         <span className="font-display text-[8px] text-muted-foreground/50 uppercase tracking-widest">Live Trades</span>
-        <span className="font-mono text-[8px] text-muted-foreground/30">{trades.length}</span>
+        <span ref={countRef} className="font-mono text-[8px] text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full transition-all duration-300">{totalCount}</span>
       </div>
       <div className="relative overflow-hidden">
         <div className="flex gap-1.5 animate-marquee whitespace-nowrap">
