@@ -6,6 +6,7 @@ import BetHistory, { type BetRecord } from '@/components/BetHistory';
 import LiveFeed from '@/components/LiveFeed';
 import MarketRules from '@/components/MarketRules';
 import OrderBook from '@/components/OrderBook';
+import DepthChart from '@/components/DepthChart';
 import WinRain from '@/components/WinRain';
 import { useCryptoPrice, type MarketSymbol } from '@/hooks/useCryptoPrice';
 import { useWallet } from '@/hooks/useWallet';
