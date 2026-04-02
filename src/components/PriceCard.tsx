@@ -21,7 +21,15 @@ interface PriceCardProps {
   countdown?: number;
   selectedPrice?: number | null;
   selectedDirection?: 'up' | 'down' | null;
+  market?: string;
 }
+
+const MARKET_INFO: Record<string, { pair: string; name: string; icon: string }> = {
+  SOL: { pair: 'SOL / USD', name: 'Solana', icon: '◎' },
+  BTC: { pair: 'BTC / USD', name: 'Bitcoin', icon: '₿' },
+  ETH: { pair: 'ETH / USD', name: 'Ethereum', icon: 'Ξ' },
+  XRP: { pair: 'XRP / USD', name: 'XRP', icon: '✕' },
+};
 
 const PriceCard = ({
   price,
@@ -38,7 +46,9 @@ const PriceCard = ({
   activeBets = [],
   selectedPrice,
   selectedDirection,
+  market = 'SOL',
 }: PriceCardProps) => {
+  const marketInfo = MARKET_INFO[market] || MARKET_INFO.SOL;
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
   const [priceTrend, setPriceTrend] = useState<'up' | 'down'>('up');
   const [displayPrice, setDisplayPrice] = useState(currentPrice ?? 0);
@@ -118,11 +128,11 @@ const PriceCard = ({
         <div className="flex items-center justify-between px-3 sm:px-5 pt-3 sm:pt-4 pb-1 sm:pb-2 z-[1]">
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <span className="text-[8px] sm:text-[10px] font-black text-primary">◎</span>
+              <span className="text-[8px] sm:text-[10px] font-black text-primary">{marketInfo.icon}</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-display text-xs sm:text-sm text-foreground font-bold tracking-wide">SOL / USD</span>
-              <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground tracking-wider">Solana</span>
+              <span className="font-display text-xs sm:text-sm text-foreground font-bold tracking-wide">{marketInfo.pair}</span>
+              <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground tracking-wider">{marketInfo.name}</span>
             </div>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full bg-danger/8 border border-danger/15">

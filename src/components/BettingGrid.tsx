@@ -24,11 +24,12 @@ interface BettingGridProps {
   countdown?: number;
   selectedPrice?: number | null;
   selectedDirection?: 'up' | 'down' | null;
+  market?: string;
 }
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
 
-const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBets, betResult, quickBetMode, countdown, selectedPrice, selectedDirection }: BettingGridProps) => {
+const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBets, betResult, quickBetMode, countdown, selectedPrice, selectedDirection, market }: BettingGridProps) => {
   const basePrice = currentPrice ?? 150;
   const hasBets = activeBets.length > 0;
   const primaryBet = hasBets ? activeBets[0] : null;
@@ -136,6 +137,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
           countdown={countdown}
           selectedPrice={selectedPrice}
           selectedDirection={selectedDirection}
+          market={market}
         />
       </div>
 
@@ -177,6 +179,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
           countdown={countdown}
           selectedPrice={selectedPrice}
           selectedDirection={selectedDirection}
+          market={market}
         />
       </div>
 
