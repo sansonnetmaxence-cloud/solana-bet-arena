@@ -174,7 +174,18 @@ const PriceCard = ({
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
                 'font-display font-black leading-none tabular-nums block whitespace-nowrap',
-                hasBet ? 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl' : 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]',
+                // Dynamic sizing based on price length
+                displayPrice >= 10000
+                  ? hasBet
+                    ? 'text-xl sm:text-3xl md:text-4xl lg:text-5xl'
+                    : 'text-2xl sm:text-4xl md:text-5xl lg:text-[3.5rem]'
+                  : displayPrice >= 1000
+                    ? hasBet
+                      ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl'
+                      : 'text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem]'
+                    : hasBet
+                      ? 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl'
+                      : 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',
