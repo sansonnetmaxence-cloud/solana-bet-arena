@@ -46,6 +46,8 @@ interface Trade {
 
 const LiveFeed = () => {
   const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 20 }, generateFakeTrade));
+  const [totalCount, setTotalCount] = useState(20);
+  const countRef = useRef<HTMLSpanElement>(null);
 
   const showBigWinToast = useCallback((trade: Trade) => {
     playBigWinSound();
