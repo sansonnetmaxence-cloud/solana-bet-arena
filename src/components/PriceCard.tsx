@@ -21,7 +21,15 @@ interface PriceCardProps {
   countdown?: number;
   selectedPrice?: number | null;
   selectedDirection?: 'up' | 'down' | null;
+  market?: string;
 }
+
+const MARKET_INFO: Record<string, { pair: string; name: string; icon: string }> = {
+  SOL: { pair: 'SOL / USD', name: 'Solana', icon: '◎' },
+  BTC: { pair: 'BTC / USD', name: 'Bitcoin', icon: '₿' },
+  ETH: { pair: 'ETH / USD', name: 'Ethereum', icon: 'Ξ' },
+  XRP: { pair: 'XRP / USD', name: 'XRP', icon: '✕' },
+};
 
 const PriceCard = ({
   price,
