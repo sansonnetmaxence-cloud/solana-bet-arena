@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 
@@ -47,7 +47,8 @@ interface Trade {
 const LiveFeed = () => {
   const [trades, setTrades] = useState<Trade[]>(() => Array.from({ length: 20 }, generateFakeTrade));
   const [totalCount, setTotalCount] = useState(20);
-  const countRef = useRef<HTMLSpanElement>(null);
+  const [prevCount, setPrevCount] = useState(20);
+  const [animKey, setAnimKey] = useState(0);
 
   const showBigWinToast = useCallback((trade: Trade) => {
     playBigWinSound();
@@ -64,27 +65,40 @@ const LiveFeed = () => {
       const newTrade = generateFakeTrade();
       if (newTrade.won && newTrade.amount >= 5) showBigWinToast(newTrade);
       setTrades(prev => [newTrade, ...prev].slice(0, 40));
+      setPrevCount(totalCount);
       setTotalCount(prev => prev + 1);
-      // Flash the counter
-      if (countRef.current) {
-        countRef.current.classList.remove('animate-ping-once');
-        void countRef.current.offsetWidth;
-        countRef.current.classList.add('animate-ping-once');
-      }
+      setAnimKey(k => k + 1);
     }, 1800 + Math.random() * 1500);
     return () => clearInterval(interval);
-  }, [showBigWinToast]);
+  }, [showBigWinToast, totalCount]);
 
   // Duplicate list for seamless loop
   const displayed = trades.slice(0, 20);
+
+  // Render digits with per-digit animation
+  const digits = String(totalCount).split('');
+  const prevStr = String(prevCount).padStart(digits.length, '0');
+  const prevDigits = prevStr.split('');
 
   return (
     <div className="w-full py-1.5 overflow-hidden border-b border-border/20">
       <div className="flex items-center gap-1.5 px-3 mb-1">
         <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse shrink-0" />
         <span className="font-display text-[8px] text-muted-foreground/50 uppercase tracking-widest">Live Trades</span>
-        <span ref={countRef} className="font-mono text-[9px] text-muted-foreground/50 tabular-nums inline-flex overflow-hidden h-[14px] items-end">
-          <span className="inline-block animate-ping-once">{totalCount}</span>
+        <span className="font-mono text-[9px] text-muted-foreground/50 tabular-nums inline-flex">
+          {digits.map((d, i) => {
+            const changed = prevDigits[i] !== d;
+            return (
+              <span key={i} className="inline-block overflow-hidden h-[14px] w-[7px] relative">
+                <span
+                  key={changed ? animKey : `s-${d}`}
+                  className={changed ? 'inline-block animate-ping-once' : 'inline-block'}
+                >
+                  {d}
+                </span>
+              </span>
+            );
+          })}
         </span>
       </div>
       <div className="relative overflow-hidden">
