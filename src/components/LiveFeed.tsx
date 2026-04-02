@@ -77,9 +77,8 @@ const LiveFeed = () => {
 
   // Render digits with per-digit animation
   const digits = String(totalCount).split('');
-  const prevDigits = String(prevCount).split('').padStart(digits.length, '0').split('');
-  // Pad prev to same length
-  while (prevDigits.length < digits.length) prevDigits.unshift('0');
+  const prevStr = String(prevCount).padStart(digits.length, '0');
+  const prevDigits = prevStr.split('');
 
   return (
     <div className="w-full py-1.5 overflow-hidden border-b border-border/20">
