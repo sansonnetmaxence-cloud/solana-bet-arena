@@ -24,6 +24,7 @@ interface BettingGridProps {
   countdown?: number;
   selectedPrice?: number | null;
   selectedDirection?: 'up' | 'down' | null;
+  market?: string;
 }
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
