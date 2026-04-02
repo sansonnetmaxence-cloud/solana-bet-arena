@@ -201,8 +201,8 @@
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
 @keyframes ping-once {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.4); }
-  100% { transform: scale(1); }
+  0% { transform: translateY(-100%); opacity: 0; filter: blur(2px); }
+  60% { transform: translateY(0); opacity: 1; filter: blur(0); }
+  100% { transform: translateY(0); opacity: 1; filter: blur(0); }
 }
-.animate-ping-once { animation: ping-once 0.35s ease-out; }
+.animate-ping-once { animation: ping-once 0.4s ease-out; }
