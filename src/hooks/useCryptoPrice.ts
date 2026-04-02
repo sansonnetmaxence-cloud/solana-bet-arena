@@ -9,16 +9,22 @@ const BINANCE_SYMBOLS: Record<MarketSymbol, string> = {
   XRP: 'XRPUSDT',
 };
 
+const CG_IDS: Record<MarketSymbol, string> = {
+  SOL: 'solana',
+  BTC: 'bitcoin',
+  ETH: 'ethereum',
+  XRP: 'ripple',
+};
+
 export const useCryptoPrice = (symbol: MarketSymbol) => {
   const [price, setPrice] = useState<number | null>(null);
   const [previousPrice, setPreviousPrice] = useState<number | null>(null);
   const [priceHistory, setPriceHistory] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
-  const wsRef = useRef<WebSocket | null>(null);
-  const pollingRef = useRef<NodeJS.Timeout | null>(null);
   const latestPrice = useRef<number | null>(null);
   const lastHistoryTime = useRef(0);
-  const usingWs = useRef(false);
+  const symbolRef = useRef(symbol);
+  symbolRef.current = symbol;
 
   const updatePrice = useCallback((newPrice: number) => {
     const prev = latestPrice.current;
@@ -37,102 +43,86 @@ export const useCryptoPrice = (symbol: MarketSymbol) => {
     }
   }, []);
 
-  // REST API polling fallback
-  const fetchPrice = useCallback(async () => {
-    try {
-      const pair = BINANCE_SYMBOLS[symbol];
-      const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${pair}`);
-      if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      const p = parseFloat(data.price);
-      if (!isNaN(p)) updatePrice(p);
-    } catch {
-      // If REST also fails, try CoinGecko as second fallback
-      try {
-        const cgIds: Record<MarketSymbol, string> = {
-          SOL: 'solana', BTC: 'bitcoin', ETH: 'ethereum', XRP: 'ripple',
-        };
-        const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgIds[symbol]}&vs_currencies=usd`);
-        if (res.ok) {
-          const data = await res.json();
-          const cgId = cgIds[symbol];
-          const p = data[cgId]?.usd;
-          if (p) updatePrice(p);
-        }
-      } catch {}
-    }
-  }, [symbol, updatePrice]);
-
-  const startPolling = useCallback(() => {
-    if (pollingRef.current) return;
-    // Fetch immediately then poll every 2s
-    fetchPrice();
-    pollingRef.current = setInterval(fetchPrice, 2000);
-  }, [fetchPrice]);
-
-  const stopPolling = useCallback(() => {
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current);
-      pollingRef.current = null;
-    }
-  }, []);
-
-  // Try WebSocket first, fall back to REST polling
-  const connect = useCallback(() => {
-    const pair = BINANCE_SYMBOLS[symbol].toLowerCase();
-    const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${pair}@trade`);
-    wsRef.current = ws;
-
-    const wsTimeout = setTimeout(() => {
-      // If WS hasn't opened in 3s, fall back to polling
-      if (!usingWs.current) {
-        ws.close();
-        startPolling();
-      }
-    }, 3000);
-
-    ws.onopen = () => {
-      clearTimeout(wsTimeout);
-      usingWs.current = true;
-      stopPolling();
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        const newPrice = parseFloat(data.p);
-        if (!isNaN(newPrice)) updatePrice(newPrice);
-      } catch {}
-    };
-
-    ws.onerror = () => {};
-
-    ws.onclose = () => {
-      clearTimeout(wsTimeout);
-      usingWs.current = false;
-      startPolling();
-    };
-  }, [symbol, updatePrice, startPolling, stopPolling]);
-
   useEffect(() => {
-    // Reset state on symbol change
+    // Reset on symbol change
     setPrice(null);
     setPreviousPrice(null);
     setPriceHistory([]);
     setLoading(true);
     latestPrice.current = null;
     lastHistoryTime.current = 0;
-    usingWs.current = false;
-    stopPolling();
-    wsRef.current?.close();
 
-    const t = setTimeout(() => connect(), 50);
-    return () => {
-      clearTimeout(t);
-      wsRef.current?.close();
-      stopPolling();
+    let ws: WebSocket | null = null;
+    let polling: ReturnType<typeof setInterval> | null = null;
+    let cancelled = false;
+
+    const fetchRest = async () => {
+      if (cancelled) return;
+      try {
+        const pair = BINANCE_SYMBOLS[symbolRef.current];
+        const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${pair}`);
+        if (!res.ok) throw new Error('Binance REST error');
+        const data = await res.json();
+        const p = parseFloat(data.price);
+        if (!isNaN(p) && !cancelled) updatePrice(p);
+      } catch {
+        try {
+          const cgId = CG_IDS[symbolRef.current];
+          const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${cgId}&vs_currencies=usd`);
+          if (res.ok && !cancelled) {
+            const data = await res.json();
+            const p = data[cgId]?.usd;
+            if (p) updatePrice(p);
+          }
+        } catch {}
+      }
     };
-  }, [connect, stopPolling]);
+
+    const startPolling = () => {
+      if (polling) return;
+      fetchRest();
+      polling = setInterval(fetchRest, 2000);
+    };
+
+    // Try WebSocket
+    const pair = BINANCE_SYMBOLS[symbol].toLowerCase();
+    try {
+      ws = new WebSocket(`wss://stream.binance.com:9443/ws/${pair}@trade`);
+
+      const wsTimeout = setTimeout(() => {
+        if (ws && ws.readyState !== WebSocket.OPEN) {
+          ws.close();
+          startPolling();
+        }
+      }, 3000);
+
+      ws.onopen = () => {
+        clearTimeout(wsTimeout);
+        if (polling) { clearInterval(polling); polling = null; }
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          const p = parseFloat(data.p);
+          if (!isNaN(p) && !cancelled) updatePrice(p);
+        } catch {}
+      };
+
+      ws.onerror = () => {};
+      ws.onclose = () => {
+        if (!cancelled) startPolling();
+      };
+    } catch {
+      startPolling();
+    }
+
+    return () => {
+      cancelled = true;
+      ws?.close();
+      if (polling) clearInterval(polling);
+    };
+  }, [symbol, updatePrice]);
 
   const priceDirection = price && previousPrice
     ? price > previousPrice ? 'up' : price < previousPrice ? 'down' : 'neutral'
