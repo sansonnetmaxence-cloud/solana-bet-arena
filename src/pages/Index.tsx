@@ -216,24 +216,22 @@ const Index = () => {
       />
 
       <MarketRules />
-      
+
+      <LiveFeed />
 
       {/* Main area */}
       <div className={cn(
-        'flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 min-h-[calc(100vh-100px)] sm:min-h-[calc(100vh-120px)] transition-all duration-500',
+        'flex flex-col items-center justify-center p-2 sm:p-4 md:p-8 min-h-[calc(100vh-160px)] sm:min-h-[calc(100vh-180px)] transition-all duration-500',
         latestResult && 'relative'
       )}>
         {latestResult && latestResultBet && (
           <div className="fixed inset-0 flex items-center justify-center z-50 animate-result-backdrop bg-background/70">
-            {/* Radial glow behind */}
             <div
               className={cn(
                 'absolute w-[400px] h-[400px] md:w-[600px] md:h-[600px] rounded-full animate-result-glow',
                 latestResult === 'won' ? 'bg-success/10' : 'bg-danger/10',
               )}
-              style={{
-                filter: 'blur(80px)',
-              }}
+              style={{ filter: 'blur(80px)' }}
             />
             <div className={cn(
               'relative text-center p-8 sm:p-10 md:p-16 rounded-3xl border animate-result-pop',
@@ -283,11 +281,12 @@ const Index = () => {
         )}
       </div>
 
-      <LiveFeed />
-
       <OrderBook currentPrice={price} />
+      <div className="max-w-5xl mx-auto px-4">
+        <DepthChart currentPrice={price} />
+      </div>
 
-      <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm">
+      <div className="border-t border-border/30 bg-card/20 backdrop-blur-sm mt-4">
         <BetHistory history={betHistory} />
       </div>
 
