@@ -83,7 +83,9 @@ const LiveFeed = () => {
       <div className="flex items-center gap-1.5 px-3 mb-1">
         <span className="w-1.5 h-1.5 rounded-full bg-danger animate-pulse shrink-0" />
         <span className="font-display text-[8px] text-muted-foreground/50 uppercase tracking-widest">Live Trades</span>
-        <span ref={countRef} className="font-mono text-[8px] text-primary/60 bg-primary/10 px-1.5 py-0.5 rounded-full transition-all duration-300">{totalCount}</span>
+        <span ref={countRef} className="font-mono text-[9px] text-muted-foreground/50 tabular-nums inline-flex overflow-hidden h-[14px] items-end">
+          <span className="inline-block animate-ping-once">{totalCount}</span>
+        </span>
       </div>
       <div className="relative overflow-hidden">
         <div className="flex gap-1.5 animate-marquee whitespace-nowrap">
