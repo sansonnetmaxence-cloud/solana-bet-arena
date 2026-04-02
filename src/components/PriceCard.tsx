@@ -46,7 +46,9 @@ const PriceCard = ({
   activeBets = [],
   selectedPrice,
   selectedDirection,
+  market = 'SOL',
 }: PriceCardProps) => {
+  const marketInfo = MARKET_INFO[market] || MARKET_INFO.SOL;
   const [priceFlash, setPriceFlash] = useState<'up' | 'down' | null>(null);
   const [priceTrend, setPriceTrend] = useState<'up' | 'down'>('up');
   const [displayPrice, setDisplayPrice] = useState(currentPrice ?? 0);
