@@ -29,7 +29,7 @@ interface BettingGridProps {
 
 const TIMEFRAMES = ['1min', '2min', '5min', '30s'];
 
-const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBets, betResult, quickBetMode, countdown, selectedPrice, selectedDirection }: BettingGridProps) => {
+const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, activeBets, betResult, quickBetMode, countdown, selectedPrice, selectedDirection, market }: BettingGridProps) => {
   const basePrice = currentPrice ?? 150;
   const hasBets = activeBets.length > 0;
   const primaryBet = hasBets ? activeBets[0] : null;
