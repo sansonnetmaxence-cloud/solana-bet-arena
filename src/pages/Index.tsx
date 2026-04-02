@@ -277,6 +277,7 @@ const Index = () => {
             countdown={primaryCountdown}
             selectedPrice={selectedPrice}
             selectedDirection={selectedDirection}
+            market={selectedMarket}
           />
         )}
       </div>
