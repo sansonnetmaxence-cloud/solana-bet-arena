@@ -128,7 +128,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-background/80 backdrop-blur-2xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-card shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200" style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', backgroundColor: 'hsl(var(--card) / 0.92)' }}>
           {/* Search */}
           <div className="p-2 border-b border-border/20">
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border/20">
