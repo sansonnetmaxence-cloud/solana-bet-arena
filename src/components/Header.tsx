@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
+import MarketSelector from './MarketSelector';
 
 interface HeaderProps {
   priceDirection: 'up' | 'down' | 'neutral';
@@ -8,13 +9,6 @@ interface HeaderProps {
   onMarketChange: (market: MarketSymbol) => void;
 }
 
-const markets: { pair: string; symbol: MarketSymbol | null; soon?: boolean }[] = [
-  { pair: 'SOL / USD', symbol: 'SOL' },
-  { pair: 'BTC / USD', symbol: 'BTC' },
-  { pair: 'ETH / USD', symbol: 'ETH' },
-  { pair: 'XRP / USD', symbol: 'XRP' },
-  { pair: 'Stock Market', symbol: null, soon: true },
-];
 
 const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps) => {
   const [totalSol, setTotalSol] = useState(124_853.42);
@@ -30,17 +24,21 @@ const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps)
   return (
     <div className="border-b border-border/30 bg-card/40 backdrop-blur-md relative z-20">
       <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <span className="font-display text-primary text-xs sm:text-sm font-black">◎</span>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+              <span className="font-display text-primary text-xs sm:text-sm font-black">◎</span>
+            </div>
+            <div className="flex flex-col">
+              <h1 className="font-display text-sm sm:text-base font-bold tracking-wider uppercase leading-tight">
+                <span className="text-primary">SOL</span>
+                <span className="text-foreground/60">BET</span>
+              </h1>
+              <span className="font-display text-[7px] sm:text-[8px] text-muted-foreground tracking-widest uppercase hidden sm:block">Prediction Market</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <h1 className="font-display text-sm sm:text-base font-bold tracking-wider uppercase leading-tight">
-              <span className="text-primary">SOL</span>
-              <span className="text-foreground/60">BET</span>
-            </h1>
-            <span className="font-display text-[7px] sm:text-[8px] text-muted-foreground tracking-widest uppercase hidden sm:block">Prediction Market</span>
-          </div>
+          <div className="hidden sm:block h-6 w-px bg-border/30" />
+          <MarketSelector selectedMarket={selectedMarket} onMarketChange={onMarketChange} />
         </div>
 
         <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-success/[0.04] border border-success/10">
@@ -67,29 +65,6 @@ const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps)
         </div>
       </header>
 
-      {/* Market pairs strip */}
-      <div className="flex items-center gap-1 px-3 sm:px-6 pb-2 overflow-x-auto scrollbar-hide">
-        {markets.map((m) => (
-          <button
-            key={m.pair}
-            onClick={() => m.symbol && onMarketChange(m.symbol)}
-            disabled={m.soon}
-            className={cn(
-              'relative px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-display font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border',
-              m.symbol === selectedMarket
-                ? 'border-primary/40 text-primary bg-primary/10'
-                : m.soon
-                  ? 'border-border/20 text-muted-foreground/30 cursor-not-allowed'
-                  : 'border-border/20 text-muted-foreground/60 hover:text-foreground hover:border-border/40'
-            )}
-          >
-            {m.pair}
-            {m.soon && (
-              <span className="ml-1.5 text-[8px] font-mono text-muted-foreground/30 uppercase">soon</span>
-            )}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
