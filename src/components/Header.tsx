@@ -65,29 +65,6 @@ const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps)
         </div>
       </header>
 
-      {/* Market pairs strip */}
-      <div className="flex items-center gap-1 px-3 sm:px-6 pb-2 overflow-x-auto scrollbar-hide">
-        {markets.map((m) => (
-          <button
-            key={m.pair}
-            onClick={() => m.symbol && onMarketChange(m.symbol)}
-            disabled={m.soon}
-            className={cn(
-              'relative px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-display font-semibold tracking-wide whitespace-nowrap transition-all duration-200 border',
-              m.symbol === selectedMarket
-                ? 'border-primary/40 text-primary bg-primary/10'
-                : m.soon
-                  ? 'border-border/20 text-muted-foreground/30 cursor-not-allowed'
-                  : 'border-border/20 text-muted-foreground/60 hover:text-foreground hover:border-border/40'
-            )}
-          >
-            {m.pair}
-            {m.soon && (
-              <span className="ml-1.5 text-[8px] font-mono text-muted-foreground/30 uppercase">soon</span>
-            )}
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
