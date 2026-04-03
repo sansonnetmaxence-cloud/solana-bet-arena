@@ -223,11 +223,13 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
     >
       <div className="flex items-center gap-2">
         <Star className={cn('w-3 h-3 flex-shrink-0', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
-        <img
-          src={market.logo}
-          alt={market.name}
-          className="w-6 h-6 rounded-full object-contain flex-shrink-0"
-        />
+        {market.logo ? (
+          <img src={market.logo} alt={market.name} className="w-6 h-6 rounded-full object-contain flex-shrink-0" loading="lazy" width={24} height={24} />
+        ) : (
+          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">
+            {market.textIcon || market.pair.charAt(0)}
+          </div>
+        )}
         <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
         {market.leverage && (
           <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-muted/60 text-muted-foreground/70 font-semibold">
