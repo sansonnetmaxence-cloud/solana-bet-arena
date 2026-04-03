@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Search, ChevronDown, Star } from 'lucide-react';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
@@ -7,22 +7,52 @@ interface MarketItem {
   symbol: MarketSymbol | null;
   pair: string;
   name: string;
-  icon: string;
-  iconBg: string;
+  logo: string; // SVG URL
   leverage?: string;
   category: 'crypto' | 'stock';
   soon?: boolean;
+  binanceSymbol?: string;
 }
 
+const CRYPTO_LOGOS: Record<string, string> = {
+  BTC: 'https://cryptologos.cc/logos/bitcoin-btc-logo.svg',
+  ETH: 'https://cryptologos.cc/logos/ethereum-eth-logo.svg',
+  SOL: 'https://cryptologos.cc/logos/solana-sol-logo.svg',
+  XRP: 'https://cryptologos.cc/logos/xrp-xrp-logo.svg',
+  AAPL: 'https://logo.clearbit.com/apple.com',
+  TSLA: 'https://logo.clearbit.com/tesla.com',
+  NVDA: 'https://logo.clearbit.com/nvidia.com',
+};
+
 const markets: MarketItem[] = [
-  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', icon: '₿', iconBg: 'bg-orange-500', leverage: '50x', category: 'crypto' },
-  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', icon: 'Ξ', iconBg: 'bg-blue-500', leverage: '50x', category: 'crypto' },
-  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', icon: '◎', iconBg: 'bg-gradient-to-br from-purple-500 to-teal-400', leverage: '25x', category: 'crypto' },
-  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', icon: '✕', iconBg: 'bg-gray-500', leverage: '25x', category: 'crypto' },
-  { symbol: null, pair: 'AAPL/USD', name: 'Apple', icon: '', iconBg: 'bg-muted', category: 'stock', soon: true },
-  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', icon: 'T', iconBg: 'bg-muted', category: 'stock', soon: true },
-  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', icon: 'N', iconBg: 'bg-muted', category: 'stock', soon: true },
+  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', logo: CRYPTO_LOGOS.BTC, leverage: '50x', category: 'crypto', binanceSymbol: 'BTCUSDT' },
+  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: CRYPTO_LOGOS.ETH, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
+  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: CRYPTO_LOGOS.SOL, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
+  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: CRYPTO_LOGOS.XRP, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
+  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: CRYPTO_LOGOS.AAPL, category: 'stock', soon: true },
+  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: CRYPTO_LOGOS.TSLA, category: 'stock', soon: true },
+  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: CRYPTO_LOGOS.NVDA, category: 'stock', soon: true },
 ];
+
+interface LiveData {
+  price: number;
+  change24h: number;
+  volume: string;
+}
+
+function formatVolume(vol: number): string {
+  if (vol >= 1e9) return `$${(vol / 1e9).toFixed(2)}B`;
+  if (vol >= 1e6) return `$${(vol / 1e6).toFixed(2)}M`;
+  if (vol >= 1e3) return `$${(vol / 1e3).toFixed(1)}K`;
+  return `$${vol.toFixed(0)}`;
+}
+
+function formatPrice(price: number): string {
+  if (price >= 10000) return price.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  if (price >= 100) return price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (price >= 1) return price.toFixed(3);
+  return price.toFixed(4);
+}
 
 interface MarketSelectorProps {
   selectedMarket: MarketSymbol;
@@ -32,10 +62,12 @@ interface MarketSelectorProps {
 const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
+  const [liveData, setLiveData] = useState<Record<string, LiveData>>({});
   const ref = useRef<HTMLDivElement>(null);
 
   const selected = markets.find(m => m.symbol === selectedMarket)!;
 
+  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -43,6 +75,32 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
+
+  // Fetch live 24h ticker data
+  const fetchTickers = useCallback(async () => {
+    try {
+      const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT'];
+      const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${JSON.stringify(symbols)}`);
+      if (!res.ok) return;
+      const data = await res.json();
+      const newData: Record<string, LiveData> = {};
+      for (const t of data) {
+        const sym = t.symbol.replace('USDT', '');
+        newData[sym] = {
+          price: parseFloat(t.lastPrice),
+          change24h: parseFloat(t.priceChangePercent),
+          volume: formatVolume(parseFloat(t.quoteVolume)),
+        };
+      }
+      setLiveData(newData);
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    fetchTickers();
+    const interval = setInterval(fetchTickers, 5000);
+    return () => clearInterval(interval);
+  }, [fetchTickers]);
 
   const filtered = markets.filter(m =>
     m.pair.toLowerCase().includes(search.toLowerCase()) ||
@@ -53,7 +111,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
   const stocks = filtered.filter(m => m.category === 'stock');
 
   return (
-    <div ref={ref} className="relative">
+    <div ref={ref} className="relative z-50">
       {/* Trigger button */}
       <button
         onClick={() => setOpen(!open)}
@@ -63,9 +121,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
           open && 'border-primary/40 bg-card/80'
         )}
       >
-        <div className={cn('w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white', selected.iconBg)}>
-          {selected.icon}
-        </div>
+        <img src={selected.logo} alt={selected.name} className="w-5 h-5 rounded-full object-contain" />
         <span className="font-display text-xs font-bold text-foreground">{selected.pair}</span>
         {selected.leverage && (
           <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-muted text-muted-foreground font-semibold">
@@ -77,7 +133,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[340px] rounded-xl border border-border/40 bg-card/95 backdrop-blur-xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-background/80 backdrop-blur-2xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {/* Search */}
           <div className="p-2 border-b border-border/20">
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border/20">
@@ -101,30 +157,32 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
           </div>
 
           <div className="max-h-[300px] overflow-y-auto scrollbar-hide">
-            {/* Crypto section */}
             {cryptos.length > 0 && (
               <div>
                 <div className="px-3 py-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest">
                   Crypto Perpetuals
                 </div>
-                {cryptos.map(m => (
-                  <MarketRow
-                    key={m.pair}
-                    market={m}
-                    isSelected={m.symbol === selectedMarket}
-                    onClick={() => {
-                      if (m.symbol) {
-                        onMarketChange(m.symbol);
-                        setOpen(false);
-                        setSearch('');
-                      }
-                    }}
-                  />
-                ))}
+                {cryptos.map(m => {
+                  const data = m.symbol ? liveData[m.symbol] : undefined;
+                  return (
+                    <MarketRow
+                      key={m.pair}
+                      market={m}
+                      isSelected={m.symbol === selectedMarket}
+                      data={data}
+                      onClick={() => {
+                        if (m.symbol) {
+                          onMarketChange(m.symbol);
+                          setOpen(false);
+                          setSearch('');
+                        }
+                      }}
+                    />
+                  );
+                })}
               </div>
             )}
 
-            {/* Stocks section */}
             {stocks.length > 0 && (
               <div>
                 <div className="px-3 py-1 mt-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest border-t border-border/10 pt-2">
@@ -147,24 +205,20 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
   );
 };
 
-const MarketRow = ({ market, isSelected, onClick }: { market: MarketItem; isSelected: boolean; onClick: () => void }) => {
-  // Simulated data for display
-  const mockData: Record<string, { price: string; change: string; volume: string }> = {
-    'BTC/USD': { price: '67,298.0', change: '-1.13', volume: '$783.75M' },
-    'ETH/USDC': { price: '2,067.01', change: '-2.89', volume: '$361.81M' },
-    'SOL/USD': { price: '79.476', change: '-4.93', volume: '$78.16M' },
-    'XRP/USD': { price: '0.5124', change: '+1.24', volume: '$42.3M' },
-  };
-
-  const data = mockData[market.pair];
-  const changeNum = data ? parseFloat(data.change) : 0;
+const MarketRow = ({ market, isSelected, data, onClick }: {
+  market: MarketItem;
+  isSelected: boolean;
+  data?: LiveData;
+  onClick: () => void;
+}) => {
+  const changeNum = data?.change24h ?? 0;
 
   return (
     <button
       onClick={onClick}
       disabled={market.soon}
       className={cn(
-        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2 transition-all duration-150',
+        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2.5 transition-all duration-150',
         isSelected
           ? 'bg-primary/[0.06]'
           : market.soon
@@ -172,12 +226,13 @@ const MarketRow = ({ market, isSelected, onClick }: { market: MarketItem; isSele
             : 'hover:bg-muted/30 cursor-pointer',
       )}
     >
-      {/* Market info */}
       <div className="flex items-center gap-2">
         <Star className={cn('w-3 h-3 flex-shrink-0', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
-        <div className={cn('w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0', market.iconBg)}>
-          {market.icon}
-        </div>
+        <img
+          src={market.logo}
+          alt={market.name}
+          className="w-6 h-6 rounded-full object-contain flex-shrink-0"
+        />
         <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
         {market.leverage && (
           <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-muted/60 text-muted-foreground/70 font-semibold">
@@ -191,20 +246,17 @@ const MarketRow = ({ market, isSelected, onClick }: { market: MarketItem; isSele
         )}
       </div>
 
-      {/* Price */}
       <span className="font-mono text-[11px] text-foreground/80 tabular-nums text-right">
-        {data?.price ?? '—'}
+        {data ? formatPrice(data.price) : '—'}
       </span>
 
-      {/* 24h Change */}
       <span className={cn(
         'font-mono text-[11px] tabular-nums text-right',
         changeNum > 0 ? 'text-success' : changeNum < 0 ? 'text-danger' : 'text-muted-foreground'
       )}>
-        {data ? `${data.change}%` : '—'}
+        {data ? `${changeNum > 0 ? '+' : ''}${changeNum.toFixed(2)}%` : '—'}
       </span>
 
-      {/* Volume */}
       <span className="font-mono text-[10px] text-muted-foreground/60 tabular-nums text-right">
         {data?.volume ?? '—'}
       </span>
