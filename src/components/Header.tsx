@@ -9,13 +9,6 @@ interface HeaderProps {
   onMarketChange: (market: MarketSymbol) => void;
 }
 
-const markets: { pair: string; symbol: MarketSymbol | null; soon?: boolean }[] = [
-  { pair: 'SOL / USD', symbol: 'SOL' },
-  { pair: 'BTC / USD', symbol: 'BTC' },
-  { pair: 'ETH / USD', symbol: 'ETH' },
-  { pair: 'XRP / USD', symbol: 'XRP' },
-  { pair: 'Stock Market', symbol: null, soon: true },
-];
 
 const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps) => {
   const [totalSol, setTotalSol] = useState(124_853.42);
