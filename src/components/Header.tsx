@@ -22,7 +22,7 @@ const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps)
   }, []);
 
   return (
-    <div className="border-b border-border/30 bg-card/40 backdrop-blur-md relative z-20">
+    <div className="border-b border-border/30 bg-card/40 backdrop-blur-md relative z-[60]">
       <header className="flex items-center justify-between px-3 sm:px-6 py-2 sm:py-3">
         <div className="flex items-center gap-3 sm:gap-4">
           <div className="flex items-center gap-2 sm:gap-3">
