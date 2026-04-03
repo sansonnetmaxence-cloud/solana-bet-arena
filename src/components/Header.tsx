@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
+import MarketSelector from './MarketSelector';
 
 interface HeaderProps {
   priceDirection: 'up' | 'down' | 'neutral';
