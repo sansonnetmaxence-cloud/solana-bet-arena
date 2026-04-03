@@ -2,36 +2,31 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Search, ChevronDown, Star } from 'lucide-react';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
+import btcLogo from '@/assets/crypto-btc.png';
+import ethLogo from '@/assets/crypto-eth.png';
+import solLogo from '@/assets/crypto-sol.png';
+import xrpLogo from '@/assets/crypto-xrp.png';
 
 interface MarketItem {
   symbol: MarketSymbol | null;
   pair: string;
   name: string;
-  logo: string; // SVG URL
+  logo: string;
   leverage?: string;
   category: 'crypto' | 'stock';
   soon?: boolean;
   binanceSymbol?: string;
+  textIcon?: string;
 }
 
-const CRYPTO_LOGOS: Record<string, string> = {
-  BTC: 'https://cryptologos.cc/logos/bitcoin-btc-logo.svg',
-  ETH: 'https://cryptologos.cc/logos/ethereum-eth-logo.svg',
-  SOL: 'https://cryptologos.cc/logos/solana-sol-logo.svg',
-  XRP: 'https://cryptologos.cc/logos/xrp-xrp-logo.svg',
-  AAPL: 'https://logo.clearbit.com/apple.com',
-  TSLA: 'https://logo.clearbit.com/tesla.com',
-  NVDA: 'https://logo.clearbit.com/nvidia.com',
-};
-
 const markets: MarketItem[] = [
-  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', logo: CRYPTO_LOGOS.BTC, leverage: '50x', category: 'crypto', binanceSymbol: 'BTCUSDT' },
-  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: CRYPTO_LOGOS.ETH, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
-  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: CRYPTO_LOGOS.SOL, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
-  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: CRYPTO_LOGOS.XRP, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
-  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: CRYPTO_LOGOS.AAPL, category: 'stock', soon: true },
-  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: CRYPTO_LOGOS.TSLA, category: 'stock', soon: true },
-  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: CRYPTO_LOGOS.NVDA, category: 'stock', soon: true },
+  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', logo: btcLogo, leverage: '50x', category: 'crypto', binanceSymbol: 'BTCUSDT' },
+  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: ethLogo, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
+  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: solLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
+  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: xrpLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
+  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: '', category: 'stock', soon: true, textIcon: '' },
+  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: '', category: 'stock', soon: true, textIcon: 'T' },
+  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: '', category: 'stock', soon: true, textIcon: 'N' },
 ];
 
 interface LiveData {
