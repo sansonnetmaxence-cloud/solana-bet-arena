@@ -2,36 +2,31 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { Search, ChevronDown, Star } from 'lucide-react';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
+import btcLogo from '@/assets/crypto-btc.png';
+import ethLogo from '@/assets/crypto-eth.png';
+import solLogo from '@/assets/crypto-sol.png';
+import xrpLogo from '@/assets/crypto-xrp.png';
 
 interface MarketItem {
   symbol: MarketSymbol | null;
   pair: string;
   name: string;
-  logo: string; // SVG URL
+  logo: string;
   leverage?: string;
   category: 'crypto' | 'stock';
   soon?: boolean;
   binanceSymbol?: string;
+  textIcon?: string;
 }
 
-const CRYPTO_LOGOS: Record<string, string> = {
-  BTC: 'https://cryptologos.cc/logos/bitcoin-btc-logo.svg',
-  ETH: 'https://cryptologos.cc/logos/ethereum-eth-logo.svg',
-  SOL: 'https://cryptologos.cc/logos/solana-sol-logo.svg',
-  XRP: 'https://cryptologos.cc/logos/xrp-xrp-logo.svg',
-  AAPL: 'https://logo.clearbit.com/apple.com',
-  TSLA: 'https://logo.clearbit.com/tesla.com',
-  NVDA: 'https://logo.clearbit.com/nvidia.com',
-};
-
 const markets: MarketItem[] = [
-  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', logo: CRYPTO_LOGOS.BTC, leverage: '50x', category: 'crypto', binanceSymbol: 'BTCUSDT' },
-  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: CRYPTO_LOGOS.ETH, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
-  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: CRYPTO_LOGOS.SOL, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
-  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: CRYPTO_LOGOS.XRP, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
-  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: CRYPTO_LOGOS.AAPL, category: 'stock', soon: true },
-  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: CRYPTO_LOGOS.TSLA, category: 'stock', soon: true },
-  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: CRYPTO_LOGOS.NVDA, category: 'stock', soon: true },
+  { symbol: 'BTC', pair: 'BTC/USD', name: 'Bitcoin', logo: btcLogo, leverage: '50x', category: 'crypto', binanceSymbol: 'BTCUSDT' },
+  { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: ethLogo, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
+  { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: solLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
+  { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: xrpLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
+  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: '', category: 'stock', soon: true, textIcon: '' },
+  { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: '', category: 'stock', soon: true, textIcon: 'T' },
+  { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: '', category: 'stock', soon: true, textIcon: 'N' },
 ];
 
 interface LiveData {
@@ -133,7 +128,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-background/80 backdrop-blur-2xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-card shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200" style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', backgroundColor: 'hsl(var(--card) / 0.92)' }}>
           {/* Search */}
           <div className="p-2 border-b border-border/20">
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border/20">
@@ -228,11 +223,13 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
     >
       <div className="flex items-center gap-2">
         <Star className={cn('w-3 h-3 flex-shrink-0', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
-        <img
-          src={market.logo}
-          alt={market.name}
-          className="w-6 h-6 rounded-full object-contain flex-shrink-0"
-        />
+        {market.logo ? (
+          <img src={market.logo} alt={market.name} className="w-6 h-6 rounded-full object-contain flex-shrink-0" loading="lazy" width={24} height={24} />
+        ) : (
+          <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center text-[10px] font-bold text-muted-foreground flex-shrink-0">
+            {market.textIcon || market.pair.charAt(0)}
+          </div>
+        )}
         <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
         {market.leverage && (
           <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-muted/60 text-muted-foreground/70 font-semibold">
