@@ -118,17 +118,12 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
       >
         <img src={selected.logo} alt={selected.name} className="w-5 h-5 rounded-full object-contain" />
         <span className="font-display text-xs font-bold text-foreground">{selected.pair}</span>
-        {selected.leverage && (
-          <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-muted text-muted-foreground font-semibold">
-            {selected.leverage}
-          </span>
-        )}
-        <ChevronDown className={cn('w-3 h-3 text-muted-foreground transition-transform', open && 'rotate-180')} />
+        <ChevronDown className={cn('w-3 h-3 text-muted-foreground transition-transform duration-300', open && 'rotate-180')} />
       </button>
 
       {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-xl border border-border/40 bg-card shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200" style={{ backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)', backgroundColor: 'hsl(var(--card) / 0.92)' }}>
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 bg-card/95 backdrop-blur-md shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
           {/* Search */}
           <div className="p-2 border-b border-border/20">
             <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border/20">
@@ -213,16 +208,16 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
       onClick={onClick}
       disabled={market.soon}
       className={cn(
-        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2.5 transition-all duration-150',
+        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2.5 transition-all duration-200',
         isSelected
-          ? 'bg-primary/[0.06]'
+          ? 'bg-primary/[0.08] backdrop-blur-sm'
           : market.soon
             ? 'opacity-40 cursor-not-allowed'
-            : 'hover:bg-muted/30 cursor-pointer',
+            : 'hover:bg-muted/40 hover:backdrop-blur-sm cursor-pointer hover:translate-x-1',
       )}
     >
       <div className="flex items-center gap-2">
-        <Star className={cn('w-3 h-3 flex-shrink-0', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
+        <Star className={cn('w-3 h-3 flex-shrink-0 transition-colors duration-200', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
         {market.logo ? (
           <img src={market.logo} alt={market.name} className="w-6 h-6 rounded-full object-contain flex-shrink-0" loading="lazy" width={24} height={24} />
         ) : (
@@ -231,11 +226,6 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
           </div>
         )}
         <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
-        {market.leverage && (
-          <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-muted/60 text-muted-foreground/70 font-semibold">
-            {market.leverage}
-          </span>
-        )}
         {market.soon && (
           <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground/40 font-semibold uppercase">
             Soon
