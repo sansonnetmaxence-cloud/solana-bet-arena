@@ -144,13 +144,10 @@ const MarketSelector = ({
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 shadow-2xl z-[140] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
-          <div className="absolute inset-0 bg-card/75 backdrop-blur-xl" />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-card/40 to-card/70" />
-
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 bg-card shadow-2xl z-[140] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
           <div className="relative">
             <div className="p-2 border-b border-border/20">
-              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/45 backdrop-blur-sm border border-border/20 transition-all duration-200 hover:border-primary/20 hover:bg-muted/55">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/45 border border-border/20 transition-all duration-200 hover:border-primary/20 hover:bg-muted/55">
                 <Search className="w-3.5 h-3.5 text-muted-foreground" />
                 <input
                   value={search}
