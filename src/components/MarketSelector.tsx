@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Search, ChevronDown, Star } from 'lucide-react';
 import type { MarketSymbol } from '@/hooks/useCryptoPrice';
@@ -24,7 +24,7 @@ const markets: MarketItem[] = [
   { symbol: 'ETH', pair: 'ETH/USDC', name: 'Ethereum', logo: ethLogo, leverage: '50x', category: 'crypto', binanceSymbol: 'ETHUSDT' },
   { symbol: 'SOL', pair: 'SOL/USD', name: 'Solana', logo: solLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'SOLUSDT' },
   { symbol: 'XRP', pair: 'XRP/USD', name: 'XRP', logo: xrpLogo, leverage: '25x', category: 'crypto', binanceSymbol: 'XRPUSDT' },
-  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: '', category: 'stock', soon: true, textIcon: '' },
+  { symbol: null, pair: 'AAPL/USD', name: 'Apple', logo: '', category: 'stock', soon: true, textIcon: 'A' },
   { symbol: null, pair: 'TSLA/USD', name: 'Tesla', logo: '', category: 'stock', soon: true, textIcon: 'T' },
   { symbol: null, pair: 'NVDA/USD', name: 'Nvidia', logo: '', category: 'stock', soon: true, textIcon: 'N' },
 ];
@@ -52,17 +52,25 @@ function formatPrice(price: number): string {
 interface MarketSelectorProps {
   selectedMarket: MarketSymbol;
   onMarketChange: (market: MarketSymbol) => void;
+  favorites: MarketSymbol[];
+  canFavorite: boolean;
+  onToggleFavorite: (market: MarketSymbol) => void;
 }
 
-const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps) => {
+const MarketSelector = ({
+  selectedMarket,
+  onMarketChange,
+  favorites,
+  canFavorite,
+  onToggleFavorite,
+}: MarketSelectorProps) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [liveData, setLiveData] = useState<Record<string, LiveData>>({});
   const ref = useRef<HTMLDivElement>(null);
 
-  const selected = markets.find(m => m.symbol === selectedMarket)!;
+  const selected = markets.find((m) => m.symbol === selectedMarket)!;
 
-  // Close on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -71,7 +79,6 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Fetch live 24h ticker data
   const fetchTickers = useCallback(async () => {
     try {
       const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'XRPUSDT'];
@@ -97,23 +104,38 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
     return () => clearInterval(interval);
   }, [fetchTickers]);
 
-  const filtered = markets.filter(m =>
-    m.pair.toLowerCase().includes(search.toLowerCase()) ||
-    m.name.toLowerCase().includes(search.toLowerCase())
+  const filtered = useMemo(
+    () => markets.filter((m) =>
+      m.pair.toLowerCase().includes(search.toLowerCase()) ||
+      m.name.toLowerCase().includes(search.toLowerCase()),
+    ),
+    [search],
   );
 
-  const cryptos = filtered.filter(m => m.category === 'crypto');
-  const stocks = filtered.filter(m => m.category === 'stock');
+  const sortByFavorites = useCallback(
+    (items: MarketItem[]) => [...items].sort((a, b) => {
+      const aFav = a.symbol ? favorites.includes(a.symbol) : false;
+      const bFav = b.symbol ? favorites.includes(b.symbol) : false;
+      if (aFav === bFav) return 0;
+      return aFav ? -1 : 1;
+    }),
+    [favorites],
+  );
+
+  const cryptos = useMemo(
+    () => sortByFavorites(filtered.filter((m) => m.category === 'crypto')),
+    [filtered, sortByFavorites],
+  );
+  const stocks = filtered.filter((m) => m.category === 'stock');
 
   return (
-    <div ref={ref} className="relative z-50">
-      {/* Trigger button */}
+    <div ref={ref} className="relative z-[120]">
       <button
         onClick={() => setOpen(!open)}
         className={cn(
           'flex items-center gap-2 px-2.5 py-1.5 rounded-lg border transition-all duration-200',
           'border-border/30 hover:border-border/60 bg-card/60 backdrop-blur-sm',
-          open && 'border-primary/40 bg-card/80'
+          open && 'border-primary/40 bg-card/80',
         )}
       >
         <img src={selected.logo} alt={selected.name} className="w-5 h-5 rounded-full object-contain" />
@@ -121,73 +143,83 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
         <ChevronDown className={cn('w-3 h-3 text-muted-foreground transition-transform duration-300', open && 'rotate-180')} />
       </button>
 
-      {/* Dropdown */}
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 bg-card/95 backdrop-blur-md shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
-          {/* Search */}
-          <div className="p-2 border-b border-border/20">
-            <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-muted/50 border border-border/20">
-              <Search className="w-3.5 h-3.5 text-muted-foreground" />
-              <input
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Search markets..."
-                className="bg-transparent text-xs font-display text-foreground placeholder:text-muted-foreground/50 outline-none w-full"
-                autoFocus
-              />
+        <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 shadow-2xl z-[140] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
+          <div className="absolute inset-0 bg-card/75 backdrop-blur-xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-card/40 to-card/70" />
+
+          <div className="relative">
+            <div className="p-2 border-b border-border/20">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/45 backdrop-blur-sm border border-border/20 transition-all duration-200 hover:border-primary/20 hover:bg-muted/55">
+                <Search className="w-3.5 h-3.5 text-muted-foreground" />
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search markets..."
+                  className="bg-transparent text-xs font-display text-foreground placeholder:text-muted-foreground/50 outline-none w-full"
+                  autoFocus
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Table header */}
-          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 px-3 py-1.5 text-[9px] font-mono text-muted-foreground/50 uppercase tracking-wider border-b border-border/10">
-            <span>Market</span>
-            <span className="text-right">Last Price</span>
-            <span className="text-right">24h</span>
-            <span className="text-right">Volume</span>
-          </div>
+            <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 px-3 py-1.5 text-[9px] font-mono text-muted-foreground/50 uppercase tracking-wider border-b border-border/10">
+              <span>Market</span>
+              <span className="text-right">Last Price</span>
+              <span className="text-right">24h</span>
+              <span className="text-right">Volume</span>
+            </div>
 
-          <div className="max-h-[300px] overflow-y-auto scrollbar-hide">
-            {cryptos.length > 0 && (
-              <div>
-                <div className="px-3 py-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest">
-                  Crypto Perpetuals
+            <div className="max-h-[300px] overflow-y-auto scrollbar-hide">
+              {cryptos.length > 0 && (
+                <div>
+                  <div className="px-3 py-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest">
+                    Crypto Perpetuals
+                  </div>
+                  {cryptos.map((m) => {
+                    const data = m.symbol ? liveData[m.symbol] : undefined;
+                    return (
+                      <MarketRow
+                        key={m.pair}
+                        market={m}
+                        isSelected={m.symbol === selectedMarket}
+                        isFavorite={m.symbol ? favorites.includes(m.symbol) : false}
+                        canFavorite={canFavorite}
+                        data={data}
+                        onFavoriteToggle={() => {
+                          if (m.symbol) onToggleFavorite(m.symbol);
+                        }}
+                        onClick={() => {
+                          if (m.symbol) {
+                            onMarketChange(m.symbol);
+                            setOpen(false);
+                            setSearch('');
+                          }
+                        }}
+                      />
+                    );
+                  })}
                 </div>
-                {cryptos.map(m => {
-                  const data = m.symbol ? liveData[m.symbol] : undefined;
-                  return (
+              )}
+
+              {stocks.length > 0 && (
+                <div>
+                  <div className="px-3 py-1 mt-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest border-t border-border/10 pt-2">
+                    Stock Market
+                  </div>
+                  {stocks.map((m) => (
                     <MarketRow
                       key={m.pair}
                       market={m}
-                      isSelected={m.symbol === selectedMarket}
-                      data={data}
-                      onClick={() => {
-                        if (m.symbol) {
-                          onMarketChange(m.symbol);
-                          setOpen(false);
-                          setSearch('');
-                        }
-                      }}
+                      isSelected={false}
+                      isFavorite={false}
+                      canFavorite={false}
+                      onFavoriteToggle={() => {}}
+                      onClick={() => {}}
                     />
-                  );
-                })}
-              </div>
-            )}
-
-            {stocks.length > 0 && (
-              <div>
-                <div className="px-3 py-1 mt-1 text-[8px] font-mono text-muted-foreground/40 uppercase tracking-widest border-t border-border/10 pt-2">
-                  Stock Market
+                  ))}
                 </div>
-                {stocks.map(m => (
-                  <MarketRow
-                    key={m.pair}
-                    market={m}
-                    isSelected={false}
-                    onClick={() => {}}
-                  />
-                ))}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -195,10 +227,21 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
   );
 };
 
-const MarketRow = ({ market, isSelected, data, onClick }: {
+const MarketRow = ({
+  market,
+  isSelected,
+  isFavorite,
+  canFavorite,
+  data,
+  onFavoriteToggle,
+  onClick,
+}: {
   market: MarketItem;
   isSelected: boolean;
+  isFavorite: boolean;
+  canFavorite: boolean;
   data?: LiveData;
+  onFavoriteToggle: () => void;
   onClick: () => void;
 }) => {
   const changeNum = data?.change24h ?? 0;
@@ -216,8 +259,33 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
             : 'hover:bg-muted/40 hover:backdrop-blur-sm cursor-pointer hover:translate-x-1',
       )}
     >
-      <div className="flex items-center gap-2">
-        <Star className={cn('w-3 h-3 flex-shrink-0 transition-colors duration-200', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
+      <div className="flex items-center gap-2 min-w-0">
+        <button
+          type="button"
+          aria-label={isFavorite ? 'Remove favorite' : 'Add favorite'}
+          disabled={!canFavorite || market.soon || !market.symbol}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!market.symbol || market.soon || !canFavorite) return;
+            onFavoriteToggle();
+          }}
+          className={cn(
+            'flex h-5 w-5 items-center justify-center rounded-full transition-all duration-200',
+            canFavorite && market.symbol && !market.soon
+              ? 'hover:bg-primary/10 hover:scale-110'
+              : 'cursor-default',
+          )}
+        >
+          <Star
+            className={cn(
+              'w-3.5 h-3.5 flex-shrink-0 transition-all duration-200',
+              isFavorite
+                ? 'text-primary fill-current'
+                : 'text-muted-foreground/25 hover:text-primary/60',
+            )}
+          />
+        </button>
+
         {market.logo ? (
           <img src={market.logo} alt={market.name} className="w-6 h-6 rounded-full object-contain flex-shrink-0" loading="lazy" width={24} height={24} />
         ) : (
@@ -225,7 +293,8 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
             {market.textIcon || market.pair.charAt(0)}
           </div>
         )}
-        <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
+
+        <span className="font-display text-[11px] font-bold text-foreground truncate">{market.symbol ?? market.pair.split('/')[0]}</span>
         {market.soon && (
           <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground/40 font-semibold uppercase">
             Soon
@@ -239,7 +308,7 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
 
       <span className={cn(
         'font-mono text-[11px] tabular-nums text-right',
-        changeNum > 0 ? 'text-success' : changeNum < 0 ? 'text-danger' : 'text-muted-foreground'
+        changeNum > 0 ? 'text-success' : changeNum < 0 ? 'text-danger' : 'text-muted-foreground',
       )}>
         {data ? `${changeNum > 0 ? '+' : ''}${changeNum.toFixed(2)}%` : '—'}
       </span>
