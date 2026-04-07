@@ -118,12 +118,7 @@ const MarketSelector = ({ selectedMarket, onMarketChange }: MarketSelectorProps)
       >
         <img src={selected.logo} alt={selected.name} className="w-5 h-5 rounded-full object-contain" />
         <span className="font-display text-xs font-bold text-foreground">{selected.pair}</span>
-        {selected.leverage && (
-          <span className="text-[9px] font-mono px-1 py-0.5 rounded bg-muted text-muted-foreground font-semibold">
-            {selected.leverage}
-          </span>
-        )}
-        <ChevronDown className={cn('w-3 h-3 text-muted-foreground transition-transform', open && 'rotate-180')} />
+        <ChevronDown className={cn('w-3 h-3 text-muted-foreground transition-transform duration-300', open && 'rotate-180')} />
       </button>
 
       {/* Dropdown */}
