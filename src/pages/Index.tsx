@@ -11,6 +11,7 @@ import WinRain from '@/components/WinRain';
 import { useCryptoPrice, type MarketSymbol } from '@/hooks/useCryptoPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
+import { useMarketFavorites } from '@/hooks/useMarketFavorites';
 
 import { cn } from '@/lib/utils';
 
@@ -37,6 +38,7 @@ const Index = () => {
   const [quickBetMode] = useState(true);
   const [quickBetAmount, setQuickBetAmount] = useState(0.1);
   const wallet = useWallet();
+  const marketFavorites = useMarketFavorites(wallet.walletAddress);
   
   const sfx = useSoundEffects();
   const [activeBets, setActiveBets] = useState<ActiveBet[]>([]);
@@ -201,6 +203,9 @@ const Index = () => {
         priceDirection={priceDirection as 'up' | 'down' | 'neutral'}
         selectedMarket={selectedMarket}
         onMarketChange={setSelectedMarket}
+        favorites={marketFavorites.favorites}
+        canFavorite={marketFavorites.canFavorite}
+        onToggleFavorite={marketFavorites.toggleFavorite}
       />
 
       <TopBar

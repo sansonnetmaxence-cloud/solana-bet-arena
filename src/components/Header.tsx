@@ -7,10 +7,12 @@ interface HeaderProps {
   priceDirection: 'up' | 'down' | 'neutral';
   selectedMarket: MarketSymbol;
   onMarketChange: (market: MarketSymbol) => void;
+  favorites: MarketSymbol[];
+  canFavorite: boolean;
+  onToggleFavorite: (market: MarketSymbol) => void;
 }
 
-
-const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps) => {
+const Header = ({ priceDirection, selectedMarket, onMarketChange, favorites, canFavorite, onToggleFavorite }: HeaderProps) => {
   const [totalSol, setTotalSol] = useState(124_853.42);
 
   useEffect(() => {
@@ -38,7 +40,13 @@ const Header = ({ priceDirection, selectedMarket, onMarketChange }: HeaderProps)
             </div>
           </div>
           <div className="hidden sm:block h-6 w-px bg-border/30" />
-          <MarketSelector selectedMarket={selectedMarket} onMarketChange={onMarketChange} />
+          <MarketSelector
+            selectedMarket={selectedMarket}
+            onMarketChange={onMarketChange}
+            favorites={favorites}
+            canFavorite={canFavorite}
+            onToggleFavorite={onToggleFavorite}
+          />
         </div>
 
         <div className="hidden sm:flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-success/[0.04] border border-success/10">
