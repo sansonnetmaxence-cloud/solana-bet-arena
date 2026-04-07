@@ -208,16 +208,16 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
       onClick={onClick}
       disabled={market.soon}
       className={cn(
-        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2.5 transition-all duration-150',
+        'w-full grid grid-cols-[1fr_auto_auto_auto] gap-2 items-center px-3 py-2.5 transition-all duration-200',
         isSelected
-          ? 'bg-primary/[0.06]'
+          ? 'bg-primary/[0.08] backdrop-blur-sm'
           : market.soon
             ? 'opacity-40 cursor-not-allowed'
-            : 'hover:bg-muted/30 cursor-pointer',
+            : 'hover:bg-muted/40 hover:backdrop-blur-sm cursor-pointer hover:translate-x-1',
       )}
     >
       <div className="flex items-center gap-2">
-        <Star className={cn('w-3 h-3 flex-shrink-0', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
+        <Star className={cn('w-3 h-3 flex-shrink-0 transition-colors duration-200', isSelected ? 'text-primary/60' : 'text-muted-foreground/20')} />
         {market.logo ? (
           <img src={market.logo} alt={market.name} className="w-6 h-6 rounded-full object-contain flex-shrink-0" loading="lazy" width={24} height={24} />
         ) : (
@@ -226,11 +226,6 @@ const MarketRow = ({ market, isSelected, data, onClick }: {
           </div>
         )}
         <span className="font-display text-[11px] font-bold text-foreground">{market.symbol ?? market.pair.split('/')[0]}</span>
-        {market.leverage && (
-          <span className="text-[8px] font-mono px-1 py-0.5 rounded bg-muted/60 text-muted-foreground/70 font-semibold">
-            {market.leverage}
-          </span>
-        )}
         {market.soon && (
           <span className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-muted/40 text-muted-foreground/40 font-semibold uppercase">
             Soon
