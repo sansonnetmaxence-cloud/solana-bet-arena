@@ -180,29 +180,18 @@ const PriceCard = ({
         )}
 
         {/* Price */}
-        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1 px-2 w-full">
-          <div className="relative overflow-hidden w-full flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1 px-4 w-full">
+          <div className="relative w-full flex items-center justify-center">
             <span
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
                 'font-display font-black leading-none tabular-nums block whitespace-nowrap',
-                // Dynamic sizing based on price length
-                displayPrice >= 10000
-                  ? hasBet
-                    ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl'
-                    : 'text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem]'
-                  : displayPrice >= 1000
-                    ? hasBet
-                      ? 'text-3xl sm:text-5xl md:text-5xl lg:text-6xl'
-                      : 'text-3xl sm:text-5xl md:text-6xl lg:text-[5rem]'
-                    : hasBet
-                      ? 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl'
-                      : 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',
               )}
               style={{
+                fontSize: 'clamp(1.5rem, 8cqi, 5.5rem)',
                 textShadow: priceTrend === 'up'
                   ? `0 0 ${20 + glowIntensity.current * 30}px hsl(160 100% 51% / ${0.2 + glowIntensity.current * 0.4})`
                   : `0 0 ${20 + glowIntensity.current * 30}px hsl(0 100% 63% / ${0.2 + glowIntensity.current * 0.4})`,
