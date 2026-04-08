@@ -147,7 +147,7 @@ const MarketSelector = ({
         <div className="absolute top-full left-0 mt-1.5 w-[360px] rounded-2xl border border-border/30 bg-card shadow-2xl z-[140] overflow-hidden animate-in fade-in slide-in-from-top-3 duration-300">
           <div className="relative">
             <div className="p-2 border-b border-border/20">
-              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/45 border border-border/20 transition-all duration-200 hover:border-primary/20 hover:bg-muted/55">
+              <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl bg-muted/45 border border-border/20 transition-all duration-300 hover:border-primary/30 hover:bg-muted/55 hover:shadow-[0_0_12px_hsl(var(--primary)/0.15),0_0_24px_hsl(var(--primary)/0.08)] focus-within:border-primary/30 focus-within:shadow-[0_0_12px_hsl(var(--primary)/0.15),0_0_24px_hsl(var(--primary)/0.08)]">
                 <Search className="w-3.5 h-3.5 text-muted-foreground" />
                 <input
                   value={search}
@@ -253,7 +253,7 @@ const MarketRow = ({
           ? 'bg-primary/[0.08] backdrop-blur-sm'
           : market.soon
             ? 'opacity-40 cursor-not-allowed'
-            : 'hover:bg-muted/40 hover:backdrop-blur-sm cursor-pointer hover:translate-x-1',
+            : 'hover:bg-primary/[0.06] cursor-pointer hover:translate-x-1 hover:shadow-[inset_0_0_20px_hsl(var(--primary)/0.04)]',
       )}
     >
       <div className="flex items-center gap-2 min-w-0">
