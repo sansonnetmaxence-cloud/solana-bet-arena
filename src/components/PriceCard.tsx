@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import MiniChart from './MiniChart';
+import btcLogo from '@/assets/crypto-btc.png';
+import ethLogo from '@/assets/crypto-eth.png';
+import solLogo from '@/assets/crypto-sol.png';
+import xrpLogo from '@/assets/crypto-xrp.png';
 
 type BetResult = 'won' | 'lost' | null;
 
@@ -24,11 +28,11 @@ interface PriceCardProps {
   market?: string;
 }
 
-const MARKET_INFO: Record<string, { pair: string; name: string; icon: string }> = {
-  SOL: { pair: 'SOL / USD', name: 'Solana', icon: '◎' },
-  BTC: { pair: 'BTC / USD', name: 'Bitcoin', icon: '₿' },
-  ETH: { pair: 'ETH / USD', name: 'Ethereum', icon: 'Ξ' },
-  XRP: { pair: 'XRP / USD', name: 'XRP', icon: '✕' },
+const MARKET_INFO: Record<string, { pair: string; name: string; icon: string; logo: string }> = {
+  SOL: { pair: 'SOL / USD', name: 'Solana', icon: '◎', logo: solLogo },
+  BTC: { pair: 'BTC / USD', name: 'Bitcoin', icon: '₿', logo: btcLogo },
+  ETH: { pair: 'ETH / USD', name: 'Ethereum', icon: 'Ξ', logo: ethLogo },
+  XRP: { pair: 'XRP / USD', name: 'XRP', icon: '✕', logo: xrpLogo },
 };
 
 const PriceCard = ({
@@ -127,9 +131,7 @@ const PriceCard = ({
         {/* Header */}
         <div className="flex items-center justify-between px-3 sm:px-5 pt-3 sm:pt-4 pb-1 sm:pb-2 z-[1]">
           <div className="flex items-center gap-2">
-            <div className="w-5 h-5 sm:w-7 sm:h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-              <span className="text-[8px] sm:text-[10px] font-black text-primary">{marketInfo.icon}</span>
-            </div>
+            <img src={marketInfo.logo} alt={marketInfo.name} className="w-5 h-5 sm:w-7 sm:h-7 rounded-full object-contain" />
             <div className="flex flex-col">
               <span className="font-display text-xs sm:text-sm text-foreground font-bold tracking-wide">{marketInfo.pair}</span>
               <span className="font-display text-[8px] sm:text-[9px] text-muted-foreground tracking-wider">{marketInfo.name}</span>
