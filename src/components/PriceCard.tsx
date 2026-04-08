@@ -112,7 +112,6 @@ const PriceCard = ({
     return (
       <div className={cn(
         'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
-        // Responsive sizing
         hasBet
           ? 'w-full max-w-[22rem] h-[24rem] sm:w-[26rem] sm:h-[32rem] md:w-[32rem] md:h-[38rem] lg:w-[36rem] lg:h-[42rem]'
           : 'w-full max-w-[20rem] h-[22rem] sm:w-[24rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem] lg:w-[32rem] lg:h-[38rem]',
@@ -121,6 +120,7 @@ const PriceCard = ({
         !hasBet && 'border-border/30',
       )}
         style={{
+          containerType: 'inline-size' as any,
           boxShadow: hasBet
             ? betDir === 'up'
               ? '0 0 60px hsl(160 100% 51% / 0.12), 0 0 120px hsl(160 100% 51% / 0.04)'
@@ -180,29 +180,18 @@ const PriceCard = ({
         )}
 
         {/* Price */}
-        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1 px-2 w-full">
-          <div className="relative overflow-hidden w-full flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center flex-1 z-[1] py-1 px-4 w-full">
+          <div className="relative w-full flex items-center justify-center">
             <span
               key={`price-${priceTrend}-${Math.floor(displayPrice)}`}
               className={cn(
                 'font-display font-black leading-none tabular-nums block whitespace-nowrap',
-                // Dynamic sizing based on price length
-                displayPrice >= 10000
-                  ? hasBet
-                    ? 'text-2xl sm:text-4xl md:text-5xl lg:text-6xl'
-                    : 'text-3xl sm:text-5xl md:text-6xl lg:text-[4.5rem]'
-                  : displayPrice >= 1000
-                    ? hasBet
-                      ? 'text-3xl sm:text-5xl md:text-5xl lg:text-6xl'
-                      : 'text-3xl sm:text-5xl md:text-6xl lg:text-[5rem]'
-                    : hasBet
-                      ? 'text-3xl sm:text-5xl md:text-6xl lg:text-7xl'
-                      : 'text-4xl sm:text-6xl md:text-7xl lg:text-[5.5rem]',
                 priceTrend === 'up' ? 'text-success' : 'text-danger',
                 priceFlash === 'up' && 'animate-price-fly-up',
                 priceFlash === 'down' && 'animate-price-fly-down',
               )}
               style={{
+                fontSize: 'clamp(1.5rem, 8cqi, 5.5rem)',
                 textShadow: priceTrend === 'up'
                   ? `0 0 ${20 + glowIntensity.current * 30}px hsl(160 100% 51% / ${0.2 + glowIntensity.current * 0.4})`
                   : `0 0 ${20 + glowIntensity.current * 30}px hsl(0 100% 63% / ${0.2 + glowIntensity.current * 0.4})`,
