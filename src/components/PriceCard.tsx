@@ -110,9 +110,8 @@ const PriceCard = ({
     const priceDeltaPositive = priceDelta != null ? priceDelta >= 0 : null;
 
     return (
-      <div style={{ containerType: 'inline-size' }} className={cn(
+      <div className={cn(
         'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
-        // Responsive sizing
         hasBet
           ? 'w-full max-w-[22rem] h-[24rem] sm:w-[26rem] sm:h-[32rem] md:w-[32rem] md:h-[38rem] lg:w-[36rem] lg:h-[42rem]'
           : 'w-full max-w-[20rem] h-[22rem] sm:w-[24rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem] lg:w-[32rem] lg:h-[38rem]',
@@ -121,6 +120,7 @@ const PriceCard = ({
         !hasBet && 'border-border/30',
       )}
         style={{
+          containerType: 'inline-size' as any,
           boxShadow: hasBet
             ? betDir === 'up'
               ? '0 0 60px hsl(160 100% 51% / 0.12), 0 0 120px hsl(160 100% 51% / 0.04)'
