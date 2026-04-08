@@ -110,7 +110,7 @@ const PriceCard = ({
     const priceDeltaPositive = priceDelta != null ? priceDelta >= 0 : null;
 
     return (
-      <div className={cn(
+      <div style={{ containerType: 'inline-size' }} className={cn(
         'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
         // Responsive sizing
         hasBet
