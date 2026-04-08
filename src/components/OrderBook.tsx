@@ -56,7 +56,7 @@ const AnimatedRow = ({
 };
 
 const OrderBook = ({ currentPrice }: OrderBookProps) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [tick, setTick] = useState(0);
   const [flashRows, setFlashRows] = useState<Set<number>>(new Set());
   const prevOrdersRef = useRef<{ asks: OrderRow[]; bids: OrderRow[] } | null>(null);

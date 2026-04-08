@@ -83,7 +83,9 @@ const DepthChart = ({ currentPrice }: DepthChartProps) => {
               stroke="hsl(160, 100%, 51%)"
               strokeWidth={1.5}
               fill="url(#bidGrad)"
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
             <Area
               type="stepAfter"
@@ -91,7 +93,9 @@ const DepthChart = ({ currentPrice }: DepthChartProps) => {
               stroke="hsl(0, 100%, 63%)"
               strokeWidth={1.5}
               fill="url(#askGrad)"
-              isAnimationActive={false}
+              isAnimationActive={true}
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
           </AreaChart>
         </ResponsiveContainer>

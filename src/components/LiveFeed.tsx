@@ -33,7 +33,12 @@ const generateFakeTrade = () => {
   const pseudo = PSEUDOS[Math.floor(Math.random() * PSEUDOS.length)];
   const suffix = Math.floor(Math.random() * 999);
   const won = Math.random() > 0.3;
-  const amount = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10][Math.floor(Math.random() * 8)];
+  const rawAmount = Math.random() < 0.6
+    ? +(0.01 + Math.random() * 0.49).toFixed(2)
+    : Math.random() < 0.8
+      ? +(0.5 + Math.random() * 4.5).toFixed(2)
+      : +(5 + Math.random() * 45).toFixed(2);
+  const amount = rawAmount;
   const priceBase = 120 + Math.random() * 40;
   const direction = Math.random() > 0.5 ? 'up' : 'down';
   const timeframe = ['30s', '1m', '2m', '5m'][Math.floor(Math.random() * 4)];
