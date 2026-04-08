@@ -108,7 +108,7 @@ const OrderBook = ({ currentPrice }: OrderBookProps) => {
 
   return (
     <div className="border-t border-border/30 bg-card/10 backdrop-blur-sm">
-      <div className="max-w-5xl mx-auto px-4 py-3">
+      <div className="px-4 sm:px-6 lg:px-8 py-3">
         <button
           onClick={() => setOpen(!open)}
           className="flex items-center gap-2 text-xs font-display uppercase tracking-widest text-muted-foreground/70 hover:text-foreground transition-colors w-full"
