@@ -111,7 +111,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
 
   return (
     <div className={cn(
-      'relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-5 transition-all duration-500 w-full px-3 sm:px-4 md:px-6',
+      'relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4 transition-all duration-500 w-full max-w-full px-3 sm:px-4 md:px-6 overflow-hidden',
     )}>
       {/* Mobile: Center card on top */}
       <div className={cn(
