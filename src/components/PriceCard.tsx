@@ -258,8 +258,8 @@ const PriceCard = ({
         'hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
         // Responsive card sizes — fluid within grid
         timeLabel
-          ? 'w-full aspect-square min-w-[60px] max-w-[96px]'
-          : 'w-full aspect-square min-w-[48px] max-w-[76px]',
+          ? 'w-full aspect-square min-w-[60px] max-w-[120px]'
+          : 'w-full aspect-square min-w-[48px] max-w-[96px]',
         isUp
           ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.08]'
           : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.08]',
