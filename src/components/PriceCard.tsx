@@ -113,8 +113,8 @@ const PriceCard = ({
       <div className={cn(
         'relative flex flex-col rounded-2xl bg-card/95 backdrop-blur-sm shrink-0 transition-all duration-700 ease-out overflow-hidden border',
         hasBet
-          ? 'w-full max-w-[22rem] h-[24rem] sm:w-[26rem] sm:h-[32rem] md:w-[32rem] md:h-[38rem] lg:w-[36rem] lg:h-[42rem]'
-          : 'w-full max-w-[20rem] h-[22rem] sm:w-[24rem] sm:h-[28rem] md:w-[28rem] md:h-[34rem] lg:w-[32rem] lg:h-[38rem]',
+          ? 'w-full max-w-[22rem] h-[24rem] sm:w-[24rem] sm:h-[30rem] md:w-[26rem] md:h-[34rem] lg:w-[32rem] lg:h-[40rem] xl:w-[36rem] xl:h-[42rem]'
+          : 'w-full max-w-[20rem] h-[22rem] sm:w-[22rem] sm:h-[26rem] md:w-[24rem] md:h-[30rem] lg:w-[28rem] lg:h-[36rem] xl:w-[32rem] xl:h-[38rem]',
         hasBet && betDir === 'up' && 'border-success/20',
         hasBet && betDir === 'down' && 'border-danger/20',
         !hasBet && 'border-border/30',
