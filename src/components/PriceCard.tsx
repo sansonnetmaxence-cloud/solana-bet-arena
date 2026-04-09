@@ -255,7 +255,7 @@ const PriceCard = ({
       className={cn(
         'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
         'transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
-        'hover:scale-[1.08] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
+        'hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
         // Responsive card sizes
         timeLabel
           ? 'w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] md:w-[96px] md:h-[96px]'
