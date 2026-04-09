@@ -256,10 +256,10 @@ const PriceCard = ({
         'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
         'transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]',
         'hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
-        // Responsive card sizes
+        // Responsive card sizes — fluid within grid
         timeLabel
-          ? 'w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] md:w-[96px] md:h-[96px]'
-          : 'w-[56px] h-[56px] sm:w-[68px] sm:h-[68px] md:w-[76px] md:h-[76px]',
+          ? 'w-full aspect-square min-w-[60px] max-w-[96px]'
+          : 'w-full aspect-square min-w-[48px] max-w-[76px]',
         isUp
           ? 'border-success/15 bg-success/[0.03] hover:border-success/40 hover:bg-success/[0.08]'
           : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40 hover:bg-danger/[0.08]',
