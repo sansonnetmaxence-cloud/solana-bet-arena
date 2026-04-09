@@ -111,7 +111,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
 
   return (
     <div className={cn(
-      'relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-5 transition-all duration-500 w-full px-2 sm:px-0',
+      'relative flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 md:gap-4 transition-all duration-500 w-full max-w-full px-3 sm:px-4 md:px-6 overflow-hidden',
     )}>
       {/* Mobile: Center card on top */}
       <div className={cn(
@@ -152,8 +152,10 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
       </div>
 
       {/* Desktop layout */}
-      <div className="hidden sm:grid grid-cols-4 md:grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
-        {downPrices.map((p, i) => renderCard(p, 'down', i))}
+      <div className="hidden sm:block flex-1 min-w-0 max-h-[80vh] overflow-auto scrollbar-hide relative z-10 rounded-2xl bg-card/30 border border-border/20 p-3 md:p-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 md:gap-2">
+          {downPrices.map((p, i) => renderCard(p, 'down', i))}
+        </div>
       </div>
 
       <div className={cn(
@@ -183,8 +185,10 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
         />
       </div>
 
-      <div className="hidden sm:grid grid-cols-4 md:grid-cols-5 gap-1 md:gap-1.5 max-h-[80vh] overflow-y-auto scrollbar-hide relative z-10">
-        {upPrices.map((p, i) => renderCard(p, 'up', i))}
+      <div className="hidden sm:block flex-1 min-w-0 max-h-[80vh] overflow-auto scrollbar-hide relative z-10 rounded-2xl bg-card/30 border border-border/20 p-3 md:p-4">
+        <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 md:gap-2">
+          {upPrices.map((p, i) => renderCard(p, 'up', i))}
+        </div>
       </div>
     </div>
   );
