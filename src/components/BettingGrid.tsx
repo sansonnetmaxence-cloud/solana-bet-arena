@@ -152,7 +152,7 @@ const BettingGrid = ({ currentPrice, previousPrice, priceHistory, onSelectBet, a
       </div>
 
       {/* Desktop layout */}
-      <div className="hidden sm:block max-h-[80vh] overflow-y-auto overflow-x-hidden scrollbar-hide relative z-10 rounded-2xl bg-card/30 border border-border/20 p-3 md:p-4">
+      <div className="hidden sm:block flex-1 min-w-0 max-h-[80vh] overflow-auto scrollbar-hide relative z-10 rounded-2xl bg-card/30 border border-border/20 p-3 md:p-4">
         <div className="grid grid-cols-4 md:grid-cols-5 gap-1 md:gap-1.5">
           {downPrices.map((p, i) => renderCard(p, 'down', i))}
         </div>
