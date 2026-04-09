@@ -191,7 +191,7 @@ const PriceCard = ({
                 priceFlash === 'down' && 'animate-price-fly-down',
               )}
               style={{
-                fontSize: 'clamp(1.5rem, 8cqi, 5.5rem)',
+                fontSize: 'clamp(2.5rem, 15cqi, 8rem)',
                 textShadow: priceTrend === 'up'
                   ? `0 0 ${20 + glowIntensity.current * 30}px hsl(160 100% 51% / ${0.2 + glowIntensity.current * 0.4})`
                   : `0 0 ${20 + glowIntensity.current * 30}px hsl(0 100% 63% / ${0.2 + glowIntensity.current * 0.4})`,
