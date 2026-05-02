@@ -16,6 +16,9 @@ interface PriceCardProps {
   previousPrice?: number;
   priceHistory?: number[];
   onClick?: () => void;
+  /** Stable callback alternative — args passed at click time so the parent
+   *  can keep a single useCallback reference and let memo work. */
+  onSelect?: (price: number, direction: 'up' | 'down', quickTimeframe?: number) => void;
   selected?: boolean;
   result?: BetResult;
   disabled?: boolean;
