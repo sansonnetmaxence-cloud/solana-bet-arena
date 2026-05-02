@@ -45,6 +45,7 @@ const PriceCardImpl = ({
   currentPrice,
   priceHistory = [],
   onClick,
+  onSelect,
   selected = false,
   result,
   disabled = false,
