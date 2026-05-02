@@ -283,7 +283,14 @@ const PriceCardImpl = ({
 
   return (
     <button
-      onClick={onClick}
+      onClick={() => {
+        if (onSelect) {
+          const tf = timeLabel ? (timeLabel === '30s' ? 0.5 : parseInt(timeLabel, 10)) : undefined;
+          onSelect(price, direction, tf);
+        } else if (onClick) {
+          onClick();
+        }
+      }}
       disabled={disabled}
       className={cn(
         'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
