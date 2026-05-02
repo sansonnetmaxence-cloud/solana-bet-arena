@@ -362,7 +362,8 @@ const PriceCard = memo(PriceCardImpl, (prev, next) => {
     prev.result === next.result &&
     prev.disabled === next.disabled &&
     prev.timeLabel === next.timeLabel &&
-    prev.onClick === next.onClick
+    prev.onClick === next.onClick &&
+    prev.onSelect === next.onSelect
   );
 });
 
