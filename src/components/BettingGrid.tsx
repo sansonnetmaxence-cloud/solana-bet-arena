@@ -100,7 +100,7 @@ const BettingGrid = ({
         key={`${dir}-${item.price}-${item.timeLabel}`}
         price={item.price}
         direction={dir}
-        onClick={() => onSelectBet(item.price, dir, timeLabel ? parseTime(timeLabel) : undefined)}
+        onSelect={onSelectBet}
         selected={active || selected}
         result={active ? betResult : null}
         disabled={false}
