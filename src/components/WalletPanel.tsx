@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { WalletType } from '@/hooks/useWallet';
 import { Switch } from '@/components/ui/switch';
+import { useAuthDialog } from '@/hooks/useAuthDialog';
 
 interface WalletPanelProps {
   onPlaceBet: (amount: number, customPrice: number | null, timeframe: number) => void;
@@ -35,6 +36,7 @@ const WalletPanel = ({
   const [amount, setAmount] = useState('0.1');
   const [customPrice, setCustomPrice] = useState('');
   const [timeframe, setTimeframe] = useState(5);
+  const { openDialog } = useAuthDialog();
 
   if (!connected) {
     return (
@@ -42,22 +44,13 @@ const WalletPanel = ({
         <h3 className="font-display text-lg text-muted-foreground tracking-wider uppercase">
           Connect Wallet to Bet
         </h3>
-        <div className="flex flex-col gap-3 w-full max-w-xs">
-          <button
-            onClick={() => onConnect('phantom')}
-            disabled={connecting}
-            className="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-lg bg-secondary/20 border border-secondary/40 text-secondary-foreground font-display text-sm uppercase tracking-wider hover:bg-secondary/30 hover:glow-secondary transition-all disabled:opacity-50"
-          >
-            {connecting ? '⏳ Connecting...' : '👻 Phantom'}
-          </button>
-          <button
-            onClick={() => onConnect('solflare')}
-            disabled={connecting}
-            className="flex items-center justify-center gap-3 w-full py-3 px-6 rounded-lg bg-primary/10 border border-primary/40 text-foreground font-display text-sm uppercase tracking-wider hover:bg-primary/20 hover:glow-primary transition-all disabled:opacity-50"
-          >
-            {connecting ? '⏳ Connecting...' : '☀️ Solflare'}
-          </button>
-        </div>
+        <button
+          onClick={openDialog}
+          disabled={connecting}
+          className="px-6 py-3 rounded-lg bg-primary/10 border border-primary/40 text-primary font-display text-sm uppercase tracking-wider hover:bg-primary/20 transition-all disabled:opacity-50"
+        >
+          {connecting ? 'Connecting...' : 'Connect'}
+        </button>
       </div>
     );
   }
