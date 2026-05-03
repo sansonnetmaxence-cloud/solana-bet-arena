@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { WalletType } from '@/hooks/useWallet';
-import phantomLogo from '@/assets/phantom-logo.png';
-import solflareLogo from '@/assets/solflare-logo.png';
+import { useAuthDialog } from '@/hooks/useAuthDialog';
 
 interface Notification {
   id: string;
@@ -28,13 +27,12 @@ const TopBar = ({
   walletAddress,
   walletType,
   connecting,
-  onConnect,
   onDisconnect,
   quickBetAmount,
   onQuickBetAmountChange,
   notifications,
 }: TopBarProps) => {
-  const [showWalletMenu, setShowWalletMenu] = useState(false);
+  const { openDialog } = useAuthDialog();
   const [walletCurrency, setWalletCurrency] = useState<'SOL' | 'USD'>('SOL');
   const solPrice = 130;
   const balanceSOL = 4.20;
@@ -88,7 +86,7 @@ const TopBar = ({
             </>
           ) : (
             <button
-              onClick={() => setShowWalletMenu(!showWalletMenu)}
+              onClick={openDialog}
               disabled={connecting}
               className="px-3 py-1 rounded-md text-[10px] font-display font-bold uppercase tracking-wider border border-primary/40 text-primary hover:bg-primary/10 transition-all disabled:opacity-50"
             >
@@ -144,71 +142,15 @@ const TopBar = ({
             </button>
           </>
         ) : (
-          <div className="relative">
-            <button
-              onClick={() => setShowWalletMenu(!showWalletMenu)}
-              disabled={connecting}
-              className="px-4 py-1.5 rounded-md text-[11px] font-display font-bold uppercase tracking-wider border border-primary/40 text-primary hover:bg-primary/10 transition-all disabled:opacity-50"
-            >
-              {connecting ? 'Connecting...' : 'Connect Wallet'}
-            </button>
-          </div>
-        )}
-        {showWalletMenu && !connecting && (
-          <div className="absolute right-3 sm:right-5 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-xl p-2 shadow-2xl z-50 min-w-[200px] animate-in fade-in zoom-in-95 duration-150">
-            <span className="text-[9px] font-display uppercase tracking-widest text-muted-foreground/40 px-3 pt-1 pb-1">Select Wallet</span>
-            <button
-              onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-[#AB9FF2]/10 border border-[#AB9FF2]/20 flex items-center justify-center shadow-md shadow-[#AB9FF2]/10 group-hover:shadow-[#AB9FF2]/30 transition-shadow overflow-hidden">
-                <img src={phantomLogo} alt="Phantom" width={24} height={24} className="w-6 h-6 object-contain" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span>Phantom</span>
-                <span className="text-[9px] text-muted-foreground/50 font-normal">phantom.app</span>
-              </div>
-            </button>
-            <button
-              onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-[#FC7227]/10 border border-[#FC7227]/20 flex items-center justify-center shadow-md shadow-[#FC7227]/10 group-hover:shadow-[#FC7227]/30 transition-shadow overflow-hidden">
-                <img src={solflareLogo} alt="Solflare" width={24} height={24} className="w-6 h-6 object-contain" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span>Solflare</span>
-                <span className="text-[9px] text-muted-foreground/50 font-normal">solflare.com</span>
-              </div>
-            </button>
-          </div>
+          <button
+            onClick={openDialog}
+            disabled={connecting}
+            className="px-4 py-1.5 rounded-md text-[11px] font-display font-bold uppercase tracking-wider border border-primary/40 text-primary hover:bg-primary/10 transition-all disabled:opacity-50"
+          >
+            {connecting ? 'Connecting...' : 'Connect Wallet'}
+          </button>
         )}
       </div>
-
-      {/* Mobile wallet menu */}
-      {showWalletMenu && !connecting && (
-        <div className="sm:hidden absolute right-3 top-full mt-1.5 flex flex-col gap-1 bg-card/95 backdrop-blur-xl border border-border/30 rounded-xl p-2 shadow-2xl z-50 min-w-[180px] animate-in fade-in zoom-in-95 duration-150">
-          <span className="text-[9px] font-display uppercase tracking-widest text-muted-foreground/40 px-3 pt-1 pb-1">Select Wallet</span>
-          <button
-            onClick={() => { onConnect('phantom'); setShowWalletMenu(false); }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
-          >
-            <div className="w-7 h-7 rounded-md bg-[#AB9FF2]/10 border border-[#AB9FF2]/20 flex items-center justify-center overflow-hidden">
-              <img src={phantomLogo} alt="Phantom" width={20} height={20} className="w-5 h-5 object-contain" />
-            </div>
-            <span>Phantom</span>
-          </button>
-          <button
-            onClick={() => { onConnect('solflare'); setShowWalletMenu(false); }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[12px] font-display font-semibold text-foreground hover:bg-primary/10 transition-all group"
-          >
-            <div className="w-7 h-7 rounded-md bg-[#FC7227]/10 border border-[#FC7227]/20 flex items-center justify-center overflow-hidden">
-              <img src={solflareLogo} alt="Solflare" width={20} height={20} className="w-5 h-5 object-contain" />
-            </div>
-            <span>Solflare</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };
