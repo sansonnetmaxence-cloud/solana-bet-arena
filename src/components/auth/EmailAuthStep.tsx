@@ -45,10 +45,9 @@ export const EmailAuthStep = ({ onSuccess }: EmailAuthStepProps) => {
     // Persist to marketing_contacts
     try {
       await supabase.functions.invoke('collect-marketing-contact', {
-        body: { email: parsed(email), source: 'auth_dialog', marketingConsent: true },
+        body: { email: emailSchema.parse(email), source: 'auth_dialog', marketingConsent: true },
       });
     } catch (e) {
-      // Non-blocking
       console.error(e);
     }
     onSuccess(email);
@@ -117,6 +116,3 @@ export const EmailAuthStep = ({ onSuccess }: EmailAuthStepProps) => {
     </div>
   );
 };
-
-// Helper inlined to avoid recomputing parse
-const parsed = (e: string) => emailSchema.parse(e);
