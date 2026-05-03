@@ -12,6 +12,7 @@ import { useCryptoPrice, type MarketSymbol } from '@/hooks/useCryptoPrice';
 import { useWallet } from '@/hooks/useWallet';
 import { useSoundEffects } from '@/hooks/useSoundEffects';
 import { useMarketFavorites } from '@/hooks/useMarketFavorites';
+import { AuthDialog } from '@/components/auth/AuthDialog';
 
 import { cn } from '@/lib/utils';
 
@@ -219,6 +220,8 @@ const Index = () => {
         onQuickBetAmountChange={setQuickBetAmount}
         notifications={notifications}
       />
+
+      <AuthDialog wallet={wallet} />
 
       <MarketRules />
 
