@@ -1,129 +1,122 @@
-## Plan : Refonte cartes de prix, fluidité globale, popup wallet & email auth
+## Plan : AuthDialog (popup unifié de connexion)
 
-### 1. Distribution exponentielle des prix sur les cartes (BettingGrid)
+Création d'un popup de connexion centralisé avec collecte email (OTP 6 chiffres) et liste des 6 wallets Solana, déclenché depuis le bouton "Connect Wallet" de la TopBar.
 
-**Objectif** : remplacer la distribution linéaire actuelle par 3 tranches structurées, identiques pour toutes les paires (SOL/BTC/ETH/XRP/futures).
+### 1. Assets — logos wallets
 
-Nouvelle logique dans `src/components/BettingGrid.tsx` :
+Téléchargement et ajout dans `src/assets/wallets/` des logos PNG officiels :
+- `phantom.png` (déjà présent → réutilisé via `src/assets/phantom-logo.png`)
+- `solflare.png` (déjà présent)
+- `backpack.png`
+- `glow.png`
+- `trust.png`
+- `coinbase.png`
 
-```
-Tranche 1 — 10 cartes  → label "30s"   → écart 0.10$ → 2.50$ (courbe expo)
-Tranche 2 —  5 cartes  → label "1min"  → écart 2.50$ → 5.00$ (courbe expo)
-Tranche 2 —  5 cartes  → label "2min"  → écart 2.50$ → 5.00$ (courbe expo)
-Tranche 3 — 10 cartes  → label "5min"  → écart 5.10$ → 50.00$ (courbe expo)
-                       Total : 30 cartes UP + 30 cartes DN
-```
+Sources : sites officiels / brand kits.
 
-Le label de timeframe est désormais **déterministe** (lié à l'index/tranche), plus aléatoire. Les écarts suivent `offset = min + (max-min) * ((exp(k*t) - 1) / (exp(k) - 1))` avec t∈[0,1].
+### 2. Nouveau composant `src/components/auth/AuthDialog.tsx`
 
-Sur mobile : on garde 3 tranches mais réduites (5/3/3/5 = 16 cartes par côté) pour la lisibilité.
+Structure (basée sur `Dialog` shadcn déjà présent) :
 
-### 2. Fluidité visuelle (zéro lag)
-
-Optimisations ciblées :
-
-- **`PriceCard` central** : remplacer les `setState(displayPrice)` à 60fps par une mise à jour DOM directe via `ref.current.textContent` → évite les re-renders React de tout l'arbre à chaque frame (gain massif).
-- **`React.memo`** sur la `PriceCard` non-centrale + comparaison custom sur `price/selected/result/timeLabel`.
-- **Mémoïsation du `randomTimes`** supprimée (devient déterministe → plus de recalcul).
-- **`useMemo` stable** sur les listes `downPrices`/`upPrices` avec dépendance arrondie (`Math.round(basePrice*10)/10`) pour éviter les recalculs à chaque tick de prix.
-- **Scroll** : ajout de `will-change: transform`, `contain: layout paint` et `overscroll-behavior: contain` sur les conteneurs UP/DN.
-- **Hover** : passage des transitions sur `transform` uniquement (GPU), retrait des transitions sur `box-shadow`/`background` sur les cartes (remplacé par pseudo-élément en opacity).
-- **`requestAnimationFrame` du prix** : ne tourne que si l'écart `|target-display| > 0.01`, sinon stop le RAF.
-- **`<MiniChart>`** : memoization + throttle des updates (1 update / 250ms suffit pour le ressenti).
-
-### 3. Popup de connexion wallet redesigné
-
-Création de `src/components/auth/AuthDialog.tsx` (basé sur `Dialog` de shadcn déjà présent) :
-
-- **Layout** : `max-w-[600px] w-[90vw] md:w-[50vw]` → moitié d'écran sur desktop, responsive mobile.
-- **Backdrop** : override de `DialogOverlay` avec `backdrop-blur-3xl bg-background/40` (équivalent "blur 100%").
-- **Sections** (de haut en bas) :
-  1. **Header** : logo app + titre "Connect to start trading"
-  2. **Email auth** (collecte + magic link 6 chiffres)
-     - Input email → bouton "Send code" (style identique aux boutons existants `bg-primary/10 border-primary/40`)
-     - Étape 2 : 6 inputs OTP (composant `InputOTP` shadcn déjà présent)
-  3. **Séparateur** "or connect a wallet"
-  4. **Liste des 6 wallets Solana** (Top 6, avec `.png` officiels téléchargés dans `src/assets/wallets/`) :
-     - **Phantom** (badge "Recommandé")
-     - **Solflare** (badge "Recommandé")
-     - **Backpack** (badge "DeFi")
-     - **Glow**
-     - **Trust Wallet**
-     - **Coinbase Wallet** (badge "Recommandé")
-     - Footer : "100+ wallets compatibles Solana supportés"
-  5. Boutons aux mêmes couleurs/forme que l'app actuelle (réutilisation des classes de `WalletPanel`).
-
-- **SMS** : skip pour l'instant comme convenu, mais l'UI laisse une place pour un futur onglet "Phone".
-
-### 4. Base de données marketing (Lovable Cloud, RLS stricte)
-
-Activation Lovable Cloud puis migration créant :
-
-```sql
--- Table de collecte opt-in
-create table public.marketing_contacts (
-  id uuid primary key default gen_random_uuid(),
-  email text unique,
-  phone text unique,
-  wallet_address text,
-  source text not null default 'auth_dialog',  -- 'auth_dialog' | 'wallet_connect' | ...
-  marketing_consent boolean not null default true,
-  unsubscribed_at timestamptz,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-
--- Rôle admin séparé (pas sur le profil) pour éviter privilege escalation
-create type public.app_role as enum ('admin', 'user');
-create table public.user_roles (...);
-create function public.has_role(...) security definer ...;
-
--- RLS stricte
-alter table public.marketing_contacts enable row level security;
--- INSERT public (pour collecter depuis le dialog auth)
--- SELECT/UPDATE/DELETE : admin uniquement via has_role()
+```text
+┌───────────────────────────────────────────┐
+│  [logo]  Connect to start trading      ✕ │
+│                                           │
+│  ─── Email ─────────────────────────────  │
+│  [ email@domain.com        ] [Send code] │
+│  (étape 2 → 6 inputs OTP via InputOTP)   │
+│                                           │
+│  ────────  or connect a wallet  ────────  │
+│                                           │
+│  [👻 Phantom]      Recommandé             │
+│  [☀️ Solflare]     Recommandé             │
+│  [🎒 Backpack]     DeFi                   │
+│  [🌙 Glow]                                │
+│  [🛡 Trust Wallet]                        │
+│  [🔵 Coinbase]     Recommandé             │
+│                                           │
+│  100+ wallets compatibles Solana          │
+└───────────────────────────────────────────┘
 ```
 
-Edge function `collect-marketing-contact` :
-- Validation Zod (email format, phone E.164, longueurs)
-- Rate-limiting in-memory (10 inserts/IP/heure)
-- Upsert idempotent sur email/phone
-- Pas de log des données sensibles
+**Layout** :
+- `DialogContent` overridé : `max-w-[640px] w-[92vw] md:w-[50vw]` (moitié écran desktop, responsive mobile).
+- `DialogOverlay` overridé : `backdrop-blur-3xl bg-background/40` (blur ~100%).
+- Padding généreux : `p-6 md:p-8`, `rounded-2xl`, bordure `border-primary/20`.
 
-### 5. Email magic-link (Lovable Emails — gratuit & natif)
+**Sections internes** (sous-composants dans le même fichier ou séparés selon taille) :
+- `<EmailAuthStep />` — input email + état "code envoyé" + 6 inputs OTP (`InputOTP` shadcn).
+- `<WalletList />` — liste des 6 wallets avec badge optionnel ("Recommandé"/"DeFi"), même design que les boutons existants (classes réutilisées de `WalletPanel` / TopBar : `bg-primary/10 border-primary/40`).
 
-Pour l'auth email avec code 6 chiffres :
-- Setup email domain via `<lov-open-email-setup>` (étape 1).
-- Une fois configuré : scaffold transactional email + edge function `send-otp-email` qui :
-  - Génère un code 6 chiffres
-  - Le stocke hashé (bcrypt) dans une table `email_otps` avec TTL 10 min
-  - Envoie via Lovable Emails (template branded)
-- Edge function `verify-otp-email` qui valide et crée la session.
+### 3. Hook `useAuthDialog`
 
-### 6. Détails techniques
+Petit store local (`useState` exposé via context) :
+- `open: boolean`
+- `openDialog()`, `closeDialog()`
+
+Placé dans `src/hooks/useAuthDialog.tsx` (Provider monté dans `App.tsx`).
+
+### 4. Intégration TopBar
+
+- Suppression des deux menus déroulants `showWalletMenu` (desktop + mobile) dans `TopBar.tsx`.
+- Le bouton "Connect" / "Connect Wallet" appelle `openDialog()` au lieu de toggle le menu.
+- `WalletPanel.tsx` : suppression de la branche `!connected` (bouton "Connect Wallet to Bet" remplacé par CTA qui ouvre le dialog).
+
+### 5. Flow Email OTP
+
+**Frontend** :
+- Étape 1 : email → `supabase.functions.invoke('send-otp-email', { email })`.
+- Étape 2 : 6 chiffres → `supabase.functions.invoke('verify-otp-email', { email, code })`.
+- Sur succès : appel à `collect-marketing-contact` (déjà existant) avec `email` + `source: 'auth_dialog'` + `marketing_consent: true`. Toast de succès, fermeture du dialog.
+
+**Backend (à créer)** :
+- Migration : table `email_otps` (id, email, code_hash, expires_at, attempts, created_at) + RLS bloquant tout accès direct (service-role only).
+- Edge function `send-otp-email` :
+  - Génère code 6 chiffres random.
+  - Hash bcrypt → upsert dans `email_otps` (TTL 10 min).
+  - Envoi via **Lovable Emails** (transactional template `auth-otp-code`) — nécessite domaine email configuré.
+- Edge function `verify-otp-email` :
+  - Validation code (compare hash, vérifie TTL, max 5 tentatives).
+  - Retourne `{ success: true }` (pas de session Supabase Auth puisqu'on est en mode "collecte seule").
+
+### 6. Flow Wallet
+
+- Click sur un wallet → appel `wallet.connect(type)` (extension du hook `useWallet` pour accepter les 6 types).
+- Sur succès : appel `collect-marketing-contact` avec `wallet_address` + `source: 'wallet_connect'`.
+- Fermeture du dialog.
+
+Extension de `WalletType` :
+```ts
+export type WalletType = 'phantom' | 'solflare' | 'backpack' | 'glow' | 'trust' | 'coinbase';
+```
+
+### 7. Email domain (prérequis OTP)
+
+Pour l'envoi d'emails OTP via Lovable Emails, un domaine d'envoi doit être configuré. Si non configuré au moment de l'implémentation, je proposerai le bouton de setup. **Sans domaine configuré**, l'envoi OTP ne fonctionnera pas — dans ce cas l'UI affichera un message "Email auth coming soon" et seule la connexion wallet sera active (fallback dégradé).
+
+### Fichiers touchés
 
 | Fichier | Action |
 |---|---|
-| `src/components/BettingGrid.tsx` | Nouvelle distribution expo + memo |
-| `src/components/PriceCard.tsx` | DOM direct pour prix, `React.memo`, RAF conditionnel |
-| `src/components/auth/AuthDialog.tsx` | **Nouveau** — popup |
-| `src/components/auth/EmailAuthStep.tsx` | **Nouveau** — email + OTP |
+| `src/components/auth/AuthDialog.tsx` | **Nouveau** — popup principal |
+| `src/components/auth/EmailAuthStep.tsx` | **Nouveau** — étape email + OTP |
 | `src/components/auth/WalletList.tsx` | **Nouveau** — liste 6 wallets |
-| `src/assets/wallets/*.png` | **Nouveaux** — logos officiels (téléchargés) |
-| `src/hooks/useWallet.ts` | Refacto pour exposer le dialog state |
-| `src/components/TopBar.tsx` | Bouton "Connect" → ouvre `AuthDialog` |
-| `src/components/WalletPanel.tsx` | Supprimé / réduit (remplacé par dialog) |
-| Migration SQL | `marketing_contacts` + `user_roles` + RLS |
-| Edge functions | `collect-marketing-contact`, `send-otp-email`, `verify-otp-email` |
+| `src/hooks/useAuthDialog.tsx` | **Nouveau** — context provider |
+| `src/hooks/useWallet.ts` | Extension `WalletType` (6 wallets) |
+| `src/components/TopBar.tsx` | Bouton Connect → ouvre dialog, suppression menus |
+| `src/components/WalletPanel.tsx` | Suppression branche !connected |
+| `src/App.tsx` | Wrap avec `AuthDialogProvider` + render `<AuthDialog />` global |
+| `src/assets/wallets/*.png` | **Nouveaux** — 4 logos manquants (Backpack, Glow, Trust, Coinbase) |
+| Migration SQL | **Nouvelle** — table `email_otps` + RLS service-role |
+| `supabase/functions/send-otp-email/` | **Nouvelle** edge function |
+| `supabase/functions/verify-otp-email/` | **Nouvelle** edge function |
+| `supabase/functions/_shared/transactional-email-templates/auth-otp-code.tsx` | **Nouveau** template email |
 
 ### Ordre d'exécution
 
-1. Refonte distribution prix + optimisations fluidité (impact visuel immédiat, sans backend)
-2. Activation Lovable Cloud + migration DB marketing + edge function de collecte
-3. Setup email domain + scaffold OTP email
-4. Création AuthDialog + intégration dans TopBar
-5. Téléchargement des logos `.png` wallets et finalisation UI
-
-### Note importante
-
-L'**email domain setup** nécessite que tu cliques sur un bouton dans le chat pour configurer le domaine d'envoi (étape obligatoire pour les emails OTP). Je te le proposerai au moment d'attaquer l'étape 3.
+1. Téléchargement des 4 logos wallets manquants.
+2. Création `useAuthDialog` + `AuthDialog` + sous-composants (UI seulement, mock OTP).
+3. Intégration TopBar / suppression anciens menus.
+4. Vérification statut domaine email → si OK : setup email infra + transactional + edge functions OTP. Sinon : proposer le setup.
+5. Migration `email_otps` + branchement des edge functions.
+6. Test end-to-end + collecte marketing.
