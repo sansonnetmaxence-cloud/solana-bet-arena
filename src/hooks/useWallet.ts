@@ -1,6 +1,15 @@
 import { useState, useCallback } from 'react';
 
-export type WalletType = 'phantom' | 'solflare';
+export type WalletType = 'phantom' | 'solflare' | 'backpack' | 'glow' | 'trust' | 'coinbase';
+
+const MOCK_ADDRESSES: Record<WalletType, string> = {
+  phantom: '7xKX...q4Pm',
+  solflare: '3mFz...kR9v',
+  backpack: 'B4cK...p9Lz',
+  glow: 'GL0w...x2Rt',
+  trust: 'Tru5...t8Wq',
+  coinbase: 'CbW4...l3Zn',
+};
 
 export const useWallet = () => {
   const [connected, setConnected] = useState(false);
@@ -10,12 +19,8 @@ export const useWallet = () => {
 
   const connect = useCallback(async (type: WalletType) => {
     setConnecting(true);
-    // Simulate wallet connection
-    await new Promise((r) => setTimeout(r, 1500));
-    const mockAddress = type === 'phantom'
-      ? '7xKX...q4Pm'
-      : '3mFz...kR9v';
-    setWalletAddress(mockAddress);
+    await new Promise((r) => setTimeout(r, 1200));
+    setWalletAddress(MOCK_ADDRESSES[type] ?? '7xKX...q4Pm');
     setWalletType(type);
     setConnected(true);
     setConnecting(false);
