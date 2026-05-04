@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { WalletType } from '@/hooks/useWallet';
-import phantomLogo from '@/assets/phantom-logo.png';
+import phantomLogo from '@/assets/wallets/phantom.png';
 import solflareLogo from '@/assets/solflare-logo.png';
 import trustLogo from '@/assets/wallets/trust.png';
 import coinbaseLogo from '@/assets/wallets/coinbase.png';

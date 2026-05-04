@@ -206,3 +206,53 @@
   100% { transform: translateY(0); opacity: 1; filter: blur(0); }
 }
 .animate-ping-once { animation: ping-once 0.9s ease-out; }
+
+/* Auth dialog animated glow */
+@keyframes auth-glow-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes auth-glow-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 0.95; }
+}
+.auth-glow-wrapper { position: relative; }
+.auth-glow-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 1.05rem;
+  padding: 1.5px;
+  background: conic-gradient(
+    from 0deg,
+    hsl(var(--primary) / 0.95),
+    hsl(var(--secondary) / 0.9),
+    hsl(var(--primary) / 0.4),
+    hsl(var(--secondary) / 0.9),
+    hsl(var(--primary) / 0.95)
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  animation: auth-glow-rotate 6s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+.auth-glow-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: -14px;
+  border-radius: 1.6rem;
+  background: conic-gradient(
+    from 0deg,
+    hsl(var(--primary) / 0.5),
+    hsl(var(--secondary) / 0.5),
+    hsl(var(--primary) / 0.2),
+    hsl(var(--secondary) / 0.5),
+    hsl(var(--primary) / 0.5)
+  );
+  filter: blur(28px);
+  animation: auth-glow-rotate 6s linear infinite, auth-glow-pulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
+}
