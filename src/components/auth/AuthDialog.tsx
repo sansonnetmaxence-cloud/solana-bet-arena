@@ -83,7 +83,7 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
           </div>
 
           {/* Email auth */}
-          <div className="rounded-xl border border-border/30 bg-card/30 p-4">
+          <div className="rounded-xl border border-border/30 bg-transparent p-4">
             <EmailAuthStep onSuccess={handleEmailSuccess} />
           </div>
 
