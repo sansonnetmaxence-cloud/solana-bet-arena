@@ -52,13 +52,13 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
         />
         <DialogPrimitive.Content
           className={cn(
-            // Position below the navbar (~64px) and never overlap it
-            'fixed left-1/2 z-50 -translate-x-1/2',
-            'top-[72px] sm:top-[80px]',
-            // Constrained height so it never goes under the navbar
-            'max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-100px)] overflow-y-auto',
+            // Centered on screen, never overlapping the navbar
+            'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
+            // Constrained height (account for navbar ~64px)
+            'max-h-[calc(100vh-96px)] overflow-y-auto',
             // Narrower & fully responsive
             'w-[94vw] sm:w-[80vw] md:w-[60vw] lg:w-[42vw] xl:w-[34vw] max-w-[460px]',
+            'auth-glow-wrapper',
             'rounded-2xl border border-primary/20 bg-transparent backdrop-blur-3xl shadow-2xl',
             'p-5 sm:p-6 flex flex-col gap-4',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
