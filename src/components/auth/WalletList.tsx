@@ -80,9 +80,6 @@ export const WalletList = ({ onSelect, connecting }: WalletListProps) => {
           )}
         </button>
       ))}
-      <p className="text-center text-[10px] text-muted-foreground/50 font-display uppercase tracking-widest mt-2">
-        100+ Solana wallets supported
-      </p>
     </div>
   );
 };
