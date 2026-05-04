@@ -2,8 +2,6 @@ import { cn } from '@/lib/utils';
 import type { WalletType } from '@/hooks/useWallet';
 import phantomLogo from '@/assets/phantom-logo.png';
 import solflareLogo from '@/assets/solflare-logo.png';
-import backpackLogo from '@/assets/wallets/backpack.png';
-import glowLogo from '@/assets/wallets/glow.png';
 import trustLogo from '@/assets/wallets/trust.png';
 import coinbaseLogo from '@/assets/wallets/coinbase.png';
 
@@ -12,16 +10,14 @@ interface WalletItem {
   name: string;
   logo: string;
   badge?: 'Recommended' | 'DeFi';
-  accent: string; // tailwind color hex for hover glow
+  accent: string;
 }
 
 const WALLETS: WalletItem[] = [
   { type: 'phantom', name: 'Phantom', logo: phantomLogo, badge: 'Recommended', accent: '#AB9FF2' },
   { type: 'solflare', name: 'Solflare', logo: solflareLogo, badge: 'Recommended', accent: '#FC7227' },
-  { type: 'backpack', name: 'Backpack', logo: backpackLogo, badge: 'DeFi', accent: '#E33E3F' },
-  { type: 'glow', name: 'Glow', logo: glowLogo, accent: '#C44CF7' },
-  { type: 'trust', name: 'Trust Wallet', logo: trustLogo, accent: '#3375BB' },
   { type: 'coinbase', name: 'Coinbase Wallet', logo: coinbaseLogo, badge: 'Recommended', accent: '#1652F0' },
+  { type: 'trust', name: 'Trust Wallet', logo: trustLogo, accent: '#3375BB' },
 ];
 
 interface WalletListProps {
