@@ -52,10 +52,15 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
         />
         <DialogPrimitive.Content
           className={cn(
-            'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
-            'w-[92vw] md:w-[55vw] max-w-[640px] max-h-[90vh] overflow-y-auto',
-            'rounded-2xl border border-primary/20 bg-card/95 backdrop-blur-2xl shadow-2xl',
-            'p-6 md:p-8 flex flex-col gap-5',
+            // Position below the navbar (~64px) and never overlap it
+            'fixed left-1/2 z-50 -translate-x-1/2',
+            'top-[72px] sm:top-[80px]',
+            // Constrained height so it never goes under the navbar
+            'max-h-[calc(100vh-88px)] sm:max-h-[calc(100vh-100px)] overflow-y-auto',
+            // Narrower & fully responsive
+            'w-[94vw] sm:w-[80vw] md:w-[60vw] lg:w-[42vw] xl:w-[34vw] max-w-[460px]',
+            'rounded-2xl border border-primary/20 bg-transparent backdrop-blur-3xl shadow-2xl',
+            'p-5 sm:p-6 flex flex-col gap-4',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
             'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95'
@@ -78,7 +83,7 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
           </div>
 
           {/* Email auth */}
-          <div className="rounded-xl border border-border/30 bg-card/30 p-4">
+          <div className="rounded-xl border border-border/30 bg-transparent p-4">
             <EmailAuthStep onSuccess={handleEmailSuccess} />
           </div>
 
