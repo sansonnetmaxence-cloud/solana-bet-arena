@@ -45,21 +45,18 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           className={cn(
-            'fixed inset-0 z-50 bg-background/70 backdrop-blur-md',
+            'fixed inset-0 z-[60] bg-background/70 backdrop-blur-md',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
           )}
         />
         <DialogPrimitive.Content
           className={cn(
-            // Centered on screen, never overlapping the navbar
-            'fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2',
-            // Constrained height (account for navbar ~64px)
+            'fixed left-1/2 top-1/2 z-[70] -translate-x-1/2 -translate-y-1/2',
             'max-h-[calc(100vh-96px)] overflow-y-auto',
-            // Narrower & fully responsive
             'w-[94vw] sm:w-[80vw] md:w-[60vw] lg:w-[42vw] xl:w-[34vw] max-w-[460px]',
             'auth-glow-wrapper',
-            'rounded-2xl border border-primary/30 bg-card/80 backdrop-blur-2xl shadow-2xl',
+            'rounded-2xl border border-primary/30 bg-card shadow-2xl',
             'p-5 sm:p-6 flex flex-col gap-4',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',

@@ -26,18 +26,20 @@ interface TierConfig {
   k: number;
 }
 
+// Offsets are tight (cents) so cards stay close to live price.
+// They will rebase every 5s on the new live price.
 const DESKTOP_TIERS: TierConfig[] = [
-  { count: 10, min: 0.1, max: 2.5, label: '30s', k: 2.2 },
-  { count: 5, min: 2.5, max: 5, label: '1min', k: 1.6 },
-  { count: 5, min: 2.5, max: 5, label: '2min', k: 1.6 },
-  { count: 10, min: 5.1, max: 50, label: '5min', k: 2.6 },
+  { count: 10, min: 0.01, max: 0.10, label: '30s', k: 1.8 },
+  { count: 5, min: 0.10, max: 0.25, label: '1min', k: 1.6 },
+  { count: 5, min: 0.10, max: 0.25, label: '2min', k: 1.6 },
+  { count: 10, min: 0.25, max: 1.00, label: '5min', k: 2.2 },
 ];
 
 const MOBILE_TIERS: TierConfig[] = [
-  { count: 5, min: 0.1, max: 2.5, label: '30s', k: 2.2 },
-  { count: 3, min: 2.5, max: 5, label: '1min', k: 1.6 },
-  { count: 3, min: 2.5, max: 5, label: '2min', k: 1.6 },
-  { count: 5, min: 5.1, max: 50, label: '5min', k: 2.6 },
+  { count: 5, min: 0.01, max: 0.10, label: '30s', k: 1.8 },
+  { count: 3, min: 0.10, max: 0.25, label: '1min', k: 1.6 },
+  { count: 3, min: 0.10, max: 0.25, label: '2min', k: 1.6 },
+  { count: 5, min: 0.25, max: 1.00, label: '5min', k: 2.2 },
 ];
 
 const expCurve = (t: number, k: number) =>

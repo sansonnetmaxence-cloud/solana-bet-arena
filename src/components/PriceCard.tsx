@@ -294,14 +294,14 @@ const PriceCardImpl = ({
       disabled={disabled}
       className={cn(
         'group relative flex flex-col items-center justify-center rounded-lg border cursor-pointer font-display backdrop-blur-md overflow-hidden',
-        'transition-transform duration-200 ease-out will-change-transform',
-        'hover:scale-[1.04] hover:-translate-y-0.5 active:scale-[0.97] active:translate-y-0',
+        'transition-all duration-200 ease-out will-change-transform',
+        'hover:scale-[1.08] hover:-translate-y-1 active:scale-[0.97] active:translate-y-0',
         timeLabel
           ? 'w-full aspect-square min-w-[60px] max-w-[120px]'
           : 'w-full aspect-square min-w-[48px] max-w-[96px]',
         isUp
-          ? 'border-success/15 bg-success/[0.03] hover:border-success/40'
-          : 'border-danger/15 bg-danger/[0.03] hover:border-danger/40',
+          ? 'border-success/15 bg-success/[0.03] hover:border-success/70 hover:bg-success/[0.12] hover:shadow-[0_0_20px_hsl(160_100%_51%/0.4),0_0_40px_hsl(160_100%_51%/0.15)]'
+          : 'border-danger/15 bg-danger/[0.03] hover:border-danger/70 hover:bg-danger/[0.12] hover:shadow-[0_0_20px_hsl(0_100%_63%/0.4),0_0_40px_hsl(0_100%_63%/0.15)]',
         selected && isUp && 'border-success/50 bg-success/[0.08] ring-1 ring-success/30 scale-[1.05]',
         selected && !isUp && 'border-danger/50 bg-danger/[0.08] ring-1 ring-danger/30 scale-[1.05]',
         result === 'won' && 'border-success/60 bg-success/10',
@@ -309,13 +309,13 @@ const PriceCardImpl = ({
         disabled && 'opacity-30 cursor-not-allowed hover:scale-100 hover:translate-y-0',
       )}
     >
-      {/* Glow overlay (opacity-only transition = no paint cost outside hover) */}
+      {/* Glow overlay */}
       <div
         className={cn(
           'absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg pointer-events-none',
           isUp
-            ? 'bg-gradient-to-t from-success/[0.08] to-transparent'
-            : 'bg-gradient-to-b from-danger/[0.08] to-transparent',
+            ? 'bg-gradient-to-t from-success/[0.18] via-success/[0.06] to-transparent'
+            : 'bg-gradient-to-b from-danger/[0.18] via-danger/[0.06] to-transparent',
         )}
       />
 
