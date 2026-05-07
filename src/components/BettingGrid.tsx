@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import PriceCard from './PriceCard';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -58,11 +58,27 @@ const BettingGrid = ({
   // Tiers depend only on viewport — totally stable.
   const tiers = useMemo(() => buildPriceTiers(isMobile), [isMobile]);
 
-  // Snapshot price for the cards so they don't re-render on every stream tick.
-  const snapshotPrice = useMemo(
-    () => bucketPrice(basePrice),
-    [bucketPrice(basePrice)],
-  );
+  // Snapshot the live price every 5s so the bet cards re-anchor on the
+  // real current price (and therefore reflect a small offset like 0.10$
+  // around it), without re-rendering on every websocket tick.
+  const priceRef = useRef(basePrice);
+  priceRef.current = basePrice;
+  const [snapshotPrice, setSnapshotPrice] = useState(() => basePrice);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSnapshotPrice(priceRef.current);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
+
+  // Make sure the snapshot is initialised once we get a real price.
+  useEffect(() => {
+    if (currentPrice != null && snapshotPrice === 150) {
+      setSnapshotPrice(currentPrice);
+    }
+  }, [currentPrice, snapshotPrice]);
+
 
   const upPrices = useMemo(
     () =>

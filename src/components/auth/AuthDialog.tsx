@@ -45,7 +45,7 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay
           className={cn(
-            'fixed inset-0 z-50 bg-background/40 backdrop-blur-3xl',
+            'fixed inset-0 z-50 bg-background/70 backdrop-blur-md',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0'
           )}
@@ -59,7 +59,7 @@ export const AuthDialog = ({ wallet }: AuthDialogProps) => {
             // Narrower & fully responsive
             'w-[94vw] sm:w-[80vw] md:w-[60vw] lg:w-[42vw] xl:w-[34vw] max-w-[460px]',
             'auth-glow-wrapper',
-            'rounded-2xl border border-primary/20 bg-transparent backdrop-blur-3xl shadow-2xl',
+            'rounded-2xl border border-primary/30 bg-card/80 backdrop-blur-2xl shadow-2xl',
             'p-5 sm:p-6 flex flex-col gap-4',
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
